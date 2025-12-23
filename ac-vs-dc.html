@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AC vs. DC Efficiency Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局樣式 --- */
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background-color: #f4f7f6; color: #444; height: 100vh; display: flex; flex-direction: column; }
+        
+        /* 綠色標題列 */
+        header { background-color: #3dcd58; color: white; padding: 0 20px; height: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
+        .brand { font-weight: 700; font-size: 14px; letter-spacing: 0.5px; }
+        .title { font-size: 18px; font-weight: 500; text-transform: uppercase; }
+        
+        /* 主佈局 */
+        .container { display: flex; flex: 1; padding: 20px; gap: 20px; overflow: hidden; max-width: 1400px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        
+        /* 左側：輸入區 */
+        .left-panel { width: 40%; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; padding-right: 5px; }
+        
+        .input-group { background: #e0e0e0; border: 1px solid #ccc; border-radius: 2px; }
+        .group-header { background: #999; color: white; padding: 6px 10px; font-weight: bold; font-size: 13px; display: flex; justify-content: space-between; }
+        .group-body { padding: 15px; background: #fff; display: flex; flex-direction: column; gap: 12px; }
+
+        .control-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #555; }
+        .control-row label { flex: 1.2; }
+        .slider-container { flex: 1.5; display: flex; align-items: center; gap: 10px; }
+        
+        /* 滑桿樣式 */
+        input[type="range"] { flex: 1; height: 6px; background: #ccc; border-radius: 3px; outline: none; appearance: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; background: #3dcd58; border: 2px solid white; border-radius: 50%; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        
+        .val-display { font-weight: bold; width: 45px; text-align: right; }
+
+        /* 下拉選單模擬按鈕 */
+        .dropdown-btn { width: 100%; background: linear-gradient(to bottom, #eee, #ccc); border: 1px solid #999; padding: 4px; border-radius: 3px; font-size: 11px; text-align: center; cursor: pointer; color: #333; }
+
+        /* 右側：結果區 */
+        .right-panel { width: 60%; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        
+        .result-box { background: white; border: 1px solid #ccc; display: flex; flex-direction: column; }
+        .result-header { background: #999; color: white; padding: 6px 10px; font-weight: bold; font-size: 13px; display: flex; justify-content: space-between; }
+        .chart-area { padding: 15px; height: 180px; position: relative; }
+
+        /* 圖例 (Legend) */
+        .custom-legend { display: flex; justify-content: center; gap: 15px; margin-top: auto; padding: 10px; font-size: 11px; color: #666; border-top: 1px solid #eee; background: white; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .color-box { width: 12px; height: 12px; border-radius: 2px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">Life Is On | Schneider Electric</div>
+        <div class="title">Data Center AC vs. DC Efficiency Calculator</div>
+        <div><i class="fas fa-question-circle"></i></div>
+    </header>
+
+    <div class="container">
+        <div class="left-panel">
+            
+            <div class="input-group">
+                <div class="group-header">UPS <i class="fas fa-question-circle"></i></div>
+                <div class="group-body">
+                    <div class="control-row">
+                        <label>Modern AC UPS Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="ups_ac" min="90" max="99" step="0.1" value="96.3" oninput="calc()">
+                            <span class="val-display" id="val_ups_ac">96.3%</span>
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <label>DC UPS Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="ups_dc" min="90" max="99" step="0.1" value="96.5" oninput="calc()">
+                            <span class="val-display" id="val_ups_dc">96.5%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="group-header">Power Distribution <i class="fas fa-question-circle"></i></div>
+                <div class="group-body">
+                    <div class="control-row">
+                        <label>Modern AC PDU Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="pdu_ac" min="95" max="99.9" step="0.1" value="98.3" oninput="calc()">
+                            <span class="val-display" id="val_pdu_ac">98.3%</span>
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <label>Distribution Wiring Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="wire" min="98" max="99.9" step="0.1" value="99.5" oninput="calc()">
+                            <span class="val-display" id="val_wire">99.5%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="group-header">Power Supply <i class="fas fa-question-circle"></i></div>
+                <div class="group-body">
+                    <div class="control-row">
+                        <label>Modern AC Power Supply Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="psu_ac" min="85" max="98" step="0.1" value="93.2" oninput="calc()">
+                            <span class="val-display" id="val_psu_ac">93.2%</span>
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <label>Modern DC Power Supply Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="psu_dc" min="85" max="98" step="0.1" value="94.1" oninput="calc()">
+                            <span class="val-display" id="val_psu_dc">94.1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="group-header">Cooling & Lighting <i class="fas fa-question-circle"></i></div>
+                <div class="group-body">
+                    <div class="control-row">
+                        <label>Cooling Architecture</label>
+                        <div style="flex:1.5"><div class="dropdown-btn">Traditional chilled water system ▼</div></div>
+                    </div>
+                    <div class="control-row">
+                        <label>Lighting</label>
+                        <div style="flex:1.5"><div class="dropdown-btn">Traditional lighting ▼</div></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="right-panel">
+            
+            <div class="result-box">
+                <div class="result-header">Power Path Efficiency (%) <i class="fas fa-question-circle"></i></div>
+                <div class="chart-area">
+                    <canvas id="chartEff"></canvas>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-header">Power Path Efficiency Improvement (%) <i class="fas fa-question-circle"></i></div>
+                <div class="chart-area">
+                    <canvas id="chartImp"></canvas>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-header">Total Data Center Power Reduction (%) <i class="fas fa-question-circle"></i></div>
+                <div class="chart-area">
+                    <canvas id="chartRed"></canvas>
+                </div>
+            </div>
+
+            <div class="custom-legend">
+                <div class="legend-item"><div class="color-box" style="background:#9ca3af"></div>Legacy 208 VAC</div>
+                <div class="legend-item"><div class="color-box" style="background:#60a5fa"></div>Modern 208 VAC</div>
+                <div class="legend-item"><div class="color-box" style="background:#65a30d"></div>415 VAC</div>
+                <div class="legend-item"><div class="color-box" style="background:#facc15"></div>380 VDC</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Chart.js 全局設定
+        Chart.defaults.font.family = "'Segoe UI', sans-serif";
+        Chart.defaults.color = '#555';
+        
+        // 顏色定義 (Grey, Blue, Green, Yellow)
+        const colors = ['#9ca3af', '#60a5fa', '#65a30d', '#facc15'];
+        const labels = ['Legacy', 'Modern', '415 VAC', '380 VDC'];
+
+        // 初始化圖表物件
+        let chartEff, chartImp, chartRed;
+
+        function initCharts() {
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: true } },
+                scales: {
+                    y: { beginAtZero: false, min: 50, max: 100, grid: { color: '#f0f0f0' } },
+                    x: { display: false } // 隱藏 X 軸標籤，靠顏色區分
+                },
+                layout: { padding: { top: 20 } }
+            };
+
+            // 1. Efficiency Chart
+            chartEff = new Chart(document.getElementById('chartEff'), {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6 }] },
+                options: { ...commonOptions, plugins: { datalabels: { anchor: 'end', align: 'top', color: '#555', font: { weight: 'bold' }, formatter: (v)=>v.toFixed(1) } } },
+                plugins: [ChartDataLabels]
+            });
+
+            // 2. Improvement Chart (比較基準: Legacy)
+            chartImp = new Chart(document.getElementById('chartImp'), {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6 }] },
+                options: { ...commonOptions, scales: { y: { beginAtZero: true, max: 40 } }, plugins: { datalabels: { anchor: 'end', align: 'top', formatter: (v)=>v > 0 ? v.toFixed(1)+'%' : '' } } },
+                plugins: [ChartDataLabels]
+            });
+
+            // 3. Reduction Chart
+            chartRed = new Chart(document.getElementById('chartRed'), {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6 }] },
+                options: { ...commonOptions, scales: { y: { beginAtZero: true, max: 40 } }, plugins: { datalabels: { anchor: 'end', align: 'top', formatter: (v)=>v > 0 ? v.toFixed(1)+'%' : '' } } },
+                plugins: [ChartDataLabels]
+            });
+        }
+
+        // --- 核心計算邏輯 (Physics of Power Path) ---
+        function calc() {
+            // 1. 讀取輸入
+            const upsAc = parseFloat(document.getElementById('ups_ac').value) / 100;
+            const upsDc = parseFloat(document.getElementById('ups_dc').value) / 100;
+            
+            const pduAc = parseFloat(document.getElementById('pdu_ac').value) / 100;
+            const wire = parseFloat(document.getElementById('wire').value) / 100;
+            
+            const psuAc = parseFloat(document.getElementById('psu_ac').value) / 100;
+            const psuDc = parseFloat(document.getElementById('psu_dc').value) / 100;
+
+            // 更新文字顯示
+            document.getElementById('val_ups_ac').innerText = (upsAc*100).toFixed(1) + "%";
+            document.getElementById('val_ups_dc').innerText = (upsDc*100).toFixed(1) + "%";
+            document.getElementById('val_pdu_ac').innerText = (pduAc*100).toFixed(1) + "%";
+            document.getElementById('val_wire').innerText = (wire*100).toFixed(1) + "%";
+            document.getElementById('val_psu_ac').innerText = (psuAc*100).toFixed(1) + "%";
+            document.getElementById('val_psu_dc').innerText = (psuDc*100).toFixed(1) + "%";
+
+            // 2. 計算各架構的總效率 (Total Efficiency)
+            // 公式：Path Eff = UPS * PDU * Wiring * PSU
+            
+            // A. Legacy (假設比 Modern 差一點，固定係數)
+            // Legacy UPS 較差 (-3%), PDU 較差 (-2%), PSU 較差 (-5%)
+            const effLegacy = (upsAc - 0.03) * (pduAc - 0.02) * wire * (psuAc - 0.05);
+
+            // B. Modern AC (208V) - 這是使用者設定的基準
+            const effModern = upsAc * pduAc * wire * psuAc;
+
+            // C. 415 VAC (歐洲/新標準)
+            // 優勢：電壓高電流小 (Wiring 損耗少 +0.2%)，不需要 PDU 變壓器 (PDU效率接近100%)
+            const eff415 = upsAc * 0.995 * (wire + 0.002) * psuAc; 
+
+            // D. 380 VDC (直流)
+            // 優勢：不需要整流 (PSU效率高)，不需要 PDU 變壓器
+            const effDC = upsDc * 0.995 * (wire + 0.001) * psuDc;
+
+            // 轉成百分比陣列
+            const effData = [effLegacy * 100, effModern * 100, eff415 * 100, effDC * 100];
+
+            // 3. 計算 Improvement (相對於 Legacy)
+            // 公式：(New - Old) / Old
+            const impData = effData.map(e => ((e - effData[0]) / effData[0]) * 100);
+
+            // 4. 計算 Power Reduction (總能耗減少)
+            // 假設 IT Load 固定為 1，總輸入 = 1 / Eff
+            // Reduction = 1 - (Input_New / Input_Legacy)
+            const inputLegacy = 1 / effLegacy;
+            const redData = [effLegacy, effModern, eff415, effDC].map(e => {
+                const inputCurrent = 1 / e;
+                return (1 - (inputCurrent / inputLegacy)) * 100;
+            });
+
+            // 5. 更新圖表
+            chartEff.data.datasets[0].data = effData;
+            chartEff.update();
+
+            chartImp.data.datasets[0].data = impData;
+            chartImp.update();
+
+            chartRed.data.datasets[0].data = redData;
+            chartRed.update();
+        }
+
+        // 啟動
+        initCharts();
+        calc();
+
+    </script>
+</body>
+</html>
