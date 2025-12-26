@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TradeOff Tools Dashboard | Schneider Electric Style</title>
+    <title>AMD TradeOff Tools Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- 1. 全局樣式 --- */
+        /* --- 1. 全局樣式 (AMD Dark Mode) --- */
         body {
             font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f4f3;
-            color: #333;
+            background-color: #121212; /* 深黑背景 */
+            color: #e0e0e0; /* 淺灰文字 */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -20,124 +20,141 @@
 
         /* --- 2. 頂部 Hero 區塊 --- */
         .hero {
-            background: linear-gradient(135deg, #3dcd58 0%, #2bb673 100%);
+            background-color: #000000; /* 全黑 */
+            background-image: linear-gradient(to bottom, #000000, #1a1a1a);
             color: white;
-            padding: 50px 20px 80px; /* 下方留白給卡片浮動 */
+            padding: 60px 20px 100px; /* 下方留白給卡片浮動 */
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-bottom: 4px solid #ED1C24; /* AMD 紅色底線 */
+            box-shadow: 0 4px 20px rgba(237, 28, 36, 0.3); /* 紅色光暈 */
+            position: relative;
         }
 
         .hero h1 {
             margin: 0;
-            font-size: 2.8em;
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-size: 3em;
+            font-weight: 800; /* 更粗的字體 */
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
+        
+        .hero h1 span { color: #ED1C24; } /* AMD 紅色強調 */
 
         .hero p {
-            font-size: 1.1em;
-            margin-top: 10px;
-            opacity: 0.9;
+            font-size: 1.2em;
+            margin-top: 15px;
+            opacity: 0.8;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            color: #ccc;
         }
 
         /* --- 3. 卡片容器 (Grid System) --- */
         .container {
             max-width: 1200px;
-            margin: -60px auto 40px; /* 負邊距讓卡片往上浮動壓在綠色背景上 */
+            margin: -60px auto 40px; /* 負邊距讓卡片往上浮動 */
             padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* 自動適應寬度 */
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 25px;
+            position: relative;
+            z-index: 10;
         }
 
-        /* --- 4. 工具卡片設計 --- */
+        /* --- 4. 工具卡片設計 (Dark Card) --- */
         .card {
-            background: white;
-            border-radius: 12px;
+            background: #1e1e1e; /* 深灰卡片背景 */
+            border: 1px solid #333;
+            border-radius: 4px; /* 稍微銳利的圓角 */
             padding: 30px 25px;
             text-align: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
             text-decoration: none;
-            color: #444;
+            color: #e0e0e0;
             display: flex;
             flex-direction: column;
             align-items: center;
             border-top: 4px solid transparent;
-            position: relative;
-            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-8px); /* 懸浮效果 */
-            box-shadow: 0 15px 35px rgba(61, 205, 88, 0.2);
-            border-top-color: #3dcd58;
+            transform: translateY(-10px);
+            border-color: #ED1C24; /* hover 時邊框變紅 */
+            border-top-color: #ED1C24;
+            box-shadow: 0 15px 40px rgba(237, 28, 36, 0.15); /* 紅色陰影 */
+            background: #252525;
         }
 
         /* 圖標圓圈 */
         .icon-box {
-            width: 70px;
-            height: 70px;
-            background-color: #f0fdf4;
+            width: 80px;
+            height: 80px;
+            background-color: #121212; /* 黑色圓圈 */
+            border: 2px solid #333;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
             font-size: 32px;
-            color: #3dcd58;
+            color: #ED1C24; /* 紅色圖標 */
             transition: all 0.3s;
         }
 
         .card:hover .icon-box {
-            background-color: #3dcd58;
+            background-color: #ED1C24;
             color: white;
-            transform: scale(1.1);
+            border-color: #ED1C24;
+            box-shadow: 0 0 15px rgba(237, 28, 36, 0.6);
         }
 
         .card h3 {
             margin: 0 0 10px;
-            font-size: 1.3em;
-            font-weight: 600;
+            font-size: 1.4em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .card p {
-            color: #777;
+            color: #aaa;
             font-size: 0.95em;
-            line-height: 1.5;
-            margin-bottom: 25px;
-            flex-grow: 1; /* 讓文字區塊填滿空間，使按鈕對齊底部 */
+            line-height: 1.6;
+            margin-bottom: 30px;
+            flex-grow: 1;
         }
 
-        /* 按鈕樣式 */
+        /* 按鈕樣式 (AMD Style) */
         .btn {
-            padding: 10px 30px;
-            border: 2px solid #3dcd58;
-            border-radius: 50px;
-            color: #3dcd58;
-            font-weight: 600;
+            padding: 10px 35px;
+            border: 2px solid #ED1C24;
+            border-radius: 2px; /* 銳利按鈕 */
+            color: #ED1C24;
+            font-weight: 700;
             font-size: 0.9em;
+            text-transform: uppercase;
             transition: all 0.3s;
             background: transparent;
+            letter-spacing: 1px;
         }
 
         .card:hover .btn {
-            background-color: #3dcd58;
+            background-color: #ED1C24;
             color: white;
-            box-shadow: 0 4px 10px rgba(61, 205, 88, 0.3);
+            box-shadow: 0 0 10px rgba(237, 28, 36, 0.4);
         }
 
         /* 頁尾 */
         footer {
             margin-top: auto;
             text-align: center;
-            padding: 30px;
-            color: #999;
+            padding: 40px;
+            color: #666;
             font-size: 0.85em;
-            border-top: 1px solid #e0e0e0;
+            background-color: #0a0a0a;
+            border-top: 1px solid #222;
         }
 
     </style>
@@ -145,58 +162,58 @@
 <body>
 
     <div class="hero">
-        <h1>TradeOff Tools Hub</h1>
-        <p>Interactive planning tools for Data Center efficiency, cost, and sustainability.</p>
+        <h1>AMD <span>TradeOff</span> Hub</h1>
+        <p>Advanced modeling tools for Data Center performance, efficiency, and TCO analysis.</p>
     </div>
 
     <div class="container">
 
         <a href="data-center-v2.html" class="card">
             <div class="icon-box"><i class="fas fa-server"></i></div>
-            <h3>Capital Cost Calculator</h3>
+            <h3>Capital Cost</h3>
             <p>Calculate total data center capital cost, rack count, and area based on capacity and density.</p>
-            <span class="btn">Open Tool</span>
+            <span class="btn">Launch Tool</span>
         </a>
 
         <a href="co2.html" class="card">
             <div class="icon-box"><i class="fas fa-leaf"></i></div>
-            <h3>Lifecycle CO2e Calculator</h3>
+            <h3>Lifecycle CO2e</h3>
             <p>Estimate carbon footprint (Scope 1, 2, 3) over a 15-year lifecycle analysis.</p>
-            <span class="btn">Open Tool</span>
+            <span class="btn">Launch Tool</span>
         </a>
 
         <a href="cost-comparison.html" class="card">
             <div class="icon-box"><i class="fas fa-chart-line"></i></div>
             <h3>TCO Comparison</h3>
             <p>Compare Traditional vs. Modern infrastructure costs and find the break-even point.</p>
-            <span class="btn">Open Tool</span>
+            <span class="btn">Launch Tool</span>
         </a>
 
         <a href="pue-calculator.html" class="card">
             <div class="icon-box"><i class="fas fa-wind"></i></div>
-            <h3>Cooling Economizer PUE</h3>
+            <h3>Cooling PUE</h3>
             <p>Compare cooling architectures and analyze PUE based on geography and climate.</p>
-            <span class="btn">Open Tool</span>
+            <span class="btn">Launch Tool</span>
         </a>
 
         <a href="ac-vs-dc.html" class="card">
             <div class="icon-box"><i class="fas fa-bolt"></i></div>
             <h3>AC vs. DC Efficiency</h3>
             <p>Compare end-to-end power path efficiency across Legacy, Modern AC, and DC architectures.</p>
-            <span class="btn">Open Tool</span>
+            <span class="btn">Launch Tool</span>
         </a>
 
         <a href="Cooling.html" class="card">
             <div class="icon-box"><i class="fas fa-snowflake"></i></div>
-            <h3>Cooling System Analysis</h3>
+            <h3>Cooling Analysis</h3>
             <p>Analyze data center cooling requirements and architecture performance.</p>
-            <span class="btn">Open Tool</span>
+            <span class="btn">Launch Tool</span>
         </a>
 
     </div>
 
     <footer>
-        <p>Designed for Learning | Powered by GitHub Pages</p>
+        <p>High Performance Computing Tools | Powered by GitHub Pages</p>
     </footer>
 
 </body>

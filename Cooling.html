@@ -3,87 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cooling Economizer Mode PUE Calculator</title>
+    <title>AMD Cooling PUE Calculator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- 1. 全局設定 (Global Styles) --- */
-        body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; margin: 0; background-color: #f4f7f6; color: #333; display: flex; flex-direction: column; height: 100vh; }
+        /* --- 1. 全局設定 (Global Styles - AMD Dark) --- */
+        body { 
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            background-color: #121212; /* 深黑背景 */
+            color: #e0e0e0; /* 淺灰文字 */
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+        }
         
-        /* 綠色頂部標題 */
-        header { background-color: #3dcd58; color: white; padding: 0 20px; height: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
-        .brand { font-weight: 700; font-size: 14px; letter-spacing: 0.5px; }
-        .title { font-size: 18px; font-weight: 500; text-transform: uppercase; }
-        .header-icons i { margin-left: 15px; cursor: pointer; opacity: 0.9; }
+        /* 頂部標題列 (AMD Style) */
+        header { 
+            background-color: #000000; 
+            color: white; 
+            padding: 0 25px; 
+            height: 60px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 3px solid #ED1C24; /* AMD 紅色底線 */
+            box-shadow: 0 4px 15px rgba(237, 28, 36, 0.2); 
+            flex-shrink: 0; 
+        }
+        .brand { font-weight: 800; font-size: 24px; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+        .title { font-size: 16px; font-weight: 400; text-transform: uppercase; color: #ccc; letter-spacing: 1px; }
+        .header-icons i { margin-left: 15px; cursor: pointer; opacity: 0.8; color: #ccc; }
+        .header-icons i:hover { color: #fff; }
 
-        /* 左側裝飾標籤 (模仿原圖左邊的 $ 和 時鐘) */
+        /* 左側裝飾標籤 (AMD Red) */
         .side-tabs { position: fixed; left: 0; top: 120px; display: flex; flex-direction: column; gap: 2px; z-index: 10; }
-        .tab { background: #3dcd58; color: white; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 18px; border-radius: 0 4px 4px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
-        .tab:hover { background-color: #36b54e; }
+        .tab { 
+            background: #ED1C24; /* 紅色背景 */
+            color: white; 
+            width: 40px; height: 40px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 18px; 
+            border-radius: 0 4px 4px 0; 
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.5); 
+            cursor: pointer; 
+            transition: background 0.3s;
+        }
+        .tab:hover { background-color: #ff333b; }
 
         /* 主容器 */
-        .container { flex: 1; padding: 20px 40px 20px 60px; /* 左邊留空給側邊標籤 */ overflow-y: auto; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-
-        .section-label { color: #3dcd58; font-size: 20px; margin-bottom: 10px; font-weight: normal; display: none; /* 原圖似乎沒有顯示這行，先隱藏 */ }
+        .container { flex: 1; padding: 20px 40px 20px 60px; overflow-y: auto; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
         /* --- 2. 輸入區域 (Inputs Section) --- */
         .inputs-container { display: flex; gap: 20px; margin-bottom: 20px; }
         
-        .panel { background: #e0e0e0; border: 1px solid #ccc; flex: 1; border-radius: 2px; }
-        .panel-header { background: #999; color: white; padding: 5px 10px; font-size: 13px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        .panel-body { padding: 15px; background: #f0f0f0; display: flex; flex-direction: column; gap: 10px; height: 100%; box-sizing: border-box; }
+        .panel { 
+            background: #1e1e1e; /* 面板深灰 */
+            border: 1px solid #333; 
+            flex: 1; 
+            border-radius: 4px; 
+        }
+        .panel-header { 
+            background: #2d2d2d; /* 標題深灰 */
+            color: #ED1C24; /* 紅色文字 */
+            padding: 8px 15px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid #333;
+            text-transform: uppercase;
+        }
+        .panel-body { padding: 15px; display: flex; flex-direction: column; gap: 12px; height: 100%; box-sizing: border-box; }
 
         /* 輸入列樣式 */
-        .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #555; }
-        .input-row label { flex: 1; }
+        .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #aaa; }
+        .input-row label { flex: 1; color: #ccc; }
         
         /* 數值顯示與 Override 方塊 */
         .val-group { display: flex; align-items: center; gap: 10px; }
-        .val-display { font-weight: bold; min-width: 40px; text-align: right; }
-        .override-box { width: 14px; height: 14px; background: linear-gradient(to bottom, #ddd, #bbb); border: 1px solid #888; cursor: pointer; }
+        .val-display { font-weight: bold; min-width: 40px; text-align: right; color: #fff; }
+        .override-box { width: 14px; height: 14px; background: #333; border: 1px solid #555; cursor: pointer; }
 
-        /* 下拉選單 */
-        select { padding: 2px; border: 1px solid #aaa; border-radius: 2px; background: linear-gradient(to bottom, #fff, #e6e6e6); font-size: 11px; width: 100%; }
+        /* 下拉選單 (Dark Mode) */
+        select { 
+            padding: 4px; 
+            border: 1px solid #444; 
+            border-radius: 3px; 
+            background: #2d2d2d; 
+            color: #eee;
+            font-size: 11px; 
+            width: 100%; 
+            outline: none;
+        }
         .loc-selects { display: flex; gap: 5px; flex: 1.5; }
 
-        /* 滑桿 (Range Slider) - 核心樣式 */
+        /* 滑桿 (Range Slider) - AMD Red */
         .slider-group { flex: 1.5; display: flex; align-items: center; gap: 8px; }
         input[type="range"] {
-            flex: 1; height: 6px; -webkit-appearance: none; appearance: none; background: #bbb; border-radius: 3px; outline: none; border: 1px solid #aaa;
+            flex: 1; height: 4px; -webkit-appearance: none; appearance: none; background: #444; border-radius: 2px; outline: none; border: none;
         }
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none; width: 16px; height: 16px; background: #3dcd58; /* Schneider Green */
-            border-radius: 50%; border: 2px solid #fff; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            -webkit-appearance: none; appearance: none; width: 16px; height: 16px; 
+            background: #ED1C24; /* 紅色圓點 */
+            border-radius: 50%; border: 2px solid #121212; cursor: pointer; 
+            box-shadow: 0 0 8px rgba(237, 28, 36, 0.6);
+            transition: transform 0.1s;
         }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
         .gray-button {
-            background: linear-gradient(to bottom, #ddd, #bbb); border: 1px solid #999; padding: 2px 10px; border-radius: 3px; font-size: 11px; color: #444; width: 100%; text-align: center;
+            background: #2d2d2d; border: 1px solid #444; padding: 4px 10px; border-radius: 3px; font-size: 11px; color: #bbb; width: 100%; text-align: center;
         }
 
         /* --- 3. 結果區域 (Results Section) --- */
-        .results-panel { background: white; border: 1px solid #ccc; }
-        .results-header { background: #999; color: white; padding: 8px 15px; font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; }
+        .results-panel { 
+            background: #1e1e1e; 
+            border: 1px solid #333; 
+            border-radius: 4px;
+        }
+        .results-header { 
+            background: #2d2d2d; 
+            color: #ED1C24; 
+            padding: 8px 15px; 
+            font-weight: bold; 
+            font-size: 13px; 
+            display: flex; justify-content: space-between; 
+            border-bottom: 1px solid #333;
+            text-transform: uppercase;
+        }
         
         .results-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .results-table th { text-align: right; color: #666; font-weight: normal; padding: 10px 20px; font-size: 12px; }
-        .results-table td { padding: 15px 20px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .results-table th { text-align: right; color: #888; font-weight: normal; padding: 10px 20px; font-size: 12px; border-bottom: 1px solid #333; }
+        .results-table td { padding: 15px 20px; border-bottom: 1px solid #333; vertical-align: middle; }
         
-        .arch-title { font-weight: bold; color: #666; text-transform: uppercase; font-size: 12px; width: 150px; text-align: right; padding-right: 20px; }
-        .arch-desc { color: #555; font-size: 12px; width: 250px; }
+        .arch-title { font-weight: bold; color: #fff; text-transform: uppercase; font-size: 12px; width: 150px; text-align: right; padding-right: 20px; }
+        .arch-desc { color: #888; font-size: 12px; width: 250px; }
         
-        /* 綠色能量條 */
-        .bar-container { width: 200px; height: 12px; background: #e0e0e0; border-radius: 6px; border: 1px solid #ccc; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
-        .bar-fill { height: 100%; background: linear-gradient(to bottom, #3dcd58, #34a84b); width: 0%; transition: width 0.6s ease-out; border-radius: 6px 0 0 6px; }
-        /* 給 bar 加一點光澤感 */
-        .bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.2); }
+        /* AMD 紅色能量條 */
+        .bar-container { 
+            width: 200px; height: 8px; 
+            background: #2d2d2d; 
+            border-radius: 4px; 
+            border: 1px solid #444; 
+            overflow: hidden; position: relative; 
+        }
+        .bar-fill { 
+            height: 100%; 
+            background: linear-gradient(to right, #ED1C24, #b30000); /* 紅色漸層 */
+            width: 0%; 
+            transition: width 0.6s ease-out; 
+            border-radius: 4px; 
+            box-shadow: 0 0 10px rgba(237, 28, 36, 0.3);
+        }
+        
+        .val-cell { text-align: right; font-weight: bold; color: #eee; width: 80px; }
 
-        .val-cell { text-align: right; font-weight: bold; color: #444; width: 80px; }
+        /* 卷軸樣式 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #121212; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ED1C24; }
 
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">Life Is On | Schneider Electric</div>
-        <div class="title">Cooling Economizer Mode PUE Calculator</div>
+        <div class="brand">
+            <span style="font-size: 28px;">AMD</span> 
+            <i class="fas fa-arrow-right" style="font-size: 20px; color: #ED1C24; transform: rotate(-45deg);"></i>
+        </div>
+        <div class="title">Cooling Economizer PUE Calculator</div>
         <div class="header-icons">
             <i class="fas fa-info-circle"></i>
             <i class="fas fa-question-circle"></i>
@@ -100,7 +189,7 @@
         <div class="inputs-container">
             
             <div class="panel">
-                <div class="panel-header">Data Center Location <i class="fas fa-question-circle"></i></div>
+                <div class="panel-header">Data Center Location <i class="fas fa-info-circle"></i></div>
                 <div class="panel-body">
                     <div class="input-row">
                         <div class="loc-selects">
@@ -118,10 +207,10 @@
                         </div>
                     </div>
                     
-                    <div class="input-row" style="margin-top:5px; font-size:10px; color:#888;">
+                    <div class="input-row" style="margin-top:5px; font-size:10px; color:#666;">
                         <span style="flex:1"></span>
                         <span style="width:50px; text-align:right;">Value</span>
-                        <span style="width:30px; text-align:center;">Override</span>
+                        <span style="width:30px; text-align:center;">Ovrd</span>
                         <span style="width:60px;"></span>
                     </div>
 
@@ -155,7 +244,7 @@
             </div>
 
             <div class="panel">
-                <div class="panel-header">Power & Environmental Characteristics <i class="fas fa-question-circle"></i></div>
+                <div class="panel-header">Power & Environmental Characteristics <i class="fas fa-info-circle"></i></div>
                 <div class="panel-body">
                     <div class="input-row">
                         <label>Data Center IT Capacity</label>
@@ -198,7 +287,7 @@
         </div>
 
         <div class="results-panel">
-            <div class="results-header">PUE, Annual Energy Cost, Annual Carbon Emissions <i class="fas fa-question-circle"></i></div>
+            <div class="results-header">PUE, Annual Energy Cost, Annual Carbon Emissions <i class="fas fa-chart-line"></i></div>
             
             <table class="results-table">
                 <thead>
@@ -219,15 +308,13 @@
     </div>
 
     <script>
-        // --- 1. 模擬資料庫 (Database Simulation) ---
-        // 不同城市的電費與碳排放係數
+        // --- 資料庫與運算邏輯 (保持不變) ---
         const cityData = {
-            'Bos': { rate: 0.16, co2: 0.579, climate: 'mixed' }, // Boston: 混合氣候
-            'LA':  { rate: 0.22, co2: 0.240, climate: 'warm' },  // LA: 溫暖 (自然冷卻少)
-            'Dal': { rate: 0.11, co2: 0.450, climate: 'hot' }    // Dallas: 熱 (自然冷卻難)
+            'Bos': { rate: 0.16, co2: 0.579, climate: 'mixed' }, 
+            'LA':  { rate: 0.22, co2: 0.240, climate: 'warm' },  
+            'Dal': { rate: 0.11, co2: 0.450, climate: 'hot' }    
         };
 
-        // 冷卻架構定義 (Architecture Definitions)
         const architectures = [
             { id: 'base', name: 'BASELINE', desc: 'Chiller w/tower & perimeter CRAH w/o econ', basePue: 1.78, minPue: 1.6 },
             { id: 'water', name: 'CHILLED WATER', desc: 'Chiller w/tower & PFHX & perimeter CRAH', basePue: 1.52, minPue: 1.3 },
@@ -235,62 +322,43 @@
             { id: 'air', name: 'AIR-COOLED', desc: 'Direct air w/evap assist', basePue: 1.17, minPue: 1.05 }
         ];
 
-        // --- 2. 更新邏輯 (Core Logic) ---
         function updateRates() {
             const cityKey = document.getElementById('city').value;
             const data = cityData[cityKey];
-            
-            // 更新 UI 顯示
             document.getElementById('disp_rate').textContent = data.rate.toFixed(2);
             document.getElementById('disp_co2').textContent = data.co2.toFixed(3);
-            
-            calculate(); // 數值變了，重新計算
+            calculate(); 
         }
 
         function calculate() {
-            // A. 讀取輸入
             const loadPct = parseInt(document.getElementById('load').value);
             const tempF = parseInt(document.getElementById('temp').value);
             const cityKey = document.getElementById('city').value;
-            
             const rate = parseFloat(document.getElementById('disp_rate').textContent);
             const co2Factor = parseFloat(document.getElementById('disp_co2').textContent);
-            const capacity = 1000; // kW (固定)
+            const capacity = 1000; 
 
-            // 更新 Slider 旁的文字
             document.getElementById('val_load').textContent = loadPct + "%";
             document.getElementById('val_temp').textContent = tempF + " °F";
 
-            // B. 物理模擬運算 (Physics Simulation)
-            // 溫度對 PUE 的影響：溫度越高，PUE 越低 (因為自然冷卻時間變長，且壓縮機做工減少)
-            // 但如果是在熱帶地區 (Dallas)，高溫幫助有限
             let tempBonus = (tempF - 70) * 0.01; 
-            if (cityData[cityKey].climate === 'hot') tempBonus *= 0.5; // 熱帶地區效益減半
+            if (cityData[cityKey].climate === 'hot') tempBonus *= 0.5; 
 
-            // 負載對 PUE 的影響：負載越低，PUE 通常越高 (固定損耗佔比增加)
             let loadPenalty = 0;
             if (loadPct < 50) loadPenalty = (50 - loadPct) * 0.003;
 
-            // C. 生成結果表格 HTML
             let html = "";
-            let maxPueForBar = 2.0; // 用來計算進度條比例的基準
+            let maxPueForBar = 2.0; 
 
             architectures.forEach(arch => {
-                // 計算該架構在當前條件下的 PUE
                 let currentPue = arch.basePue - tempBonus + loadPenalty;
-                
-                // 限制 PUE 不能低於物理極限
                 if (currentPue < arch.minPue) currentPue = arch.minPue;
 
-                // 計算能耗 (kWh) = IT負載 * PUE * 8760小時
                 let itLoadKw = capacity * (loadPct / 100);
                 let totalEnergyKwh = itLoadKw * currentPue * 8760;
-
-                // 計算錢 ($) 和 碳 (tonnes)
                 let cost = totalEnergyKwh * rate;
                 let co2 = (totalEnergyKwh * co2Factor) / 1000;
 
-                // 格式化顯示字串
                 let costStr = "";
                 if (cost > 1000000) {
                     costStr = "$ " + (cost / 1000000).toFixed(1) + "M";
@@ -299,12 +367,7 @@
                 }
 
                 let co2Str = Math.round(co2).toLocaleString() + " t";
-
-                // 計算綠色條的長度 (PUE 越小越好，但這裡是顯示數值大小，所以 PUE 越大條越長)
-                // 為了視覺效果，我們讓 1.0 = 0%, 2.0 = 100% 左右的區間變化
-                let barWidth = ((currentPue - 1.0) / 1.0) * 100; 
-                // 修正視覺：直接用比例比較直觀
-                barWidth = (currentPue / 2.5) * 100; 
+                let barWidth = (currentPue / 2.5) * 100; 
 
                 html += `
                     <tr>
@@ -325,9 +388,7 @@
             document.getElementById('results-body').innerHTML = html;
         }
 
-        // 初始化執行一次
         updateRates();
-
     </script>
 </body>
 </html>
