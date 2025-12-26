@@ -18,17 +18,18 @@
             flex-direction: column;
         }
 
-        /* --- 2. 頂部品牌與標題區 --- */
+        /* --- 2. 頂部品牌與標題區 (置中) --- */
         .top-branding {
             background-color: #ffffff;
-            padding: 25px 40px;
+            padding: 30px 40px;
             display: flex;
             align-items: center;
+            justify-content: center; /* 水平置中 */
             border-bottom: 1px solid #e5e7eb;
         }
         
         .amd-logo {
-            height: 32px;
+            height: 36px;
             width: auto;
             margin-right: 25px;
             padding-right: 25px;
@@ -41,17 +42,16 @@
 
         .hero-text h1 {
             margin: 0;
-            font-size: 2em;
+            font-size: 2.2em;
             font-weight: 800;
             text-transform: uppercase;
-            color: #111827; /* 近黑色 */
+            color: #111827;
             letter-spacing: 1px;
-            line-height: 1.2;
+            line-height: 1;
         }
         
-        .hero-text h1 span { color: #ED1C24; } /* AMD 紅色強調 */
+        .hero-text h1 span { color: #ED1C24; }
         
-        /* 紅色裝飾線 */
         .red-accent-line {
             height: 4px;
             background: linear-gradient(to right, #ED1C24, #ff4d55);
@@ -69,29 +69,29 @@
             font-size: 1.15em;
             margin: 0 auto;
             max-width: 700px;
-            color: #6b7280; /* 中灰色描述文字 */
+            color: #6b7280;
             line-height: 1.6;
         }
 
         /* --- 3. 卡片容器 (Grid System) --- */
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 50px auto;
             padding: 0 30px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* 自動適應寬度 */
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
             flex: 1;
         }
 
-        /* --- 4. 工具卡片設計 (Bright Card) --- */
+        /* --- 4. 工具卡片設計 --- */
         .card {
-            background: #ffffff; /* 純白卡片 */
-            border: 1px solid #e5e7eb; /* 淺灰邊框 */
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
             border-radius: 6px;
             padding: 35px 30px;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); /* 柔和陰影 */
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             color: #333;
@@ -102,7 +102,6 @@
             overflow: hidden;
         }
         
-        /* 卡片頂部紅色條 (Hover時顯示) */
         .card::before {
             content: '';
             position: absolute;
@@ -117,26 +116,22 @@
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
         }
         
-        .card:hover::before {
-            height: 4px; /* 顯示頂部紅條 */
-        }
+        .card:hover::before { height: 4px; }
 
-        /* 圖標圓圈 (Normal: Gray) */
         .icon-box {
             width: 70px;
             height: 70px;
-            background-color: #f3f4f6; /* 淺灰底 */
+            background-color: #f3f4f6;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 25px;
             font-size: 28px;
-            color: #6b7280; /* 深灰圖標 */
+            color: #6b7280;
             transition: all 0.3s;
         }
 
-        /* 圖標圓圈 (Hover: Red) */
         .card:hover .icon-box {
             background-color: #ED1C24;
             color: white;
@@ -152,19 +147,18 @@
         }
 
         .card p {
-            color: #6b7280; /* 內文淺灰 */
+            color: #6b7280;
             font-size: 0.95em;
             line-height: 1.6;
             margin-bottom: 30px;
             flex-grow: 1;
         }
 
-        /* 按鈕樣式 (Bright Style) */
         .btn {
             padding: 10px 30px;
-            border: 2px solid #d1d5db; /* 平常是灰色邊框 */
+            border: 2px solid #d1d5db;
             border-radius: 4px;
-            color: #6b7280; /* 平常是灰色文字 */
+            color: #6b7280;
             font-weight: 700;
             font-size: 0.85em;
             text-transform: uppercase;
@@ -173,7 +167,6 @@
             letter-spacing: 1px;
         }
 
-        /* 按鈕 (Hover: Red) */
         .card:hover .btn {
             background-color: #ED1C24;
             border-color: #ED1C24;
@@ -181,7 +174,6 @@
             box-shadow: 0 4px 10px rgba(237, 28, 36, 0.3);
         }
 
-        /* 頁尾 */
         footer {
             text-align: center;
             padding: 40px;
@@ -191,62 +183,35 @@
             border-top: 1px solid #e5e7eb;
             margin-top: 50px;
         }
-        /* --- 📱 手機版響應式優化 (Mobile Responsive) --- */
+
+        /* --- 📱 手機版響應式優化 (放在最後面！) --- */
         @media screen and (max-width: 768px) {
-            /* 1. 讓主容器變成垂直排列 (上下疊放) */
+            /* 1. 讓主容器變成垂直排列 */
             body { height: auto; min-height: 100vh; overflow-y: auto; }
+            
             .container { 
+                display: flex; 
                 flex-direction: column; 
                 height: auto; 
                 padding: 15px; 
                 gap: 20px;
-                overflow: visible; /* 允許捲動 */
+                overflow: visible; 
+                margin: 20px auto;
             }
 
-            /* 2. 左側輸入區：佔滿寬度，取消右邊框，增加底線 */
-            .sidebar, .left-panel {
-                width: 100%;
-                max-width: 100%;
-                border-right: none;
-                border-bottom: 2px solid #e5e7eb;
-                padding: 15px;
-                height: auto;
-                overflow-y: visible;
-            }
-
-            /* 3. 右側結果區：佔滿寬度 */
-            .main, .main-content, .right-panel {
-                width: 100%;
-                max-width: 100%;
-                padding: 15px;
-                height: auto;
-                overflow-y: visible;
-            }
-
-            /* 4. 調整標題列，避免 Logo 太大 */
-            header { padding: 0 15px; }
-            .brand img { height: 20px; margin-right: 10px; padding-right: 10px; }
-            .title { font-size: 14px; letter-spacing: 0; border: none; padding-left: 0; }
-            
-            /* 5. 針對首頁 index.html 的特別調整 */
+            /* 2. 調整標題列 (手機版保持置中，但縮小間距) */
+            header, .top-branding { padding: 20px 15px; flex-direction: column; text-align: center; }
+            .amd-logo { border-right: none; margin-right: 0; padding-right: 0; margin-bottom: 10px; height: 30px; }
+            .hero-text { text-align: center; }
             .hero-text h1 { font-size: 1.5em; }
-            .top-branding { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .amd-logo { border-right: none; margin-bottom: 5px; }
             .sub-header { padding: 20px; }
+            .sub-header p { font-size: 1em; }
             
-            /* 6. 優化 KPI 卡片 (讓它們在手機上也垂直排列，避免擠在一起) */
-            .kpi-container, .summary-box, .result-cards, .kpi-group {
-                flex-direction: column;
-            }
-            .kpi-card, .card {
+            /* 3. 優化卡片在手機上的顯示 */
+            .card {
                 width: 100%;
                 margin-bottom: 10px;
-            }
-            
-            /* 7. 圖表容器高度調整 (避免手機上圖表太小) */
-            .chart-box, .chart-panel, .chart-container {
-                min-height: 250px;
-                padding: 15px;
+                box-sizing: border-box;
             }
         }
 
@@ -305,7 +270,7 @@
 
         <a href="Cooling.html" class="card">
             <div class="icon-box"><i class="fas fa-snowflake"></i></div>
-            <h3>Cooling Capacity</h3>
+            <h3>Cooling Analysis</h3>
             <p>Determine required cooling capacity (Tons) and airflow (CFM) based on IT heat load and temperature delta.</p>
             <span class="btn">Launch Tool</span>
         </a>
@@ -313,7 +278,7 @@
     </div>
 
     <footer>
-        <p> </p>
+        <p></p>
     </footer>
 
 </body>
