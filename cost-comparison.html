@@ -152,6 +152,64 @@
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             min-height: 400px;
         }
+        /* --- 📱 手機版響應式優化 (Mobile Responsive) --- */
+        @media screen and (max-width: 768px) {
+            /* 1. 讓主容器變成垂直排列 (上下疊放) */
+            body { height: auto; min-height: 100vh; overflow-y: auto; }
+            .container { 
+                flex-direction: column; 
+                height: auto; 
+                padding: 15px; 
+                gap: 20px;
+                overflow: visible; /* 允許捲動 */
+            }
+
+            /* 2. 左側輸入區：佔滿寬度，取消右邊框，增加底線 */
+            .sidebar, .left-panel {
+                width: 100%;
+                max-width: 100%;
+                border-right: none;
+                border-bottom: 2px solid #e5e7eb;
+                padding: 15px;
+                height: auto;
+                overflow-y: visible;
+            }
+
+            /* 3. 右側結果區：佔滿寬度 */
+            .main, .main-content, .right-panel {
+                width: 100%;
+                max-width: 100%;
+                padding: 15px;
+                height: auto;
+                overflow-y: visible;
+            }
+
+            /* 4. 調整標題列，避免 Logo 太大 */
+            header { padding: 0 15px; }
+            .brand img { height: 20px; margin-right: 10px; padding-right: 10px; }
+            .title { font-size: 14px; letter-spacing: 0; border: none; padding-left: 0; }
+            
+            /* 5. 針對首頁 index.html 的特別調整 */
+            .hero-text h1 { font-size: 1.5em; }
+            .top-branding { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .amd-logo { border-right: none; margin-bottom: 5px; }
+            .sub-header { padding: 20px; }
+            
+            /* 6. 優化 KPI 卡片 (讓它們在手機上也垂直排列，避免擠在一起) */
+            .kpi-container, .summary-box, .result-cards, .kpi-group {
+                flex-direction: column;
+            }
+            .kpi-card, .card {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            /* 7. 圖表容器高度調整 (避免手機上圖表太小) */
+            .chart-box, .chart-panel, .chart-container {
+                min-height: 250px;
+                padding: 15px;
+            }
+        }
 
     </style>
 </head>
