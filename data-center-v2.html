@@ -7,141 +7,155 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* --- 全局設定 (AMD Dark Mode) --- */
+        /* --- 全局設定 (AMD Bright Professional) --- */
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
             margin: 0; 
-            background-color: #121212; /* 深黑背景 */
-            color: #e0e0e0; /* 淺灰文字 */
+            background-color: #f9fafb; /* 極淺灰背景 */
+            color: #374151; /* 深灰文字 */
             display: flex; 
             flex-direction: column; 
             height: 100vh; 
         }
         
-        /* 頂部導航列 */
+        /* 頂部標題列 */
         header { 
-            background-color: #000000; 
-            color: white; 
+            background-color: #ffffff; 
             padding: 0 25px; 
             height: 60px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border-bottom: 3px solid #ED1C24; /* AMD 紅色底線 */
-            box-shadow: 0 4px 15px rgba(237, 28, 36, 0.2); 
-            flex-shrink: 0;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex-shrink: 0; 
         }
-        .brand { font-weight: 800; font-size: 24px; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
-        .title { font-size: 16px; font-weight: 400; text-transform: uppercase; color: #ccc; letter-spacing: 1px; }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 24px; width: auto; display: block; }
+        .title { 
+            font-size: 16px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #e5e7eb; padding-left: 15px;
+        }
         
         /* 主佈局 */
         .container { display: flex; flex: 1; overflow: hidden; height: calc(100vh - 60px); }
         
         /* 左側欄 (Inputs) */
         .sidebar { 
-            width: 420px; 
-            background: #1e1e1e; 
-            border-right: 1px solid #333; 
-            padding: 20px; 
+            width: 440px; 
+            background: #ffffff; 
+            border-right: 1px solid #e5e7eb; 
+            padding: 25px; 
             overflow-y: auto; 
             display: flex; 
             flex-direction: column; 
-            gap: 15px; 
+            gap: 20px; 
         }
+
+        /* 輸入群組標題 */
         .group-title { 
-            background: #2d2d2d; 
-            color: #ED1C24; /* 紅色標題 */
-            padding: 8px 12px; 
+            background: #f3f4f6; 
+            color: #111827; 
+            padding: 10px 15px; 
             font-size: 13px; 
-            font-weight: bold; 
-            border-radius: 3px; 
+            font-weight: 700; 
+            border-radius: 4px; 
             display: flex; 
             justify-content: space-between; 
-            border-left: 3px solid #ED1C24;
+            border-left: 4px solid #ED1C24; /* 紅色強調 */
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        /* 輸入控制項 */
-        .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 8px; color: #ccc; }
-        .input-row label { flex: 1; }
+        /* 輸入列 */
+        .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; margin-bottom: 5px; color: #4b5563; }
+        .input-row label { flex: 1; font-weight: 600; }
         
+        /* 下拉選單 */
         select { 
             flex: 1.2; 
-            padding: 5px; 
-            border: 1px solid #444; 
-            border-radius: 3px; 
-            font-size: 11px; 
-            background: #2d2d2d; 
-            color: #fff;
+            padding: 6px 10px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 4px; 
+            font-size: 12px; 
+            background: #fff; 
+            color: #374151;
             outline: none;
+            cursor: pointer;
         }
+        select:hover { border-color: #9ca3af; }
         
-        /* 滑桿樣式 (AMD Red) */
-        .slider-wrapper { flex: 1.5; display: flex; align-items: center; gap: 8px; }
+        /* 滑桿樣式 */
+        .slider-wrapper { flex: 1.5; display: flex; align-items: center; gap: 10px; }
         input[type="range"] {
-            flex: 1; height: 4px; background: #444; border-radius: 2px; outline: none;
-            -webkit-appearance: none; appearance: none;
+            flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; outline: none; -webkit-appearance: none; appearance: none; cursor: pointer;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none; appearance: none;
-            width: 16px; height: 16px; background: #ED1C24; border-radius: 50%; border: 2px solid #121212; cursor: pointer; 
-            box-shadow: 0 0 5px rgba(237, 28, 36, 0.5);
-            transition: transform 0.1s;
+            width: 16px; height: 16px; background: #000; border-radius: 50%; border: 2px solid #fff; cursor: pointer; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
         }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); background: #ED1C24; }
 
-        .val-box { font-weight: bold; width: 70px; text-align: right; font-size: 12px; color: #fff; }
+        .val-box { font-weight: 700; width: 70px; text-align: right; font-size: 13px; color: #ED1C24; font-family: monospace; }
 
-        /* 冗餘矩陣 (Redundancy Grid - Dark) */
+        /* 冗餘矩陣 (Grid - Bright Mode) */
         .grid-container { 
-            display: grid; grid-template-columns: 80px 1fr 1fr 1fr 80px; gap: 4px; 
-            background: #252525; padding: 10px; border-radius: 4px; border: 1px solid #333;
-            font-size: 11px; text-align: center; 
+            display: grid; grid-template-columns: 80px 1fr 1fr 1fr 80px; gap: 6px; 
+            background: #ffffff; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb;
+            font-size: 11px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
-        .grid-head { font-weight: bold; color: #ED1C24; font-size: 10px; }
-        .grid-row-label { text-align: left; font-weight: bold; align-self: center; color: #ccc; }
-        .tiny-select { width: 100%; padding: 2px; font-size: 10px; background: #333; color: #fff; border: 1px solid #555; }
+        .grid-head { font-weight: 700; color: #ED1C24; font-size: 11px; text-transform: uppercase; }
+        .grid-row-label { text-align: left; font-weight: 700; align-self: center; color: #374151; }
+        .tiny-select { width: 100%; padding: 3px; font-size: 11px; background: #f9fafb; color: #374151; border: 1px solid #d1d5db; border-radius: 2px; }
 
-        /* Checkbox (Dark Mode) */
-        .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; color: #bbb; }
-        .check-item { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        /* Checkbox (Bright Mode) */
+        .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; color: #4b5563; }
+        .check-item { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; }
         input[type="checkbox"] {
             -webkit-appearance: none; appearance: none;
-            width: 16px; height: 16px; border: 1px solid #555; background: #2d2d2d; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center;
+            width: 16px; height: 16px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 3px;
         }
         input[type="checkbox"]:checked { background: #ED1C24; border-color: #ED1C24; }
         input[type="checkbox"]:checked::after { content: '✓'; color: white; font-size: 12px; font-weight: bold; }
 
         /* 右側欄 (Results) */
-        .main { flex: 1; background: #121212; padding: 30px; overflow-y: auto; }
-        .res-header { color: #fff; font-size: 20px; margin-bottom: 20px; font-weight: 500; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .main { flex: 1; background: #f9fafb; padding: 40px; overflow-y: auto; }
+        .res-header { color: #111827; font-size: 20px; margin-bottom: 25px; font-weight: 700; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
         
         .section-bar { 
-            background: #2d2d2d; 
-            color: #ED1C24; 
-            padding: 8px 12px; 
-            font-size: 13px; font-weight: bold; margin-bottom: 15px; border-radius: 3px; 
-            display: flex; justify-content: space-between; border-left: 3px solid #ED1C24;
-            text-transform: uppercase;
+            background: #ffffff; 
+            border: 1px solid #e5e7eb;
+            color: #111827; 
+            padding: 10px 15px; 
+            font-size: 13px; font-weight: 700; margin-bottom: 15px; border-radius: 4px; 
+            display: flex; justify-content: space-between; border-left: 4px solid #ED1C24;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
         
         /* 摘要表格 */
-        .summary-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 30px; color: #ccc; }
-        .summary-table td { padding: 10px 0; border-bottom: 1px solid #333; }
-        .res-val { text-align: right; font-weight: bold; color: #fff; font-size: 16px; }
+        .summary-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 40px; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .summary-table td { padding: 12px 20px; border-bottom: 1px solid #f3f4f6; color: #4b5563; }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .res-val { text-align: right; font-weight: 700; color: #111827; font-family: monospace; font-size: 15px; }
 
         /* 圖表區 */
-        .chart-row { display: flex; align-items: center; height: 180px; margin-bottom: 20px; background: #1e1e1e; padding: 15px; border-radius: 4px; border: 1px solid #333; }
+        .chart-row { 
+            display: flex; align-items: center; height: 200px; margin-bottom: 30px; 
+            background: #ffffff; padding: 20px; border-radius: 6px; border: 1px solid #e5e7eb; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
         .chart-container { width: 160px; height: 160px; }
-        .legend { margin-left: 30px; font-size: 12px; display: flex; flex-direction: column; gap: 8px; color: #ccc; }
+        .legend { margin-left: 40px; font-size: 12px; display: flex; flex-direction: column; gap: 8px; color: #4b5563; }
         .legend div { display: flex; align-items: center; gap: 10px; }
-        .dot { width: 10px; height: 10px; display: inline-block; border-radius: 2px; }
+        .dot { width: 12px; height: 12px; display: inline-block; border-radius: 2px; }
 
         /* 卷軸 */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #121212; }
-        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #ED1C24; }
+        ::-webkit-scrollbar-track { background: #f9fafb; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
     </style>
 </head>
@@ -149,17 +163,15 @@
 
     <header>
         <div class="brand">
-            <span style="font-size: 28px;">AMD</span> 
-            <i class="fas fa-arrow-right" style="font-size: 20px; color: #ED1C24; transform: rotate(-45deg);"></i>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
         </div>
         <div class="title">Data Center Capital Cost Calculator</div>
-        <div><i class="fas fa-cog" style="color: #666; cursor: pointer;"></i></div>
+        <div><i class="fas fa-server" style="color: #9ca3af; font-size: 18px;"></i></div>
     </header>
 
     <div class="container">
         <div class="sidebar">
-            <div style="color:#ED1C24; font-weight:bold; font-size: 14px; margin-bottom: 10px;">INPUTS</div>
-
+            
             <div class="group-title">Data Center Environment</div>
             
             <div class="input-row">
@@ -252,7 +264,7 @@
 
             <div class="section-bar">
                 Capital Cost Summary
-                <select style="color:#fff; background:#222; border:none; font-size:11px; height:20px;"><option>USD ($)</option></select>
+                <select style="background:transparent; border:none; color:#111; font-weight:bold; font-size:12px; cursor:pointer;"><option>USD ($)</option></select>
             </div>
             <table class="summary-table">
                 <tr><td>Data Center Cost</td><td class="res-val" id="out_total">$ 7.2 M</td></tr>
@@ -267,10 +279,10 @@
                 <div class="chart-container"><canvas id="chartType"></canvas></div>
                 <div class="legend">
                     <div><span class="dot" style="background:#ED1C24"></span> Material (25%)</div>
-                    <div><span class="dot" style="background:#A0A0A0"></span> Installation (40%)</div>
-                    <div><span class="dot" style="background:#444444"></span> Design (10%)</div>
-                    <div><span class="dot" style="background:#808080"></span> Project Mgt (15%)</div>
-                    <div><span class="dot" style="background:#ffffff"></span> Core & Shell (10%)</div>
+                    <div><span class="dot" style="background:#4b5563"></span> Installation (40%)</div>
+                    <div><span class="dot" style="background:#6b7280"></span> Design (10%)</div>
+                    <div><span class="dot" style="background:#9ca3af"></span> Project Mgt (15%)</div>
+                    <div><span class="dot" style="background:#d1d5db"></span> Core & Shell (10%)</div>
                 </div>
             </div>
 
@@ -279,8 +291,8 @@
                 <div class="chart-container"><canvas id="chartSys"></canvas></div>
                 <div class="legend">
                     <div><span class="dot" style="background:#ED1C24"></span> Power (<span id="pct_power">40</span>%)</div>
-                    <div><span class="dot" style="background:#ffffff"></span> Cooling (<span id="pct_cool">30</span>%)</div>
-                    <div><span class="dot" style="background:#444444"></span> Other (<span id="pct_other">30</span>%)</div>
+                    <div><span class="dot" style="background:#4b5563"></span> Cooling (<span id="pct_cool">30</span>%)</div>
+                    <div><span class="dot" style="background:#9ca3af"></span> Other (<span id="pct_other">30</span>%)</div>
                 </div>
             </div>
         </div>
@@ -298,7 +310,7 @@
             calc(); 
         }
 
-        // --- 初始化圖表 (AMD Colors) ---
+        // --- 初始化圖表 (Bright Mode Colors) ---
         const configPie = {
             type: 'doughnut',
             options: { 
@@ -310,27 +322,27 @@
             }
         };
         
-        // Cost by Type 配色: 紅、淺灰、深灰、中灰、白
+        // Cost by Type 配色: 紅、深灰、中灰、淺灰、極淺灰
         const chartType = new Chart(document.getElementById('chartType'), {
             ...configPie,
             data: {
                 labels: ['Mat', 'Inst', 'Des', 'Mgt', 'Shell'],
                 datasets: [{ 
                     data: [25, 40, 10, 15, 10], 
-                    backgroundColor: ['#ED1C24', '#A0A0A0', '#444444', '#808080', '#ffffff'], 
+                    backgroundColor: ['#ED1C24', '#4b5563', '#6b7280', '#9ca3af', '#d1d5db'], 
                     borderWidth: 0 
                 }]
             }
         });
 
-        // Cost by System 配色: 紅、白、深灰
+        // Cost by System 配色: 紅、深灰、淺灰
         const chartSys = new Chart(document.getElementById('chartSys'), {
             ...configPie,
             data: {
                 labels: ['Power', 'Cooling', 'Other'],
                 datasets: [{ 
                     data: [40, 30, 30], 
-                    backgroundColor: ['#ED1C24', '#ffffff', '#444444'], 
+                    backgroundColor: ['#ED1C24', '#4b5563', '#9ca3af'], 
                     borderWidth: 0 
                 }]
             }

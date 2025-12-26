@@ -6,179 +6,228 @@
     <title>AMD TradeOff Tools Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- 1. 全局樣式 (AMD Dark Mode) --- */
+        /* --- 1. 全局樣式 (AMD Bright Professional) --- */
         body {
             font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #121212; /* 深黑背景 */
-            color: #e0e0e0; /* 淺灰文字 */
+            background-color: #f9fafb; /* 極淺灰背景 */
+            color: #333; /* 深灰文字 */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* --- 2. 頂部 Hero 區塊 --- */
-        .hero {
-            background-color: #000000; /* 全黑 */
-            background-image: linear-gradient(to bottom, #000000, #1a1a1a);
-            color: white;
-            padding: 60px 20px 100px; /* 下方留白給卡片浮動 */
-            text-align: center;
-            border-bottom: 4px solid #ED1C24; /* AMD 紅色底線 */
-            box-shadow: 0 4px 20px rgba(237, 28, 36, 0.3); /* 紅色光暈 */
-            position: relative;
-        }
-
-        .hero h1 {
-            margin: 0;
-            font-size: 3em;
-            font-weight: 800; /* 更粗的字體 */
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        /* --- 2. 頂部品牌與標題區 --- */
+        .top-branding {
+            background-color: #ffffff;
+            padding: 25px 40px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
         }
         
-        .hero h1 span { color: #ED1C24; } /* AMD 紅色強調 */
+        .amd-logo {
+            height: 32px;
+            width: auto;
+            margin-right: 25px;
+            padding-right: 25px;
+            border-right: 2px solid #e5e7eb;
+        }
 
-        .hero p {
-            font-size: 1.2em;
-            margin-top: 15px;
-            opacity: 0.8;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            color: #ccc;
+        .hero-text {
+           text-align: left;
+        }
+
+        .hero-text h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #111827; /* 近黑色 */
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+        
+        .hero-text h1 span { color: #ED1C24; } /* AMD 紅色強調 */
+        
+        /* 紅色裝飾線 */
+        .red-accent-line {
+            height: 4px;
+            background: linear-gradient(to right, #ED1C24, #ff4d55);
+            width: 100%;
+        }
+
+        .sub-header {
+            background-color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .sub-header p {
+            font-size: 1.15em;
+            margin: 0 auto;
+            max-width: 700px;
+            color: #6b7280; /* 中灰色描述文字 */
+            line-height: 1.6;
         }
 
         /* --- 3. 卡片容器 (Grid System) --- */
         .container {
             max-width: 1200px;
-            margin: -60px auto 40px; /* 負邊距讓卡片往上浮動 */
-            padding: 0 20px;
+            margin: 50px auto;
+            padding: 0 30px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            position: relative;
-            z-index: 10;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* 自動適應寬度 */
+            gap: 30px;
+            flex: 1;
         }
 
-        /* --- 4. 工具卡片設計 (Dark Card) --- */
+        /* --- 4. 工具卡片設計 (Bright Card) --- */
         .card {
-            background: #1e1e1e; /* 深灰卡片背景 */
-            border: 1px solid #333;
-            border-radius: 4px; /* 稍微銳利的圓角 */
-            padding: 30px 25px;
+            background: #ffffff; /* 純白卡片 */
+            border: 1px solid #e5e7eb; /* 淺灰邊框 */
+            border-radius: 6px;
+            padding: 35px 30px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); /* 柔和陰影 */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
-            color: #e0e0e0;
+            color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-top: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 卡片頂部紅色條 (Hover時顯示) */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 0px;
+            background: #ED1C24;
+            transition: height 0.2s;
         }
 
         .card:hover {
-            transform: translateY(-10px);
-            border-color: #ED1C24; /* hover 時邊框變紅 */
-            border-top-color: #ED1C24;
-            box-shadow: 0 15px 40px rgba(237, 28, 36, 0.15); /* 紅色陰影 */
-            background: #252525;
+            transform: translateY(-5px);
+            border-color: #d1d5db;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        
+        .card:hover::before {
+            height: 4px; /* 顯示頂部紅條 */
         }
 
-        /* 圖標圓圈 */
+        /* 圖標圓圈 (Normal: Gray) */
         .icon-box {
-            width: 80px;
-            height: 80px;
-            background-color: #121212; /* 黑色圓圈 */
-            border: 2px solid #333;
+            width: 70px;
+            height: 70px;
+            background-color: #f3f4f6; /* 淺灰底 */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
-            font-size: 32px;
-            color: #ED1C24; /* 紅色圖標 */
+            margin-bottom: 25px;
+            font-size: 28px;
+            color: #6b7280; /* 深灰圖標 */
             transition: all 0.3s;
         }
 
+        /* 圖標圓圈 (Hover: Red) */
         .card:hover .icon-box {
             background-color: #ED1C24;
             color: white;
-            border-color: #ED1C24;
-            box-shadow: 0 0 15px rgba(237, 28, 36, 0.6);
         }
 
         .card h3 {
-            margin: 0 0 10px;
-            font-size: 1.4em;
+            margin: 0 0 15px;
+            font-size: 1.25em;
             font-weight: 700;
+            color: #111827;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .card p {
-            color: #aaa;
+            color: #6b7280; /* 內文淺灰 */
             font-size: 0.95em;
             line-height: 1.6;
             margin-bottom: 30px;
             flex-grow: 1;
         }
 
-        /* 按鈕樣式 (AMD Style) */
+        /* 按鈕樣式 (Bright Style) */
         .btn {
-            padding: 10px 35px;
-            border: 2px solid #ED1C24;
-            border-radius: 2px; /* 銳利按鈕 */
-            color: #ED1C24;
+            padding: 10px 30px;
+            border: 2px solid #d1d5db; /* 平常是灰色邊框 */
+            border-radius: 4px;
+            color: #6b7280; /* 平常是灰色文字 */
             font-weight: 700;
-            font-size: 0.9em;
+            font-size: 0.85em;
             text-transform: uppercase;
             transition: all 0.3s;
             background: transparent;
             letter-spacing: 1px;
         }
 
+        /* 按鈕 (Hover: Red) */
         .card:hover .btn {
             background-color: #ED1C24;
+            border-color: #ED1C24;
             color: white;
-            box-shadow: 0 0 10px rgba(237, 28, 36, 0.4);
+            box-shadow: 0 4px 10px rgba(237, 28, 36, 0.3);
         }
 
         /* 頁尾 */
         footer {
-            margin-top: auto;
             text-align: center;
             padding: 40px;
-            color: #666;
+            color: #9ca3af;
             font-size: 0.85em;
-            background-color: #0a0a0a;
-            border-top: 1px solid #222;
+            background-color: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 50px;
         }
 
     </style>
 </head>
 <body>
 
-    <div class="hero">
-        <h1>AMD <span>TradeOff</span> Hub</h1>
-        <p>Advanced modeling tools for Data Center performance, efficiency, and TCO analysis.</p>
+    <div class="top-branding">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" class="amd-logo">
+        <div class="hero-text">
+            <h1>Data Center <span>TradeOff Hub</span></h1>
+        </div>
+    </div>
+    <div class="red-accent-line"></div>
+    
+    <div class="sub-header">
+        <p>A suite of advanced modeling tools designed to analyze performance, improve efficiency, and calculate TCO for modern data center infrastructure.</p>
     </div>
 
     <div class="container">
 
-        <a href="data-center-v2.html" class="card">
+        <a href="density-calculator.html" class="card">
             <div class="icon-box"><i class="fas fa-server"></i></div>
+            <h3>Server Consolidation</h3>
+            <p>Calculate rack space and power savings by migrating legacy servers to high-density AMD solutions.</p>
+            <span class="btn">Launch Tool</span>
+        </a>
+
+        <a href="data-center-v2.html" class="card">
+            <div class="icon-box"><i class="fas fa-building"></i></div>
             <h3>Capital Cost</h3>
-            <p>Calculate total data center capital cost, rack count, and area based on capacity and density.</p>
+            <p>Calculate total data center capital cost, rack count, and facility area based on capacity and density.</p>
             <span class="btn">Launch Tool</span>
         </a>
 
         <a href="co2.html" class="card">
             <div class="icon-box"><i class="fas fa-leaf"></i></div>
             <h3>Lifecycle CO2e</h3>
-            <p>Estimate carbon footprint (Scope 1, 2, 3) over a 15-year lifecycle analysis.</p>
+            <p>Estimate comprehensive carbon footprint (Scope 1, 2, & 3) over a data center's entire lifecycle.</p>
             <span class="btn">Launch Tool</span>
         </a>
 
@@ -189,31 +238,24 @@
             <span class="btn">Launch Tool</span>
         </a>
 
-        <a href="pue-calculator.html" class="card">
-            <div class="icon-box"><i class="fas fa-wind"></i></div>
-            <h3>Cooling PUE</h3>
-            <p>Compare cooling architectures and analyze PUE based on geography and climate.</p>
-            <span class="btn">Launch Tool</span>
-        </a>
-
         <a href="ac-vs-dc.html" class="card">
             <div class="icon-box"><i class="fas fa-bolt"></i></div>
-            <h3>AC vs. DC Efficiency</h3>
-            <p>Compare end-to-end power path efficiency across Legacy, Modern AC, and DC architectures.</p>
+            <h3>Power Path Efficiency</h3>
+            <p>Compare end-to-end power distribution efficiency across Legacy AC, Modern AC, and 380V DC architectures.</p>
             <span class="btn">Launch Tool</span>
         </a>
 
         <a href="Cooling.html" class="card">
             <div class="icon-box"><i class="fas fa-snowflake"></i></div>
-            <h3>Cooling Analysis</h3>
-            <p>Analyze data center cooling requirements and architecture performance.</p>
+            <h3>Cooling Capacity</h3>
+            <p>Determine required cooling capacity (Tons) and airflow (CFM) based on IT heat load and temperature delta.</p>
             <span class="btn">Launch Tool</span>
         </a>
 
     </div>
 
     <footer>
-        <p>High Performance Computing Tools | Powered by GitHub Pages</p>
+        <p>© 2024 Advanced Micro Devices, Inc. All rights reserved. | High Performance Computing Tools</p>
     </footer>
 
 </body>

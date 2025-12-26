@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMD Server Consolidation & Density Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 1. 全局樣式 (AMD Bright Professional) --- */
+        body { 
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            background-color: #f9fafb; /* 極淺灰背景 */
+            color: #333; /* 深灰文字 */
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        /* 頂部標題列 */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 70px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex-shrink: 0; 
+        }
+        
+        /* AMD Logo 設定 */
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 24px; width: auto; display: block; }
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #e5e7eb; padding-left: 15px;
+        }
+        .header-icons i { font-size: 20px; color: #ED1C24; }
+
+        /* 主容器 */
+        .container { flex: 1; padding: 30px; overflow-y: auto; max-width: 1400px; margin: 0 auto; width: 100%; box-sizing: border-box; display: flex; gap: 30px; }
+
+        /* --- 左側輸入區 --- */
+        .sidebar { 
+            width: 400px; 
+            display: flex; flex-direction: column; gap: 25px; flex-shrink: 0;
+        }
+
+        /* 面板樣式 */
+        .panel { 
+            background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;
+        }
+        .panel-header { 
+            background: #f3f4f6; color: #111827; padding: 12px 20px; font-size: 13px; font-weight: 700; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid #d1d5db; text-transform: uppercase; letter-spacing: 0.5px;
+            border-left: 4px solid #ED1C24; /* 左側紅線強調 */
+        }
+        .panel-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+        /* 輸入控制項 */
+        .input-row { display: flex; flex-direction: column; gap: 10px; }
+        .input-label-group { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: #4b5563; }
+        
+        /* 數值顯示 */
+        .val-display { font-weight: 700; color: #ED1C24; font-family: monospace; font-size: 14px; }
+
+        /* 滑桿樣式 */
+        .slider-wrapper { display: flex; align-items: center; height: 20px; }
+        input[type="range"] {
+            flex: 1; height: 6px; -webkit-appearance: none; appearance: none; background: #e5e7eb; border-radius: 3px; outline: none; border: none; cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 18px; height: 18px; 
+            background: #000; border-radius: 50%; border: 2px solid #fff; cursor: pointer; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #ED1C24; }
+
+        /* --- 右側結果區 --- */
+        .main-content { flex: 1; display: flex; flex-direction: column; gap: 25px; }
+
+        /* KPI 卡片組 */
+        .kpi-group { display: flex; gap: 20px; }
+        .kpi-card {
+            flex: 1; background: #ffffff; padding: 25px; border-radius: 6px; text-align: center; 
+            border: 1px solid #e5e7eb; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .kpi-card:hover { transform: translateY(-3px); border-color: #ED1C24; }
+        .kpi-card h4 { margin: 0; font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .kpi-card h2 { margin: 10px 0 0; font-size: 32px; color: #111827; font-weight: 800; }
+        .kpi-unit { font-size: 14px; color: #9ca3af; font-weight: 500; }
+        .kpi-accent { color: #ED1C24 !important; } /* 強調色 */
+
+        /* 圖表區塊 */
+        .chart-panel {
+            flex: 1; background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); padding: 25px; min-height: 300px;
+            display: flex; flex-direction: column;
+        }
+        .chart-header { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 20px; text-transform: uppercase; }
+        .chart-container { flex: 1; position: relative; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">Server Consolidation & Density Calculator</div>
+        </div>
+        <div class="header-icons"><i class="fas fa-server"></i></div>
+    </header>
+
+    <div class="container">
+        
+        <div class="sidebar">
+            
+            <div class="panel">
+                <div class="panel-header">Current Legacy Environment <i class="fas fa-history"></i></div>
+                <div class="panel-body">
+                    <div class="input-row">
+                        <div class="input-label-group">
+                            <label>Current Rack Count</label>
+                            <span id="val_racks" class="val-display">50</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" id="in_racks" min="10" max="200" step="5" value="50" oninput="calc()">
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="input-label-group">
+                            <label>Avg. Power per Rack (kW)</label>
+                            <span id="val_power_rack" class="val-display">8 kW</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" id="in_power_rack" min="4" max="20" step="1" value="8" oninput="calc()">
+                        </div>
+                    </div>
+                    
+                    <div style="font-size:12px; color:#6b7280; background:#f9fafb; padding:10px; border-radius:4px;">
+                        Total Current Power: <strong><span id="total_curr_power">400</span> kW</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" style="border-color: #ED1C24;"> <div class="panel-header" style="background:#fff1f1; border-left-color:#ED1C24; color:#ED1C24;">
+                    Target AMD Deployment <i class="fas fa-rocket"></i>
+                </div>
+                <div class="panel-body">
+                    <div class="input-row">
+                        <div class="input-label-group">
+                            <label>Consolidation Ratio (X:1)</label>
+                            <span id="val_ratio" class="val-display" style="color:#ED1C24;">4 : 1</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" id="in_ratio" min="2" max="10" step="1" value="4" oninput="calc()">
+                        </div>
+                        <div style="font-size:11px; color:#9ca3af;">e.g., Replacing 4 old servers with 1 new AMD server.</div>
+                    </div>
+
+                    <div class="input-row" style="margin-top:10px;">
+                        <div class="input-label-group">
+                            <label>Target Power per Rack (kW)</label>
+                            <span id="val_target_density" class="val-display" style="color:#ED1C24;">25 kW</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" id="in_target_density" min="10" max="50" step="5" value="25" oninput="calc()">
+                        </div>
+                        <div style="font-size:11px; color:#9ca3af;">Higher density supported by modern infrastructure.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="main-content">
+            
+            <div class="kpi-group">
+                <div class="kpi-card">
+                    <h4>Racks Eliminated</h4>
+                    <h2 id="kpi_racks_saved" class="kpi-accent">34</h2>
+                    <span class="kpi-unit">Racks Freed</span>
+                </div>
+                <div class="kpi-card">
+                    <h4>Space Reduction</h4>
+                    <h2 id="kpi_space_saved">68%</h2>
+                    <span class="kpi-unit">Footprint Saved</span>
+                </div>
+                <div class="kpi-card">
+                    <h4>Total Power Reduction</h4>
+                    <h2 id="kpi_power_saved" class="kpi-accent">150 kW</h2>
+                    <span class="kpi-unit">Energy Saved</span>
+                </div>
+            </div>
+
+            <div class="chart-panel" style="flex:1.5;">
+                <div class="chart-header">Rack Footprint Comparison</div>
+                <div class="chart-container">
+                    <canvas id="rackChart"></canvas>
+                </div>
+            </div>
+
+             <div class="chart-panel" style="flex:1.5;">
+                <div class="chart-header">Total Power Consumption Comparison</div>
+                <div class="chart-container">
+                    <canvas id="powerChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Chart.js 全局設定 (符合 AMD 風格)
+        Chart.defaults.font.family = "'Segoe UI', sans-serif";
+        Chart.defaults.color = '#6b7280';
+        Chart.defaults.scale.grid.color = '#f3f4f6';
+
+        let rackChart, powerChart;
+
+        function initCharts() {
+            // 通用圖表選項
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1f2937' } },
+                scales: {
+                    y: { beginAtZero: true, grid: { drawBorder: false } },
+                    x: { grid: { display: false } }
+                }
+            };
+
+            // 圖表 1: 機櫃數量
+            const ctxRack = document.getElementById('rackChart').getContext('2d');
+            rackChart = new Chart(ctxRack, {
+                type: 'bar',
+                data: {
+                    labels: ['Legacy Deployment', 'New AMD Deployment'],
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#9ca3af', '#ED1C24'], // 舊(灰) vs 新(紅)
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: { 
+                    ...commonOptions,
+                    plugins: { ...commonOptions.plugins, title: { display: false } },
+                    scales: { ...commonOptions.scales, y: { ...commonOptions.scales.y, title: { display: true, text: 'Number of Racks' } } }
+                 }
+            });
+
+            // 圖表 2: 電力消耗
+            const ctxPower = document.getElementById('powerChart').getContext('2d');
+            powerChart = new Chart(ctxPower, {
+                type: 'bar',
+                data: {
+                    labels: ['Legacy Deployment', 'New AMD Deployment'],
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#6b7280', '#b91c1c'], // 舊(深灰) vs 新(深紅)
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: { 
+                    ...commonOptions,
+                    scales: { ...commonOptions.scales, y: { ...commonOptions.scales.y, title: { display: true, text: 'Total Power (kW)' } } }
+                 }
+            });
+        }
+
+        // --- 核心計算邏輯 ---
+        function calc() {
+            // 1. 讀取輸入
+            const currRacks = parseInt(document.getElementById('in_racks').value);
+            const currPowerPerRack = parseInt(document.getElementById('in_power_rack').value);
+            const ratio = parseInt(document.getElementById('in_ratio').value);
+            const targetDensity = parseInt(document.getElementById('in_target_density').value);
+
+            // 2. 更新數值顯示
+            document.getElementById('val_racks').innerText = currRacks;
+            document.getElementById('val_power_rack').innerText = currPowerPerRack + " kW";
+            document.getElementById('val_ratio').innerText = ratio + " : 1";
+            document.getElementById('val_target_density').innerText = targetDensity + " kW";
+
+            // 3. 計算現狀
+            const totalCurrPower = currRacks * currPowerPerRack;
+            document.getElementById('total_curr_power').innerText = totalCurrPower;
+
+            // 4. 計算未來 (核心假設：整合後所需的總運算能力相當，但效率提升)
+            // 假設：新系統的總功耗約為舊系統的 (1 / 整合比率) * 效率因子(例如 1.2，因為新硬體雖高效但也跑更多工作)
+            // 這裡為了簡化模型並突顯優勢，我們假設整合後的總功耗是原來的 40% + (整合比率帶來的額外節省)
+            // 這是一個簡化的 TCO 模型假設。
+            const consolidationFactor = 0.4 + (1/ratio * 0.2); 
+            const totalNewPowerEstimated = totalCurrPower * consolidationFactor;
+
+            // 計算所需的新機櫃數 = 新總功耗 / 目標單機櫃功率密度
+            const newRacks = Math.ceil(totalNewPowerEstimated / targetDensity);
+            
+            // 修正後的新總功耗 (基於實際機櫃數)
+            const totalNewPowerFinal = newRacks * targetDensity;
+
+            // 5. 計算節省量
+            const racksSaved = currRacks - newRacks;
+            const spaceSavedPct = ((racksSaved / currRacks) * 100).toFixed(0);
+            const powerSaved = totalCurrPower - totalNewPowerFinal;
+
+            // 6. 更新 KPI
+            document.getElementById('kpi_racks_saved').innerText = racksSaved;
+            document.getElementById('kpi_space_saved').innerText = spaceSavedPct + "%";
+            document.getElementById('kpi_power_saved').innerText = Math.round(powerSaved) + " kW";
+
+            // 7. 更新圖表
+            rackChart.data.datasets[0].data = [currRacks, newRacks];
+            rackChart.update();
+
+            powerChart.data.datasets[0].data = [totalCurrPower, totalNewPowerFinal];
+            powerChart.update();
+        }
+
+        // 初始化
+        initCharts();
+        calc();
+
+    </script>
+</body>
+</html>
