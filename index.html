@@ -73,13 +73,14 @@
             line-height: 1.6;
         }
 
-        /* --- 3. 卡片容器 (Grid System) --- */
+        /* --- 3. 卡片容器 (Grid System 3x3) --- */
         .container {
             max-width: 1300px;
             margin: 50px auto;
             padding: 0 30px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            /* 強制設定為 3 列，若螢幕變小會自動調整 */
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
             gap: 30px;
             flex: 1;
         }
@@ -110,12 +111,12 @@
             transition: height 0.2s;
         }
 
+        /* 正常卡片的 Hover 效果 */
         .card:hover {
             transform: translateY(-5px);
             border-color: #d1d5db;
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
         }
-        
         .card:hover::before { height: 4px; }
 
         .icon-box {
@@ -174,6 +175,34 @@
             box-shadow: 0 4px 10px rgba(237, 28, 36, 0.3);
         }
 
+        /* --- 🚧 施工中卡片樣式 (Coming Soon) --- */
+        .card.disabled {
+            opacity: 0.7;
+            cursor: default;
+            background-color: #fafafa;
+        }
+        .card.disabled:hover {
+            transform: none;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border-color: #e5e7eb;
+        }
+        .card.disabled::before { display: none; }
+        .card.disabled:hover .icon-box {
+            background-color: #f3f4f6;
+            color: #9ca3af; /* 保持灰色 */
+        }
+        .card.disabled .btn {
+            border-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: default;
+        }
+        .card.disabled:hover .btn {
+            background-color: transparent;
+            color: #9ca3af;
+            box-shadow: none;
+            border-color: #e5e7eb;
+        }
+
         footer {
             text-align: center;
             padding: 40px;
@@ -184,9 +213,8 @@
             margin-top: 50px;
         }
 
-        /* --- 📱 手機版響應式優化 (放在最後面！) --- */
+        /* --- 📱 手機版響應式優化 --- */
         @media screen and (max-width: 768px) {
-            /* 1. 讓主容器變成垂直排列 */
             body { height: auto; min-height: 100vh; overflow-y: auto; }
             
             .container { 
@@ -199,7 +227,6 @@
                 margin: 20px auto;
             }
 
-            /* 2. 調整標題列 (手機版保持置中，但縮小間距) */
             header, .top-branding { padding: 20px 15px; flex-direction: column; text-align: center; }
             .amd-logo { border-right: none; margin-right: 0; padding-right: 0; margin-bottom: 10px; height: 30px; }
             .hero-text { text-align: center; }
@@ -207,7 +234,6 @@
             .sub-header { padding: 20px; }
             .sub-header p { font-size: 1em; }
             
-            /* 3. 優化卡片在手機上的顯示 */
             .card {
                 width: 100%;
                 margin-bottom: 10px;
@@ -228,7 +254,7 @@
     <div class="red-accent-line"></div>
     
     <div class="sub-header">
-        <p>A suite of advanced modeling tools designed to analyze performance, improve efficiency, and calculate TCO for modern data center infrastructure.</p>
+        <p>A suite of advanced modeling tools designed to analyze performance, improve efficiency, and calculate TCO for AMD AI power soltion.</p>
     </div>
 
     <div class="container">
@@ -237,6 +263,13 @@
             <div class="icon-box"><i class="fas fa-server"></i></div>
             <h3>Server Consolidation</h3>
             <p>Calculate rack space and power savings by migrating legacy servers to high-density AMD solutions.</p>
+            <span class="btn">Launch Tool</span>
+        </a>
+
+        <a href="battery-tco.html" class="card">
+            <div class="icon-box"><i class="fas fa-car-battery"></i></div>
+            <h3>Li-ion vs VRLA TCO</h3>
+            <p>Compare the 15-year Total Cost of Ownership between modern Lithium-Ion and traditional Lead-Acid UPS batteries.</p>
             <span class="btn">Launch Tool</span>
         </a>
 
@@ -264,7 +297,7 @@
         <a href="ac-vs-dc.html" class="card">
             <div class="icon-box"><i class="fas fa-bolt"></i></div>
             <h3>Power Path Efficiency</h3>
-            <p>Compare end-to-end power distribution efficiency across Legacy AC, Modern AC, and 380V DC architectures.</p>
+            <p>Compare end-to-end power distribution efficiency across Legacy AC, Modern AC, and HVDC +/-400v DC architectures.</p>
             <span class="btn">Launch Tool</span>
         </a>
 
@@ -275,10 +308,24 @@
             <span class="btn">Launch Tool</span>
         </a>
 
+        <div class="card disabled">
+            <div class="icon-box"><i class="fas fa-microchip"></i></div>
+            <h3>AI Cluster Cost</h3>
+            <p>Estimate CapEx for high-density AI clusters, including GPU servers and liquid cooling infrastructure.</p>
+            <span class="btn">Coming Soon</span>
+        </div>
+
+        <div class="card disabled">
+            <div class="icon-box"><i class="fas fa-water"></i></div>
+            <h3>Liquid Cooling ROI</h3>
+            <p>Analyze the efficiency and cost benefits of transitioning from air cooling to direct-to-chip liquid cooling.</p>
+            <span class="btn">Coming Soon</span>
+        </div>
+
     </div>
 
     <footer>
-        <p></p>
+        <p>Design by NDHU 資訊 AI 研究室 Tim Chan</p>
     </footer>
 
 </body>

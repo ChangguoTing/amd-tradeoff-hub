@@ -32,66 +32,34 @@
             flex-shrink: 0; 
         }
         
-        /* AMD Logo 設定 */
         .brand { display: flex; align-items: center; gap: 15px; }
-        .brand img {
-            height: 24px; /* Logo 大小 */
-            width: auto;
-            display: block;
-        }
+        .brand img { height: 24px; width: auto; display: block; }
         .title { 
-            font-size: 18px; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            color: #6b7280; /* 標題灰色 */
-            letter-spacing: 1px;
-            border-left: 2px solid #e5e7eb;
-            padding-left: 15px;
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #e5e7eb; padding-left: 15px;
         }
         
         /* 主佈局 */
         .container { 
-            display: flex; 
-            flex: 1; 
-            padding: 30px; 
-            gap: 30px; 
-            overflow: hidden; 
-            max-width: 1600px; 
-            margin: 0 auto; 
-            width: 100%; 
-            box-sizing: border-box; 
+            display: flex; flex: 1; padding: 30px; gap: 30px; overflow: hidden; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box; 
         }
         
         /* --- 左側：輸入區 --- */
         .left-panel { 
-            width: 40%; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 20px; 
-            overflow-y: auto; 
-            padding-right: 10px; 
+            width: 40%; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; padding-right: 10px; 
         }
         
+        /* 輸入群組 */
         .input-group { 
-            background: #ffffff; 
-            border: 1px solid #e5e7eb; 
-            border-radius: 6px; 
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            overflow: hidden;
+            background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;
         }
         .group-header { 
-            background: #f3f4f6; 
-            color: #111827;
-            padding: 12px 20px; 
-            font-weight: 700; 
-            font-size: 14px; 
-            display: flex; 
-            justify-content: space-between; 
-            border-bottom: 1px solid #e5e7eb;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            background: #f3f4f6; color: #111827; padding: 12px 20px; font-weight: 700; font-size: 14px; 
+            display: flex; justify-content: space-between; border-bottom: 1px solid #d1d5db; 
+            text-transform: uppercase; letter-spacing: 0.5px; border-left: 4px solid #ED1C24; /* AMD 紅色 */
         }
-        .group-header i { color: #000; } /* 圖示改為黑色 */
+        .group-header i { color: #374151; }
         
         .group-body { padding: 20px; display: flex; flex-direction: column; gap: 18px; }
 
@@ -105,107 +73,49 @@
         }
         input[type="range"]::-webkit-slider-thumb { 
             appearance: none; -webkit-appearance: none; width: 18px; height: 18px; 
-            background: #000000; /* 黑色按鈕 */
-            border: 2px solid #fff; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
+            background: #000; border: 2px solid #fff; border-radius: 50%; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
         }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #333; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #ED1C24; }
         
-        .val-display { font-weight: 700; width: 55px; text-align: right; color: #000; font-family: monospace; font-size: 14px; }
+        .val-display { font-weight: 700; width: 55px; text-align: right; color: #ED1C24; font-family: monospace; font-size: 14px; }
 
-        /* 下拉選單樣式 */
+        /* 下拉選單 */
         .styled-select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            background-color: #fff;
-            color: #374151;
-            font-size: 13px;
-            outline: none;
-            cursor: pointer;
+            width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; 
+            background-color: #fff; color: #374151; font-size: 13px; outline: none; cursor: pointer;
         }
-        .styled-select:hover { border-color: #9ca3af; }
 
         /* --- 右側：結果區 --- */
         .right-panel { width: 60%; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
         
         .result-box { 
-            background: #ffffff; 
-            border: 1px solid #e5e7eb; 
-            border-radius: 6px; 
-            display: flex; flex-direction: column; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; 
+            display: flex; flex-direction: column; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
         }
         .result-header { 
-            background: #fff; color: #000; padding: 15px 20px; font-weight: 700; font-size: 14px; 
+            background: #fff; color: #111827; padding: 15px 20px; font-weight: 700; font-size: 14px; 
             display: flex; justify-content: space-between; border-bottom: 1px solid #f3f4f6; text-transform: uppercase;
         }
-        .chart-area { padding: 20px; height: 220px; position: relative; }
+        .chart-area { padding: 20px; height: 250px; position: relative; }
 
-        /* 圖例 (配合新的灰黑色階) */
+        /* 圖例 */
         .custom-legend { 
             display: flex; justify-content: center; gap: 25px; margin-top: auto; padding: 15px; 
             font-size: 13px; color: #4b5563; background: #fff; border-radius: 6px; border: 1px solid #e5e7eb;
         }
-        .legend-item { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-weight: 600; }
         .color-box { width: 14px; height: 14px; border-radius: 3px; }
+
         /* --- 📱 手機版響應式優化 (Mobile Responsive) --- */
         @media screen and (max-width: 768px) {
-            /* 1. 讓主容器變成垂直排列 (上下疊放) */
             body { height: auto; min-height: 100vh; overflow-y: auto; }
-            .container { 
-                flex-direction: column; 
-                height: auto; 
-                padding: 15px; 
-                gap: 20px;
-                overflow: visible; /* 允許捲動 */
-            }
-
-            /* 2. 左側輸入區：佔滿寬度，取消右邊框，增加底線 */
-            .sidebar, .left-panel {
-                width: 100%;
-                max-width: 100%;
-                border-right: none;
-                border-bottom: 2px solid #e5e7eb;
-                padding: 15px;
-                height: auto;
-                overflow-y: visible;
-            }
-
-            /* 3. 右側結果區：佔滿寬度 */
-            .main, .main-content, .right-panel {
-                width: 100%;
-                max-width: 100%;
-                padding: 15px;
-                height: auto;
-                overflow-y: visible;
-            }
-
-            /* 4. 調整標題列，避免 Logo 太大 */
+            .container { flex-direction: column; height: auto; padding: 15px; gap: 20px; overflow: visible; }
+            .left-panel, .right-panel { width: 100%; max-width: 100%; border-right: none; padding: 0; height: auto; overflow: visible; }
             header { padding: 0 15px; }
-            .brand img { height: 20px; margin-right: 10px; padding-right: 10px; }
-            .title { font-size: 14px; letter-spacing: 0; border: none; padding-left: 0; }
-            
-            /* 5. 針對首頁 index.html 的特別調整 */
-            .hero-text h1 { font-size: 1.5em; }
-            .top-branding { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .amd-logo { border-right: none; margin-bottom: 5px; }
-            .sub-header { padding: 20px; }
-            
-            /* 6. 優化 KPI 卡片 (讓它們在手機上也垂直排列，避免擠在一起) */
-            .kpi-container, .summary-box, .result-cards, .kpi-group {
-                flex-direction: column;
-            }
-            .kpi-card, .card {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            
-            /* 7. 圖表容器高度調整 (避免手機上圖表太小) */
-            .chart-box, .chart-panel, .chart-container {
-                min-height: 250px;
-                padding: 15px;
-            }
+            .title { font-size: 14px; padding-left: 10px; }
+            .chart-area { min-height: 250px; }
+            .custom-legend { flex-wrap: wrap; gap: 15px; }
         }
 
     </style>
@@ -217,7 +127,7 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
             <div class="title">Data Center Efficiency Calculator</div>
         </div>
-        <div><i class="fas fa-bars" style="color: #9ca3af; cursor: pointer; font-size: 20px;"></i></div>
+        <div><i class="fas fa-bolt" style="color: #9ca3af; font-size: 20px;"></i></div>
     </header>
 
     <div class="container">
@@ -236,8 +146,8 @@
                     <div class="control-row">
                         <label>DC UPS Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="ups_dc" min="90" max="99" step="0.1" value="96.5" oninput="calc()">
-                            <span class="val-display" id="val_ups_dc">96.5%</span>
+                            <input type="range" id="ups_dc" min="90" max="99" step="0.1" value="97.5" oninput="calc()">
+                            <span class="val-display" id="val_ups_dc">97.5%</span>
                         </div>
                     </div>
                 </div>
@@ -254,7 +164,7 @@
                         </div>
                     </div>
                     <div class="control-row">
-                        <label>Distribution Wiring Efficiency</label>
+                        <label>Distribution Wiring Eff.</label>
                         <div class="slider-container">
                             <input type="range" id="wire" min="98" max="99.9" step="0.1" value="99.5" oninput="calc()">
                             <span class="val-display" id="val_wire">99.5%</span>
@@ -269,40 +179,30 @@
                     <div class="control-row">
                         <label>Modern AC PSU Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="psu_ac" min="85" max="98" step="0.1" value="93.2" oninput="calc()">
-                            <span class="val-display" id="val_psu_ac">93.2%</span>
+                            <input type="range" id="psu_ac" min="85" max="98" step="0.1" value="94.0" oninput="calc()">
+                            <span class="val-display" id="val_psu_ac">94.0%</span>
                         </div>
                     </div>
                     <div class="control-row">
                         <label>Modern DC PSU Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="psu_dc" min="85" max="98" step="0.1" value="94.1" oninput="calc()">
-                            <span class="val-display" id="val_psu_dc">94.1%</span>
+                            <input type="range" id="psu_dc" min="85" max="98" step="0.1" value="96.0" oninput="calc()">
+                            <span class="val-display" id="val_psu_dc">96.0%</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="input-group">
-                <div class="group-header">Cooling & Lighting <i class="fas fa-snowflake"></i></div>
+                <div class="group-header">System Config <i class="fas fa-cogs"></i></div>
                 <div class="group-body">
                     <div class="control-row">
                         <label>Cooling Architecture</label>
                         <div style="flex:1.5">
                             <select class="styled-select">
-                                <option>Traditional chilled water system</option>
-                                <option>Air-cooled chillers with economizer</option>
-                                <option>Direct/Indirect evaporative cooling</option>
-                                <option>Liquid immersion cooling</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="control-row">
-                        <label>Lighting</label>
-                        <div style="flex:1.5">
-                            <select class="styled-select">
-                                <option>Traditional lighting (Fluorescent)</option>
-                                <option>LED lighting with motion sensors</option>
+                                <option>Traditional Chilled Water</option>
+                                <option>Air-Cooled with Economizer</option>
+                                <option>Liquid Immersion Cooling</option>
                             </select>
                         </div>
                     </div>
@@ -331,96 +231,72 @@
             <div class="custom-legend">
                 <div class="legend-item"><div class="color-box" style="background:#D1D5DB"></div>Legacy</div>
                 <div class="legend-item"><div class="color-box" style="background:#9CA3AF"></div>Modern AC</div>
-                <div class="legend-item"><div class="color-box" style="background:#6B7280"></div>415 VAC</div>
-                <div class="legend-item"><div class="color-box" style="background:#2D3748"></div>380 VDC</div>
+                <div class="legend-item"><div class="color-box" style="background:#6B7280"></div>480 VAC</div>
+                <div class="legend-item"><div class="color-box" style="background:#ED1C24"></div>HVDC +/-400V</div>
             </div>
 
         </div>
     </div>
 
     <script>
-        // 設定 Chart.js 預設字型與顏色
+        // 設定 Chart.js
         Chart.defaults.font.family = "'Segoe UI', sans-serif";
         Chart.defaults.color = '#374151'; 
         Chart.defaults.font.size = 11;
         
-        // 【修改點 1】顏色定義：改為灰黑色階，四色不同，無紅色
-        const colors = ['#D1D5DB', '#9CA3AF', '#6B7280', '#2D3748']; 
-        // X軸標籤
-        const labels = ['Legacy', 'Modern AC', '415 VAC', '380 VDC'];
+        // 顏色定義 (DC 改為 AMD 紅色以強調)
+        const colors = ['#D1D5DB', '#9CA3AF', '#6B7280', '#ED1C24']; 
+        // 標籤更新：415 -> 480, 380 -> HVDC
+        const labels = ['Legacy', 'Modern AC', '480 VAC', 'HVDC +/-400V'];
 
-        // 初始化變數
         let chartEff, chartImp, chartRed;
 
         function initCharts() {
-            // 通用圖表設定
             const commonOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { 
-                    legend: { display: false }, // 隱藏上方預設圖例
+                    legend: { display: false }, 
                     tooltip: { enabled: true, backgroundColor: '#1f2937', padding: 10 } 
                 },
                 layout: { padding: { top: 25 } },
                 scales: {
-                    x: {
-                        display: true, // 顯示 X 軸標籤 (圖下方文字)
-                        grid: { display: false },
-                        ticks: { color: '#4b5563', font: { weight: '600' } }
-                    }
+                    x: { display: true, grid: { display: false }, ticks: { color: '#4b5563', font: { weight: '600' } } }
                 }
             };
 
-            // 圖表 1: 效率
+            // 圖表 1: 效率 (Efficiency)
             chartEff = new Chart(document.getElementById('chartEff'), {
                 type: 'bar',
                 data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6, borderRadius: 4 }] },
                 options: { 
                     ...commonOptions, 
-                    scales: { 
-                        ...commonOptions.scales,
-                        y: { beginAtZero: false, min: 70, max: 100, grid: { color: '#f3f4f6' } }
-                    },
-                    plugins: { 
-                        ...commonOptions.plugins,
-                        datalabels: { anchor: 'end', align: 'top', color: '#374151', font: { weight: 'bold' }, formatter: (v)=>v.toFixed(1) } 
-                    } 
+                    scales: { ...commonOptions.scales, y: { beginAtZero: false, min: 60, max: 100, grid: { color: '#f3f4f6' } } },
+                    plugins: { ...commonOptions.plugins, datalabels: { anchor: 'end', align: 'top', color: '#374151', font: { weight: 'bold' }, formatter: (v)=>v.toFixed(1) } } 
                 },
                 plugins: [ChartDataLabels]
             });
 
-            // 圖表 2: 提升率
+            // 圖表 2: 提升率 (Improvement)
             chartImp = new Chart(document.getElementById('chartImp'), {
                 type: 'bar',
                 data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6, borderRadius: 4 }] },
                 options: { 
                     ...commonOptions, 
-                    scales: { 
-                         ...commonOptions.scales,
-                        y: { beginAtZero: true, max: 30, grid: { color: '#f3f4f6' } }
-                    },
-                    plugins: { 
-                        ...commonOptions.plugins,
-                        datalabels: { anchor: 'end', align: 'top', color: '#374151', formatter: (v)=>v.toFixed(1)+'%' } 
-                    } 
+                    scales: { ...commonOptions.scales, y: { beginAtZero: true, max: 35, grid: { color: '#f3f4f6' } } },
+                    plugins: { ...commonOptions.plugins, datalabels: { anchor: 'end', align: 'top', color: '#374151', formatter: (v)=>v.toFixed(1)+'%' } } 
                 },
                 plugins: [ChartDataLabels]
             });
 
-            // 圖表 3: 節能率
+            // 圖表 3: 節能率 (Reduction)
             chartRed = new Chart(document.getElementById('chartRed'), {
                 type: 'bar',
                 data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6, borderRadius: 4 }] },
                 options: { 
                     ...commonOptions, 
-                    scales: { 
-                         ...commonOptions.scales,
-                        y: { beginAtZero: true, max: 30, grid: { color: '#f3f4f6' } }
-                    },
-                    plugins: { 
-                         ...commonOptions.plugins,
-                        datalabels: { anchor: 'end', align: 'top', color: '#374151', formatter: (v)=>v.toFixed(1)+'%' } 
-                    } 
+                    scales: { ...commonOptions.scales, y: { beginAtZero: true, max: 30, grid: { color: '#f3f4f6' } } },
+                    plugins: { ...commonOptions.plugins, datalabels: { anchor: 'end', align: 'top', color: '#374151', formatter: (v)=>v.toFixed(1)+'%' } } 
                 },
                 plugins: [ChartDataLabels]
             });
@@ -444,32 +320,35 @@
             document.getElementById('val_psu_ac').innerText = (psuAc*100).toFixed(1) + "%";
             document.getElementById('val_psu_dc').innerText = (psuDc*100).toFixed(1) + "%";
 
-            // 計算效率
-            // Legacy 設定為固定常數 (基準線)
-            const legacy_ups = 0.92; 
-            const legacy_pdu = 0.95; 
-            const legacy_wire = 0.98; 
-            const legacy_psu = 0.85; 
-            const effLegacy = legacy_ups * legacy_pdu * legacy_wire * legacy_psu;
+            // --- 效率計算模型 ---
+            // 1. Legacy (基準線): 雙轉換 UPS 效率低，變壓器多
+            const effLegacy = 0.88 * 0.95 * 0.98 * 0.82; // UPS * PDU * Wire * PSU (Older tech)
 
-            // 其他架構 (受滑桿控制)
+            // 2. Modern AC: 高效 UPS，標準 AC 架構
             const effModern = upsAc * pduAc * wire * psuAc;
-            const eff415 = upsAc * 0.995 * (wire + 0.002) * psuAc; 
-            const effDC = upsDc * 0.995 * (wire + 0.001) * psuDc;
 
-            const effData = [effLegacy * 100, effModern * 100, eff415 * 100, effDC * 100];
+            // 3. 480 VAC: 減少一次變壓，效率略高
+            // 假設比 Modern AC 少一個變壓器環節，效率提升約 1%
+            const eff480 = effModern * 1.015; 
 
-            // 計算提升率 (Improvement) - Legacy 自己比自己，恆為 0%
+            // 4. HVDC +/-400V: 減少整流/逆變次數，效率最高
+            // 架構: AC Grid -> Rectifier (98%) -> DC Bus -> IT Load (PSU is simpler DC-DC)
+            // 這裡使用 upsDc 代表整流效率，psuDc 代表 DC-DC 轉換
+            const effHVDC = upsDc * 0.998 * (wire + 0.002) * psuDc;
+
+            const effData = [effLegacy * 100, effModern * 100, eff480 * 100, effHVDC * 100];
+
+            // 計算提升率 (Improvement)
             const impData = effData.map(e => ((e - effLegacy * 100) / (effLegacy * 100)) * 100);
 
-            // 計算節能率 (Power Reduction) - Legacy 自己比自己，恆為 0%
+            // 計算節能率 (Power Reduction)
             const inputLegacy = 1 / effLegacy;
-            const redData = [effLegacy, effModern, eff415, effDC].map(e => {
+            const redData = [effLegacy, effModern, eff480, effHVDC].map(e => {
                 const inputCurrent = 1 / e;
                 return (1 - (inputCurrent / inputLegacy)) * 100;
             });
 
-            // 更新圖表數據
+            // 更新圖表
             chartEff.data.datasets[0].data = effData;
             chartEff.update();
 
@@ -480,7 +359,6 @@
             chartRed.update();
         }
 
-        // 啟動程式
         initCharts();
         calc();
 

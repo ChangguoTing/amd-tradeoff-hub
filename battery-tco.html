@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMD Li-ion vs VRLA TCO Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 1. 全局樣式 (AMD Bright Professional) --- */
+        body { 
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            background-color: #f9fafb; 
+            color: #333; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        /* 頂部標題列 */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 70px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex-shrink: 0; 
+        }
+        
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 24px; width: auto; display: block; }
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #e5e7eb; padding-left: 15px;
+        }
+        .header-icons i { font-size: 20px; color: #ED1C24; cursor:pointer; }
+
+        /* 主容器 */
+        .container { flex: 1; padding: 30px; overflow-y: auto; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box; display: flex; gap: 30px; }
+
+        /* --- 左側輸入區 --- */
+        .sidebar { 
+            width: 400px; 
+            display: flex; flex-direction: column; gap: 20px; flex-shrink: 0;
+        }
+
+        /* 面板樣式 */
+        .panel { 
+            background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;
+        }
+        .panel-header { 
+            background: #f3f4f6; color: #111827; padding: 12px 20px; font-size: 13px; font-weight: 700; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid #d1d5db; text-transform: uppercase; letter-spacing: 0.5px;
+            border-left: 4px solid #ED1C24; 
+        }
+        .panel-body { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+
+        /* 輸入控制項 */
+        .input-row { display: flex; flex-direction: column; gap: 8px; }
+        .input-label-group { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: #4b5563; }
+        
+        .val-display { font-weight: 700; color: #ED1C24; font-family: monospace; font-size: 14px; }
+
+        /* 下拉選單 */
+        select { padding: 5px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px; color: #333; outline: none; }
+
+        /* 滑桿樣式 */
+        .slider-wrapper { display: flex; align-items: center; height: 20px; }
+        input[type="range"] {
+            flex: 1; height: 6px; -webkit-appearance: none; appearance: none; background: #e5e7eb; border-radius: 3px; outline: none; cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 16px; height: 16px; 
+            background: #000; border-radius: 50%; border: 2px solid #fff; cursor: pointer; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #ED1C24; }
+
+        /* --- 右側結果區 --- */
+        .main-content { flex: 1; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+
+        /* KPI 卡片 */
+        .kpi-group { display: flex; gap: 20px; }
+        .kpi-card {
+            flex: 1; background: #ffffff; padding: 20px; border-radius: 6px; text-align: center; 
+            border: 1px solid #e5e7eb; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover { transform: translateY(-3px); border-color: #ED1C24; }
+        .kpi-card h4 { margin: 0; font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
+        .kpi-card h2 { margin: 10px 0 0; font-size: 28px; color: #111827; font-weight: 800; }
+        .kpi-unit { font-size: 13px; color: #9ca3af; font-weight: 500; }
+        .kpi-accent { color: #ED1C24 !important; }
+
+        /* 圖表區塊 */
+        .chart-row { display: flex; gap: 20px; flex: 1; min-height: 350px; }
+        .chart-panel {
+            flex: 1; background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); padding: 20px; display: flex; flex-direction: column;
+        }
+        .chart-header { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 15px; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .chart-container { flex: 1; position: relative; }
+
+        /* --- 手機版 RWD --- */
+        @media screen and (max-width: 768px) {
+            body { height: auto; min-height: 100vh; overflow-y: auto; }
+            .container { flex-direction: column; height: auto; padding: 15px; gap: 20px; overflow: visible; }
+            .sidebar, .main-content { width: 100%; max-width: 100%; border-right: none; padding: 0; }
+            .kpi-group, .chart-row { flex-direction: column; }
+            .chart-panel { min-height: 300px; }
+            header { padding: 0 15px; }
+            .title { font-size: 14px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">Li-ion vs VRLA TCO Calculator</div>
+        </div>
+        <div class="header-icons"><i class="fas fa-battery-full"></i></div>
+    </header>
+
+    <div class="container">
+        <div class="sidebar">
+            
+            <div class="panel">
+                <div class="panel-header">General Attributes <i class="fas fa-globe"></i></div>
+                <div class="panel-body">
+                    <div class="input-row">
+                        <div class="input-label-group">
+                            <label>Location / Region</label>
+                        </div>
+                        <select id="location" onchange="updateDefaults()">
+                            <option value="US">United States (Avg)</option>
+                            <option value="CN">China (Avg)</option>
+                            <option value="EU">Europe (Avg)</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-label-group">
+                            <label>Electricity Cost ($/kWh)</label>
+                            <span id="val_elec" class="val-display">$ 0.12</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" id="in_elec" min="0.05" max="0.50" step="0.01" value="0.12" oninput="calc()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">UPS Parameters <i class="fas fa-server"></i></div>
+                <div class="panel-body">
+                    <div class="input-row">
+                        <div class="input-label-group">
+                            <label>UPS Capacity (kW)</label>
+                            <span id="val_cap" class="val-display">1000 kW</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" id="in_cap" min="100" max="5000" step="100" value="1000" oninput="calc()">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-label-group">
+                            <label>Analysis Timeline (Years)</label>
+                            <span id="val_time" class="val-display">10 Yrs</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" id="in_time" min="5" max="15" step="1" value="10" oninput="calc()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Battery Parameters <i class="fas fa-bolt"></i></div>
+                <div class="panel-body">
+                    <div class="input-row">
+                        <div class="input-label-group">
+                            <label>Backup Time (Minutes)</label>
+                            <span id="val_backup" class="val-display">10 Min</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" id="in_backup" min="5" max="60" step="1" value="10" oninput="calc()">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-label-group">
+                            <label>VRLA Replacement (Years)</label>
+                            <span id="val_vrla_life" class="val-display">4 Yrs</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" id="in_vrla_life" min="3" max="6" step="1" value="4" oninput="calc()">
+                        </div>
+                    </div>
+                    <div style="font-size:11px; color:#6b7280; padding-top:5px;">
+                        *Li-ion battery life estimated at 12-15 years (No replacement needed in 10-yr model).
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="main-content">
+            
+            <div class="kpi-group">
+                <div class="kpi-card">
+                    <h4>Total Savings (10Y)</h4>
+                    <h2 id="kpi_savings" class="kpi-accent">$ 350k</h2>
+                    <span class="kpi-unit">Li-ion vs VRLA</span>
+                </div>
+                <div class="kpi-card">
+                    <h4>TCO Reduction</h4>
+                    <h2 id="kpi_pct">28%</h2>
+                    <span class="kpi-unit">Lower Cost</span>
+                </div>
+                <div class="kpi-card">
+                    <h4>Space Saved</h4>
+                    <h2 id="kpi_space" style="color:#374151">60%</h2>
+                    <span class="kpi-unit">Footprint Reduction</span>
+                </div>
+            </div>
+
+            <div class="chart-row">
+                <div class="chart-panel" style="flex:1.5;">
+                    <div class="chart-header">
+                        <span>Cumulative TCO Cashflow</span>
+                        <i class="fas fa-chart-line" style="color:#9ca3af"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-panel" style="flex:1;">
+                    <div class="chart-header">
+                        <span>10-Year Cost Breakdown</span>
+                        <i class="fas fa-chart-bar" style="color:#9ca3af"></i>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Chart.js 設定
+        Chart.defaults.font.family = "'Segoe UI', sans-serif";
+        Chart.defaults.color = '#6b7280';
+        Chart.defaults.scale.grid.color = '#f3f4f6';
+
+        let lineChart, barChart;
+
+        // --- 預設值連動 ---
+        function updateDefaults() {
+            const loc = document.getElementById('location').value;
+            const elecSlider = document.getElementById('in_elec');
+            
+            if (loc === 'US') elecSlider.value = 0.12;
+            if (loc === 'CN') elecSlider.value = 0.09; // Approx 0.6 RMB
+            if (loc === 'EU') elecSlider.value = 0.25;
+            
+            calc();
+        }
+
+        function initCharts() {
+            // Line Chart (累積成本)
+            const ctxLine = document.getElementById('lineChart').getContext('2d');
+            lineChart = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'VRLA (Lead-Acid)',
+                            borderColor: '#9ca3af', // 灰色 (舊技術)
+                            backgroundColor: '#9ca3af',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            data: [],
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Li-ion (AMD/New)',
+                            borderColor: '#ED1C24', // AMD 紅 (新技術)
+                            backgroundColor: '#ED1C24',
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            data: [],
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'top' }, tooltip: { backgroundColor: '#1f2937' } },
+                    scales: { y: { beginAtZero: true, title: { display:true, text:'Cumulative Cost ($)' } } }
+                }
+            });
+
+            // Bar Chart (成本結構)
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            barChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['CapEx', 'Maintenance', 'Energy', 'Replacement', 'Space'],
+                    datasets: [
+                        {
+                            label: 'Li-ion',
+                            backgroundColor: '#ED1C24',
+                            data: []
+                        },
+                        {
+                            label: 'VRLA',
+                            backgroundColor: '#9ca3af',
+                            data: []
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true, grid:{ display:false } }, x: { grid:{ display:false } } }
+                }
+            });
+        }
+
+        // --- 核心計算邏輯 (模擬 Schneider 工具邏輯) ---
+        function calc() {
+            // 1. 讀取輸入
+            const elecRate = parseFloat(document.getElementById('in_elec').value);
+            const capacity = parseInt(document.getElementById('in_cap').value);
+            const years = parseInt(document.getElementById('in_time').value);
+            const backup = parseInt(document.getElementById('in_backup').value);
+            const vrlaLife = parseInt(document.getElementById('in_vrla_life').value);
+
+            // UI 更新
+            document.getElementById('val_elec').innerText = "$ " + elecRate.toFixed(2);
+            document.getElementById('val_cap').innerText = capacity + " kW";
+            document.getElementById('val_time').innerText = years + " Yrs";
+            document.getElementById('val_backup').innerText = backup + " Min";
+            document.getElementById('val_vrla_life').innerText = vrlaLife + " Yrs";
+
+            // 2. 成本參數假設 (Simplified TCO Model)
+            // CapEx: Li-ion 比 VRLA 貴約 1.8 倍
+            const baseUnitCost = 150; // $ per kW for VRLA
+            const vrlaCapEx = capacity * baseUnitCost * (backup / 10); // backup time multiplier
+            const liionCapEx = vrlaCapEx * 1.8;
+
+            // Maintenance: VRLA 每年維護費高
+            const vrlaMaintYear = vrlaCapEx * 0.08;
+            const liionMaintYear = liionCapEx * 0.02; // Li-ion 免維護或極低
+
+            // Energy: Li-ion 效率高 (少散熱需求)
+            // 假設 VRLA 自放電與冷卻損耗 2%, Li-ion 0.5%
+            const kwhYear = capacity * 24 * 365;
+            const vrlaEnergyYear = kwhYear * 0.02 * elecRate;
+            const liionEnergyYear = kwhYear * 0.005 * elecRate;
+
+            // Space: Li-ion 節省 60% 空間 (租金假設 $500/rack/year)
+            const racksVRLA = Math.ceil(capacity / 100); 
+            const racksLiion = Math.ceil(racksVRLA * 0.4);
+            const spaceCostYearVRLA = racksVRLA * 1000; 
+            const spaceCostYearLiion = racksLiion * 1000;
+
+            // 3. 累積計算 (Loop over years)
+            let cumVRLA = 0;
+            let cumLiion = 0;
+            let dataVRLA = [];
+            let dataLiion = [];
+            let labels = [];
+
+            // 分類加總 (for Bar Chart)
+            let totalRepVRLA = 0;
+            let totalRepLiion = 0; // 假設 10-12 年內不用換
+
+            for(let i=0; i<=years; i++) {
+                labels.push("Year " + i);
+                if (i === 0) {
+                    cumVRLA = vrlaCapEx;
+                    cumLiion = liionCapEx;
+                } else {
+                    // OpEx
+                    cumVRLA += (vrlaMaintYear + vrlaEnergyYear + spaceCostYearVRLA);
+                    cumLiion += (liionMaintYear + liionEnergyYear + spaceCostYearLiion);
+
+                    // Replacement Logic
+                    if (i % vrlaLife === 0) {
+                        const repCost = vrlaCapEx * 0.9; // 換電池稍微便宜一點點
+                        cumVRLA += repCost;
+                        totalRepVRLA += repCost;
+                    }
+                    if (i > 12) { // Li-ion 12年後才可能換
+                         const repCost = liionCapEx * 0.8;
+                         cumLiion += repCost;
+                         totalRepLiion += repCost;
+                    }
+                }
+                dataVRLA.push(cumVRLA);
+                dataLiion.push(cumLiion);
+            }
+
+            // 4. 更新 Line Chart
+            lineChart.data.labels = labels;
+            lineChart.data.datasets[0].data = dataVRLA;
+            lineChart.data.datasets[1].data = dataLiion;
+            lineChart.update();
+
+            // 5. 更新 Bar Chart
+            const totalMaintV = vrlaMaintYear * years;
+            const totalEnergyV = vrlaEnergyYear * years;
+            const totalSpaceV = spaceCostYearVRLA * years;
+
+            const totalMaintL = liionMaintYear * years;
+            const totalEnergyL = liionEnergyYear * years;
+            const totalSpaceL = spaceCostYearLiion * years;
+
+            barChart.data.datasets[0].data = [liionCapEx, totalMaintL, totalEnergyL, totalRepLiion, totalSpaceL];
+            barChart.data.datasets[1].data = [vrlaCapEx, totalMaintV, totalEnergyV, totalRepVRLA, totalSpaceV];
+            barChart.update();
+
+            // 6. 更新 KPI
+            const finalVRLA = dataVRLA[years];
+            const finalLiion = dataLiion[years];
+            const savings = finalVRLA - finalLiion;
+            const pct = (savings / finalVRLA) * 100;
+
+            document.getElementById('kpi_savings').innerText = "$ " + Math.round(savings/1000) + "k";
+            document.getElementById('kpi_pct').innerText = pct.toFixed(1) + "%";
+            
+            // 空間節省固定算式
+            document.getElementById('kpi_space').innerText = "60%"; 
+        }
+
+        // 初始化
+        initCharts();
+        calc();
+
+    </script>
+</body>
+</html>
