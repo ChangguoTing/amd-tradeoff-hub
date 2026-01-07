@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AMD Power Solution Roadmap</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            background-color: #f9fafb;
+            color: #333;
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            min-width: 1200px; 
+            overflow-x: auto; 
+        }
+
+        /* --- Header --- */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 70px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex-shrink: 0; 
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 24px; width: auto; display: block; } 
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #e5e7eb; padding-left: 15px; 
+        }
+        .back-btn { 
+            color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
+        }
+        .back-btn:hover { background-color: #ED1C24; color: #fff; border-color: #ED1C24; }
+
+        /* --- 圖片與連結容器 --- */
+        .map-wrapper {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+
+        .map-container {
+            position: relative;
+            width: 1200px; /* 固定寬度 */
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .main-image {
+            width: 100%;
+            display: block;
+        }
+
+        /* --- 關鍵修改：自動排列容器 (Links Column) --- */
+        .links-column {
+            position: absolute;
+            right: 1.5%;        /* 靠右對齊文字 */
+            width: 16%;         /* 寬度涵蓋文字 */
+            
+            /* --- 設定起點與終點 (只要調這兩個數值，中間會自動對齊) --- */
+            top: 20%;           /* 第一個按鈕(2025) 的頂部位置 */
+            height: 72%;        /* 整個連結區域的總高度 (從2025延伸到2029) */
+            
+            /* 使用 Flexbox 讓內部按鈕自動平均分佈 */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* 關鍵：讓頭尾對齊，中間平均分開 */
+            
+            z-index: 10;
+            /* background-color: rgba(0,0,255,0.1); */ /* 除錯用：打開可以看到整個欄位範圍 */
+        }
+
+        /* 單個連結按鈕 */
+        .hotspot {
+            width: 100%;
+            height: 12%; /* 每個按鈕的高度佔比 */
+            
+            /* 隱形設定 */
+            background-color: transparent;
+            /* background-color: rgba(255,0,0,0.3); */ /* 除錯用：打開可以看到紅色按鈕位置 */
+            
+            cursor: pointer;
+            display: block;
+        }
+
+        /* 為了修正 2029 年稍微偏下面的問題，給最後一個按鈕一點微調 */
+        .hotspot:last-child {
+            margin-bottom: 0; 
+            /* 如果最後一個太低，可以設 height 小一點 */
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">Power Architecture Roadmap</div>
+        </div>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </header>
+
+    <div class="map-wrapper">
+        <div class="map-container">
+            <img src="power-roadmap.svg" alt="Power Solution Roadmap" class="main-image">
+
+            <div class="links-column">
+                <a href="page-2025.html" class="hotspot" title="2025"></a>
+                <a href="page-2026.html" class="hotspot" title="2026"></a>
+                <a href="page-2027.html" class="hotspot" title="2027"></a>
+                <a href="page-2028.html" class="hotspot" title="2028"></a>
+                <a href="page-2029.html" class="hotspot" title="2029"></a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

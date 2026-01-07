@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMD AC vs. DC Efficiency Calculator</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script> 
@@ -16,7 +15,10 @@
             color: #333; 
             height: 100vh; 
             display: flex; 
-            flex-direction: column; 
+            flex-direction: column;
+            /* 2. 修改點：強制最小寬度，確保左右兩欄永遠並排 */
+            min-width: 1200px; 
+            overflow-x: auto; /* 允許橫向捲動 */
         }
         
         /* 頂部標題列 */
@@ -78,7 +80,12 @@
         }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #ED1C24; }
         
+        /* 針對 Legacy 滑桿使用灰色按鈕區分 */
+        .legacy-slider::-webkit-slider-thumb { background: #6b7280 !important; }
+        .legacy-slider::-webkit-slider-thumb:hover { background: #4b5563 !important; }
+
         .val-display { font-weight: 700; width: 55px; text-align: right; color: #ED1C24; font-family: monospace; font-size: 14px; }
+        .val-legacy { color: #6b7280 !important; } /* Legacy 數值用灰色 */
 
         /* 下拉選單 */
         .styled-select {
@@ -107,16 +114,7 @@
         .legend-item { display: flex; align-items: center; gap: 8px; font-weight: 600; }
         .color-box { width: 14px; height: 14px; border-radius: 3px; }
 
-        /* --- 📱 手機版響應式優化 (Mobile Responsive) --- */
-        @media screen and (max-width: 768px) {
-            body { height: auto; min-height: 100vh; overflow-y: auto; }
-            .container { flex-direction: column; height: auto; padding: 15px; gap: 20px; overflow: visible; }
-            .left-panel, .right-panel { width: 100%; max-width: 100%; border-right: none; padding: 0; height: auto; overflow: visible; }
-            header { padding: 0 15px; }
-            .title { font-size: 14px; padding-left: 10px; }
-            .chart-area { min-height: 250px; }
-            .custom-legend { flex-wrap: wrap; gap: 15px; }
-        }
+        /* 3. 修改點：完全刪除了 @media screen and (max-width: 768px) {...} 區塊 */
 
     </style>
 </head>
@@ -133,18 +131,52 @@
     <div class="container">
         <div class="left-panel">
             
-            <div class="input-group">
-                <div class="group-header">Uninterruptible Power Supply (UPS) <i class="fas fa-battery-full"></i></div>
+            <div class="input-group" style="border-left: 4px solid #9ca3af;">
+                <div class="group-header" style="border-left: none;">Legacy Baseline <i class="fas fa-history"></i></div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Modern AC UPS Efficiency</label>
+                        <label>Legacy UPS Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="leg_ups" min="80" max="95" step="0.5" value="88.0" oninput="calc()" class="legacy-slider">
+                            <span class="val-display val-legacy" id="val_leg_ups">88.0%</span>
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <label>Legacy PDU Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="leg_pdu" min="90" max="98" step="0.1" value="95.0" oninput="calc()" class="legacy-slider">
+                            <span class="val-display val-legacy" id="val_leg_pdu">95.0%</span>
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <label>Legacy Wiring Eff.</label>
+                        <div class="slider-container">
+                            <input type="range" id="leg_wire" min="95" max="99" step="0.1" value="98.0" oninput="calc()" class="legacy-slider">
+                            <span class="val-display val-legacy" id="val_leg_wire">98.0%</span>
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <label>Legacy PSU Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="leg_psu" min="70" max="90" step="0.5" value="82.0" oninput="calc()" class="legacy-slider">
+                            <span class="val-display val-legacy" id="val_leg_psu">82.0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="group-header">Modern UPS Efficiency <i class="fas fa-battery-full"></i></div>
+                <div class="group-body">
+                    <div class="control-row">
+                        <label>Modern AC UPS</label>
                         <div class="slider-container">
                             <input type="range" id="ups_ac" min="90" max="99" step="0.1" value="96.3" oninput="calc()">
                             <span class="val-display" id="val_ups_ac">96.3%</span>
                         </div>
                     </div>
                     <div class="control-row">
-                        <label>DC UPS Efficiency</label>
+                        <label>DC UPS / Rectifier</label>
                         <div class="slider-container">
                             <input type="range" id="ups_dc" min="90" max="99" step="0.1" value="97.5" oninput="calc()">
                             <span class="val-display" id="val_ups_dc">97.5%</span>
@@ -157,14 +189,14 @@
                 <div class="group-header">Power Distribution <i class="fas fa-network-wired"></i></div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Modern AC PDU Efficiency</label>
+                        <label>Modern AC PDU</label>
                         <div class="slider-container">
                             <input type="range" id="pdu_ac" min="95" max="99.9" step="0.1" value="98.3" oninput="calc()">
                             <span class="val-display" id="val_pdu_ac">98.3%</span>
                         </div>
                     </div>
                     <div class="control-row">
-                        <label>Distribution Wiring Eff.</label>
+                        <label>Modern Wiring</label>
                         <div class="slider-container">
                             <input type="range" id="wire" min="98" max="99.9" step="0.1" value="99.5" oninput="calc()">
                             <span class="val-display" id="val_wire">99.5%</span>
@@ -177,33 +209,17 @@
                 <div class="group-header">IT Power Supply (PSU) <i class="fas fa-plug"></i></div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Modern AC PSU Efficiency</label>
+                        <label>Modern AC PSU</label>
                         <div class="slider-container">
                             <input type="range" id="psu_ac" min="85" max="98" step="0.1" value="94.0" oninput="calc()">
                             <span class="val-display" id="val_psu_ac">94.0%</span>
                         </div>
                     </div>
                     <div class="control-row">
-                        <label>Modern DC PSU Efficiency</label>
+                        <label>Modern DC PSU</label>
                         <div class="slider-container">
                             <input type="range" id="psu_dc" min="85" max="98" step="0.1" value="96.0" oninput="calc()">
                             <span class="val-display" id="val_psu_dc">96.0%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <div class="group-header">System Config <i class="fas fa-cogs"></i></div>
-                <div class="group-body">
-                    <div class="control-row">
-                        <label>Cooling Architecture</label>
-                        <div style="flex:1.5">
-                            <select class="styled-select">
-                                <option>Traditional Chilled Water</option>
-                                <option>Air-Cooled with Economizer</option>
-                                <option>Liquid Immersion Cooling</option>
-                            </select>
                         </div>
                     </div>
                 </div>
@@ -244,9 +260,8 @@
         Chart.defaults.color = '#374151'; 
         Chart.defaults.font.size = 11;
         
-        // 顏色定義 (DC 改為 AMD 紅色以強調)
+        // 顏色定義 (Legacy 用淺灰，DC 用 AMD 紅色)
         const colors = ['#D1D5DB', '#9CA3AF', '#6B7280', '#ED1C24']; 
-        // 標籤更新：415 -> 480, 380 -> HVDC
         const labels = ['Legacy', 'Modern AC', '480 VAC', 'HVDC +/-400V'];
 
         let chartEff, chartImp, chartRed;
@@ -265,7 +280,7 @@
                 }
             };
 
-            // 圖表 1: 效率 (Efficiency)
+            // 圖表 1: 效率
             chartEff = new Chart(document.getElementById('chartEff'), {
                 type: 'bar',
                 data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6, borderRadius: 4 }] },
@@ -277,7 +292,7 @@
                 plugins: [ChartDataLabels]
             });
 
-            // 圖表 2: 提升率 (Improvement)
+            // 圖表 2: 提升率
             chartImp = new Chart(document.getElementById('chartImp'), {
                 type: 'bar',
                 data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6, borderRadius: 4 }] },
@@ -289,7 +304,7 @@
                 plugins: [ChartDataLabels]
             });
 
-            // 圖表 3: 節能率 (Reduction)
+            // 圖表 3: 節能率
             chartRed = new Chart(document.getElementById('chartRed'), {
                 type: 'bar',
                 data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6, borderRadius: 4 }] },
@@ -304,7 +319,13 @@
 
         // --- 計算邏輯 ---
         function calc() {
-            // 讀取輸入值
+            // 1. 讀取 Legacy 輸入
+            const legUps = parseFloat(document.getElementById('leg_ups').value) / 100;
+            const legPdu = parseFloat(document.getElementById('leg_pdu').value) / 100;
+            const legWire = parseFloat(document.getElementById('leg_wire').value) / 100;
+            const legPsu = parseFloat(document.getElementById('leg_psu').value) / 100;
+
+            // 2. 讀取 Modern 輸入
             const upsAc = parseFloat(document.getElementById('ups_ac').value) / 100;
             const upsDc = parseFloat(document.getElementById('ups_dc').value) / 100;
             const pduAc = parseFloat(document.getElementById('pdu_ac').value) / 100;
@@ -312,7 +333,11 @@
             const psuAc = parseFloat(document.getElementById('psu_ac').value) / 100;
             const psuDc = parseFloat(document.getElementById('psu_dc').value) / 100;
 
-            // 更新文字顯示
+            // 3. 更新顯示文字
+            document.getElementById('val_leg_ups').innerText = (legUps*100).toFixed(1) + "%";
+            document.getElementById('val_leg_pdu').innerText = (legPdu*100).toFixed(1) + "%";
+            document.getElementById('val_leg_wire').innerText = (legWire*100).toFixed(1) + "%";
+            document.getElementById('val_leg_psu').innerText = (legPsu*100).toFixed(1) + "%";
             document.getElementById('val_ups_ac').innerText = (upsAc*100).toFixed(1) + "%";
             document.getElementById('val_ups_dc').innerText = (upsDc*100).toFixed(1) + "%";
             document.getElementById('val_pdu_ac').innerText = (pduAc*100).toFixed(1) + "%";
@@ -321,27 +346,18 @@
             document.getElementById('val_psu_dc').innerText = (psuDc*100).toFixed(1) + "%";
 
             // --- 效率計算模型 ---
-            // 1. Legacy (基準線): 雙轉換 UPS 效率低，變壓器多
-            const effLegacy = 0.88 * 0.95 * 0.98 * 0.82; // UPS * PDU * Wire * PSU (Older tech)
-
-            // 2. Modern AC: 高效 UPS，標準 AC 架構
+            const effLegacy = legUps * legPdu * legWire * legPsu;
             const effModern = upsAc * pduAc * wire * psuAc;
-
-            // 3. 480 VAC: 減少一次變壓，效率略高
-            // 假設比 Modern AC 少一個變壓器環節，效率提升約 1%
             const eff480 = effModern * 1.015; 
-
-            // 4. HVDC +/-400V: 減少整流/逆變次數，效率最高
-            // 架構: AC Grid -> Rectifier (98%) -> DC Bus -> IT Load (PSU is simpler DC-DC)
-            // 這裡使用 upsDc 代表整流效率，psuDc 代表 DC-DC 轉換
             const effHVDC = upsDc * 0.998 * (wire + 0.002) * psuDc;
 
             const effData = [effLegacy * 100, effModern * 100, eff480 * 100, effHVDC * 100];
 
-            // 計算提升率 (Improvement)
-            const impData = effData.map(e => ((e - effLegacy * 100) / (effLegacy * 100)) * 100);
+            const impData = effData.map(e => {
+                if (effLegacy === 0) return 0;
+                return ((e - effLegacy * 100) / (effLegacy * 100)) * 100;
+            });
 
-            // 計算節能率 (Power Reduction)
             const inputLegacy = 1 / effLegacy;
             const redData = [effLegacy, effModern, eff480, effHVDC].map(e => {
                 const inputCurrent = 1 / e;

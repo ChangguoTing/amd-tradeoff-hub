@@ -2,7 +2,6 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMD Li-ion vs VRLA TCO Calculator</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,6 +15,9 @@
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
+            /* 2. 強制最小寬度，確保左右欄位不換行 */
+            min-width: 1200px; 
+            overflow-x: auto; /* 允許橫向捲動 */
         }
         
         /* 頂部標題列 */
@@ -106,16 +108,7 @@
         .chart-header { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 15px; text-transform: uppercase; display: flex; justify-content: space-between; }
         .chart-container { flex: 1; position: relative; }
 
-        /* --- 手機版 RWD --- */
-        @media screen and (max-width: 768px) {
-            body { height: auto; min-height: 100vh; overflow-y: auto; }
-            .container { flex-direction: column; height: auto; padding: 15px; gap: 20px; overflow: visible; }
-            .sidebar, .main-content { width: 100%; max-width: 100%; border-right: none; padding: 0; }
-            .kpi-group, .chart-row { flex-direction: column; }
-            .chart-panel { min-height: 300px; }
-            header { padding: 0 15px; }
-            .title { font-size: 14px; }
-        }
+        /* 3. 移除所有 RWD @media 區塊 */
 
     </style>
 </head>

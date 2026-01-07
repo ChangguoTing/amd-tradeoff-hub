@@ -2,7 +2,6 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMD TradeOff Tools Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,6 +15,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            /* 2. 強制最小寬度，確保版面不崩壞 */
+            min-width: 1200px;
+            overflow-x: auto; /* 允許橫向捲動 */
         }
 
         /* --- 2. 頂部品牌與標題區 (置中) --- */
@@ -79,8 +81,8 @@
             margin: 50px auto;
             padding: 0 30px;
             display: grid;
-            /* 強制設定為 3 列，若螢幕變小會自動調整 */
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+            /* 強制寬度足夠時，自動排列成 3 列 */
+            grid-template-columns: repeat(3, 1fr); 
             gap: 30px;
             flex: 1;
         }
@@ -213,33 +215,7 @@
             margin-top: 50px;
         }
 
-        /* --- 📱 手機版響應式優化 --- */
-        @media screen and (max-width: 768px) {
-            body { height: auto; min-height: 100vh; overflow-y: auto; }
-            
-            .container { 
-                display: flex; 
-                flex-direction: column; 
-                height: auto; 
-                padding: 15px; 
-                gap: 20px;
-                overflow: visible; 
-                margin: 20px auto;
-            }
-
-            header, .top-branding { padding: 20px 15px; flex-direction: column; text-align: center; }
-            .amd-logo { border-right: none; margin-right: 0; padding-right: 0; margin-bottom: 10px; height: 30px; }
-            .hero-text { text-align: center; }
-            .hero-text h1 { font-size: 1.5em; }
-            .sub-header { padding: 20px; }
-            .sub-header p { font-size: 1em; }
-            
-            .card {
-                width: 100%;
-                margin-bottom: 10px;
-                box-sizing: border-box;
-            }
-        }
+        /* 3. 移除所有 RWD @media 區塊 */
 
     </style>
 </head>

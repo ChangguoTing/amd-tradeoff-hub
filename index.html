@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMD | AI Power Solution</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,7 +13,9 @@
             background-color: #000;
             color: #fff;
             height: 100%;
-            overflow-x: hidden;
+            /* 強制最小寬度 */
+            min-width: 1200px;
+            overflow-x: auto; 
         }
 
         /* --- 頂部導航欄 --- */
@@ -28,53 +29,33 @@
             border-bottom: 1px solid #333;
             position: fixed;
             width: 100%;
+            min-width: 1200px; 
             top: 0;
             z-index: 1000;
             box-sizing: border-box;
         }
 
         .nav-left { 
-            display: flex; 
-            align-items: center; 
-            gap: 25px; 
+            display: flex; align-items: center; gap: 25px; 
         }
         
         .menu-toggle {
-            cursor: pointer;
-            font-size: 22px;
-            color: #fff;
-            padding: 5px;
+            cursor: pointer; font-size: 22px; color: #fff; padding: 5px;
         }
 
-        /* AMD Logo (反白處理) */
         .amd-logo { 
-            height: 26px; 
-            width: auto; 
-            cursor: pointer; 
-            display: block;
-            filter: brightness(0) invert(1);
+            height: 26px; width: auto; cursor: pointer; display: block; filter: brightness(0) invert(1);
         }
 
-        /* 標題文字 (加大加粗) */
         .site-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #fff;
-            white-space: nowrap;
-            letter-spacing: 0.5px;
-            margin-left: 10px;
+            font-size: 22px; font-weight: 700; color: #fff; white-space: nowrap; letter-spacing: 0.5px; margin-left: 10px;
         }
 
         .nav-right { 
-            display: flex; 
-            gap: 25px; 
-            align-items: center; 
+            display: flex; gap: 25px; align-items: center; 
         }
         .nav-right i { 
-            font-size: 18px; 
-            color: #fff; 
-            cursor: pointer; 
-            transition: color 0.2s;
+            font-size: 18px; color: #fff; cursor: pointer; transition: color 0.2s;
         }
         .nav-right i:hover { color: #ccc; }
 
@@ -83,7 +64,7 @@
             position: fixed;
             top: 0; left: -100%;
             width: 100%;
-            max-width: 400px;
+            max-width: 400px; /* 選單寬度 */
             height: 100vh;
             background-color: #000;
             z-index: 2000;
@@ -96,180 +77,83 @@
         .sidebar-menu.active { left: 0; }
 
         .sidebar-header {
-            display: flex;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #222;
-            gap: 15px;
+            display: flex; align-items: center; padding: 20px; border-bottom: 1px solid #222; gap: 15px;
         }
 
         .close-btn {
-            width: 40px; height: 40px;
-            border: 1px solid #fff;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
-            color: #fff;
-            cursor: pointer;
-            transition: 0.2s;
+            width: 40px; height: 40px; border: 1px solid #fff; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #fff; cursor: pointer; transition: 0.2s;
         }
         .close-btn:hover { border-color: #ED1C24; color: #ED1C24; }
 
         .sidebar-title {
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-size: 18px; font-weight: 700; letter-spacing: 0.5px;
         }
 
         .sidebar-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex: 1;
-            overflow-y: auto;
+            list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto;
         }
 
+        /* 選單連結樣式 */
         .menu-item {
+            border-bottom: 1px solid #222;
+        }
+
+        .menu-item a {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 25px 30px;
-            border-bottom: 1px solid #222;
-            font-size: 16px;
-            font-weight: 500;
-            color: #fff;
-            cursor: default;
-            transition: background 0.2s;
-        }
-
-        .status-badge {
-            font-size: 12px;
-            color: #ED1C24;
-            text-transform: lowercase;
-            font-weight: 400;
-        }
-
-        .menu-item.active-link {
-            cursor: pointer;
-            background-color: #111;
-        }
-        .menu-item.active-link:hover { background-color: #1a1a1a; }
-        .menu-item.active-link a {
-            color: #ED1C24;
             text-decoration: none;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            color: #fff; /* 字體白色 */
+            font-size: 16px;
+            font-weight: 600; /* 加粗 */
+            transition: background 0.2s, color 0.2s;
         }
 
-        .menu-arrow { font-size: 12px; transform: rotate(-90deg); color: #666; }
-        .menu-item.active-link .menu-arrow { color: #ED1C24; transform: rotate(0deg); }
+        .menu-item a:hover {
+            background-color: #1a1a1a; /* Hover 背景變深灰 */
+            color: #ED1C24; /* 文字變紅 (可選，若想保持白字可刪除這行) */
+        }
 
-        /* --- 英雄區塊 (Hero Section) --- */
+        .menu-arrow { font-size: 14px; color: #666; }
+        .menu-item a:hover .menu-arrow { color: #ED1C24; }
+
+        /* --- 英雄區塊 --- */
         .hero {
             height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            position: relative;
-            overflow: hidden;
-            padding-top: 75px;
+            display: flex; align-items: center; justify-content: flex-start;
+            position: relative; overflow: hidden; padding-top: 75px;
             background-color: #050505;
         }
 
-        /* 背景圖片設定 (改為 123.png) */
         .hero-bg-image {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            
-            /* ✨ 載入圖片 123.png ✨ */
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('123.png');
-            
-            /* 確保充滿版面 */
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            
+            background-size: cover; background-position: center center; background-repeat: no-repeat;
             z-index: 1;
-            
-            /* 邊緣暗角效果，讓文字更清楚 */
             mask-image: radial-gradient(circle at center, black 50%, transparent 100%);
             -webkit-mask-image: radial-gradient(circle at center, black 50%, transparent 100%);
-            
             opacity: 0.9;
         }
 
         .hero-content {
-            z-index: 10;
-            text-align: left;
-            max-width: 1200px;
-            width: 100%;
-            padding: 0 60px;
-            margin: 0 auto;
+            z-index: 10; text-align: left; max-width: 1200px; width: 100%; padding: 0 60px; margin: 0 auto;
         }
 
         .hero-subtitle {
-            font-size: 1.5rem;
-            color: #fff;
-            margin-bottom: 10px;
-            font-weight: 400;
-            display: block;
+            font-size: 1.5rem; color: #fff; margin-bottom: 10px; font-weight: 400; display: block;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .hero-title {
-            font-size: 4.5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin: 10px 0 20px 0;
-            color: #fff;
-            text-transform: capitalize;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+            font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin: 10px 0 20px 0; color: #fff;
+            text-transform: capitalize; text-shadow: 0 2px 10px rgba(0,0,0,0.7);
         }
 
         .hero-desc {
-            font-size: 1.2rem;
-            color: #e5e5e5;
-            line-height: 1.6;
-            margin-bottom: 50px;
-            max-width: 700px;
-            font-weight: 300;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        /* 按鈕樣式 */
-        .btn-tradeoff {
-            padding: 18px 40px;
-            border: 2px solid #fff;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.3);
-            text-decoration: none;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            display: inline-block;
-            backdrop-filter: blur(2px);
-        }
-
-        .btn-tradeoff:hover {
-            background-color: #fff;
-            color: #000;
-            box-shadow: 0 0 20px rgba(255,255,255,0.3);
-        }
-
-        /* RWD */
-        @media (max-width: 768px) {
-            .hero-content { padding: 0 30px; }
-            .hero-title { font-size: 3rem; }
-            .hero-subtitle { font-size: 1.2rem; }
-            .sidebar-menu { max-width: 100%; }
-            .site-title { font-size: 18px; }
+            font-size: 1.2rem; color: #e5e5e5; line-height: 1.6; margin-bottom: 50px; max-width: 700px;
+            font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
     </style>
@@ -302,33 +186,35 @@
         </div>
 
         <ul class="sidebar-list">
+            
             <li class="menu-item">
-                <span>Products</span>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="status-badge">coming soon</span>
-                    <i class="fas fa-chevron-down menu-arrow"></i>
-                </div>
-            </li>
-            <li class="menu-item">
-                <span>Solutions</span>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="status-badge">coming soon</span>
-                    <i class="fas fa-chevron-down menu-arrow"></i>
-                </div>
-            </li>
-            <li class="menu-item active-link">
-                <a href="hub.html">
-                    TRADEOFF HUB
-                    <i class="fas fa-arrow-right menu-arrow"></i>
+                <a href="power-roadmap.html">
+                    Power Solution
+                    <i class="fas fa-chevron-right menu-arrow"></i>
                 </a>
             </li>
+
             <li class="menu-item">
-                <span>Shop</span>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="status-badge">coming soon</span>
-                    <i class="fas fa-chevron-down menu-arrow"></i>
-                </div>
+                <a href="tco-analysis.html">
+                    TCO Analysis
+                    <i class="fas fa-chevron-right menu-arrow"></i>
+                </a>
             </li>
+
+            <li class="menu-item">
+                <a href="resources.html">
+                    White Papers & Education
+                    <i class="fas fa-chevron-right menu-arrow"></i>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="reference-designs.html">
+                    Data Center Reference Designs
+                    <i class="fas fa-chevron-right menu-arrow"></i>
+                </a>
+            </li>
+
         </ul>
     </div>
 
@@ -347,10 +233,7 @@
                 Accelerate AI breakthroughs with end-to-end computing solutions and broad technology partnerships.
             </p>
             
-            <a href="hub.html" class="btn-tradeoff">
-                OPEN TRADEOFF HUB
-            </a>
-        </div>
+            </div>
     </div>
 
     <script>
