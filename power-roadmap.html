@@ -43,7 +43,7 @@
         }
         .back-btn:hover { background-color: #ED1C24; color: #fff; border-color: #ED1C24; }
 
-        /* --- 圖片與連結容器 --- */
+        /* --- 圖片地圖容器 --- */
         .map-wrapper {
             flex: 1;
             padding: 40px;
@@ -55,7 +55,7 @@
 
         .map-container {
             position: relative;
-            width: 1200px; /* 固定寬度 */
+            width: 1200px;
             background: #ffffff;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             border-radius: 8px;
@@ -67,43 +67,44 @@
             display: block;
         }
 
-        /* --- 關鍵修改：自動排列容器 (Links Column) --- */
-        .links-column {
-            position: absolute;
-            right: 1.5%;        /* 靠右對齊文字 */
-            width: 16%;         /* 寬度涵蓋文字 */
-            
-            /* --- 設定起點與終點 (只要調這兩個數值，中間會自動對齊) --- */
-            top: 20%;           /* 第一個按鈕(2025) 的頂部位置 */
-            height: 72%;        /* 整個連結區域的總高度 (從2025延伸到2029) */
-            
-            /* 使用 Flexbox 讓內部按鈕自動平均分佈 */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* 關鍵：讓頭尾對齊，中間平均分開 */
-            
-            z-index: 10;
-            /* background-color: rgba(0,0,255,0.1); */ /* 除錯用：打開可以看到整個欄位範圍 */
-        }
-
-        /* 單個連結按鈕 */
+        /* --- 連結熱區 (Hotspots) --- */
         .hotspot {
-            width: 100%;
-            height: 12%; /* 每個按鈕的高度佔比 */
+            position: absolute;
+            right: 0.5%;      /* 靠右對齊 */
+            width: 20%;       /* 寬度涵蓋右側文字 */
+            height: 6%;       /* 預設高度 */
             
-            /* 隱形設定 */
-            background-color: transparent;
-            /* background-color: rgba(255,0,0,0.3); */ /* 除錯用：打開可以看到紅色按鈕位置 */
+            /* --- ⚠️ 想要檢查位置時，請把 background-color 改成紅色 --- */
+            background-color: transparent; 
+            /* background-color: rgba(255, 0, 0, 0.3); */
             
             cursor: pointer;
             display: block;
+            z-index: 10;
         }
 
-        /* 為了修正 2029 年稍微偏下面的問題，給最後一個按鈕一點微調 */
-        .hotspot:last-child {
-            margin-bottom: 0; 
-            /* 如果最後一個太低，可以設 height 小一點 */
-        }
+        /* --- 設定 7 個 Solution 的垂直位置 (Top %) --- */
+        
+        /* Solution 1: 再往上移 (10.5% -> 9.5%) */
+        .link-sol1 { top: 5.5%; }
+
+        /* Solution 2: 再往上移 (20.5% -> 19.5%) */
+        .link-sol2 { top: 19%; }
+
+        /* Solution 3: 維持不變 */
+        .link-sol3 { top: 32.5%; }
+
+        /* Solution 4: 維持不變 */
+        .link-sol4 { top: 54%; }
+
+        /* Solution 5: 維持不變 */
+        .link-sol5 { top: 63%; }
+
+        /* Solution 6: 維持不變 */
+        .link-sol6 { top: 79%; }
+
+        /* Solution 7: 維持不變 (之前已調低) */
+        .link-sol7 { top: 87.5%; }
 
     </style>
 </head>
@@ -119,15 +120,15 @@
 
     <div class="map-wrapper">
         <div class="map-container">
-            <img src="power-roadmap.svg" alt="Power Solution Roadmap" class="main-image">
+            <img src="power1.svg" alt="AMD Power Solution" class="main-image">
 
-            <div class="links-column">
-                <a href="page-2025.html" class="hotspot" title="2025"></a>
-                <a href="page-2026.html" class="hotspot" title="2026"></a>
-                <a href="page-2027.html" class="hotspot" title="2027"></a>
-                <a href="page-2028.html" class="hotspot" title="2028"></a>
-                <a href="page-2029.html" class="hotspot" title="2029"></a>
-            </div>
+            <a href="page-solution1.html" class="hotspot link-sol1" title="Solution 1"></a>
+            <a href="page-solution2.html" class="hotspot link-sol2" title="Solution 2"></a>
+            <a href="page-solution3.html" class="hotspot link-sol3" title="Solution 3"></a>
+            <a href="page-solution4.html" class="hotspot link-sol4" title="Solution 4"></a>
+            <a href="page-solution5.html" class="hotspot link-sol5" title="Solution 5"></a>
+            <a href="page-solution6.html" class="hotspot link-sol6" title="Solution 6"></a>
+            <a href="page-solution7.html" class="hotspot link-sol7" title="Solution 7"></a>
         </div>
     </div>
 
