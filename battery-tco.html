@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1200">
     <title>AMD Li-ion vs VRLA TCO Calculator</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,15 +15,17 @@
             color: #333; 
             display: flex; 
             flex-direction: column; 
-            min-height: 100vh; /* 改為 min-height */
-            /* 2. 移除 min-width: 1200px，讓手機可以自適應 */
+            height: 100vh; 
+            /* 2. 鎖定最小寬度，確保版面不崩壞 */
+            min-width: 1200px; 
+            overflow-x: auto; 
         }
         
         /* 頂部標題列 */
         header { 
             background-color: #ffffff; 
-            padding: 0 20px; 
-            height: 60px; /* 手機版稍微變矮一點 */
+            padding: 0 30px; 
+            height: 70px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -32,31 +34,37 @@
             flex-shrink: 0; 
         }
         
-        .brand { display: flex; align-items: center; gap: 10px; }
-        .brand img { height: 20px; width: auto; display: block; }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 24px; width: auto; display: block; }
         .title { 
-            font-size: 16px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 0.5px;
-            border-left: 2px solid #e5e7eb; padding-left: 10px;
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #e5e7eb; padding-left: 15px;
         }
-        .header-icons i { font-size: 18px; color: #ED1C24; cursor:pointer; }
+        .header-icons i { font-size: 20px; color: #ED1C24; cursor:pointer; }
 
-        /* 主容器：預設為直向排列 (Mobile First 概念，但這裡我們用 Flex wrap) */
+        /* 主容器：強制水平排列 (Row) */
         .container { 
             flex: 1; 
-            padding: 20px; 
+            padding: 30px; 
+            overflow-y: hidden; /* 電腦版讓內部捲動 */
             max-width: 1600px; 
             margin: 0 auto; 
             width: 100%; 
             box-sizing: border-box; 
             display: flex; 
-            flex-direction: column; /* 手機預設上下排 */
-            gap: 20px; 
+            flex-direction: row; /* 強制左右排 */
+            gap: 30px; 
         }
 
         /* --- 左側輸入區 --- */
         .sidebar { 
-            width: 100%; /* 手機版佔滿寬度 */
-            display: flex; flex-direction: column; gap: 15px; 
+            width: 400px; /* 固定寬度 */
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+            flex-shrink: 0;
+            overflow-y: auto; /* 獨立捲動 */
+            padding-right: 5px;
         }
 
         /* --- 右側結果區 --- */
@@ -65,6 +73,8 @@
             display: flex; 
             flex-direction: column; 
             gap: 20px; 
+            overflow-y: auto; /* 獨立捲動 */
+            padding-right: 5px;
         }
 
         /* 面板樣式 */
@@ -72,96 +82,54 @@
             background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;
         }
         .panel-header { 
-            background: #f3f4f6; color: #111827; padding: 10px 15px; font-size: 13px; font-weight: 700; 
+            background: #f3f4f6; color: #111827; padding: 12px 20px; font-size: 13px; font-weight: 700; 
             display: flex; justify-content: space-between; align-items: center; 
             border-bottom: 1px solid #d1d5db; text-transform: uppercase; letter-spacing: 0.5px;
             border-left: 4px solid #ED1C24; 
         }
-        .panel-body { padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .panel-body { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
 
         /* 輸入控制項 */
-        .input-row { display: flex; flex-direction: column; gap: 5px; }
+        .input-row { display: flex; flex-direction: column; gap: 8px; }
         .input-label-group { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: #4b5563; }
         .val-display { font-weight: 700; color: #ED1C24; font-family: monospace; font-size: 14px; }
-        select { padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px; color: #333; outline: none; background: #fff; }
+        select { padding: 5px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px; color: #333; outline: none; }
 
-        /* 滑桿樣式 (增加觸控區域) */
-        .slider-wrapper { display: flex; align-items: center; height: 30px; }
+        /* 滑桿樣式 */
+        .slider-wrapper { display: flex; align-items: center; height: 20px; }
         input[type="range"] {
             flex: 1; height: 6px; -webkit-appearance: none; appearance: none; background: #e5e7eb; border-radius: 3px; outline: none; cursor: pointer;
         }
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none; width: 20px; height: 20px; 
+            -webkit-appearance: none; appearance: none; width: 16px; height: 16px; 
             background: #000; border-radius: 50%; border: 2px solid #fff; cursor: pointer; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
         }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #ED1C24; }
 
         /* KPI 卡片區 */
-        .kpi-group { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* 預設三欄 */
-            gap: 15px; 
-        }
+        .kpi-group { display: flex; gap: 20px; }
         .kpi-card {
-            background: #ffffff; padding: 15px; border-radius: 6px; text-align: center; 
+            flex: 1; background: #ffffff; padding: 20px; border-radius: 6px; text-align: center; 
             border: 1px solid #e5e7eb; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
         }
-        .kpi-card h4 { margin: 0; font-size: 11px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
-        .kpi-card h2 { margin: 5px 0 0; font-size: 24px; color: #111827; font-weight: 800; }
-        .kpi-unit { font-size: 11px; color: #9ca3af; font-weight: 500; }
+        .kpi-card:hover { transform: translateY(-3px); border-color: #ED1C24; }
+        .kpi-card h4 { margin: 0; font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
+        .kpi-card h2 { margin: 10px 0 0; font-size: 28px; color: #111827; font-weight: 800; }
+        .kpi-unit { font-size: 13px; color: #9ca3af; font-weight: 500; }
         .kpi-accent { color: #ED1C24 !important; }
 
         /* 圖表區塊 */
-        .chart-row { 
-            display: flex; 
-            flex-direction: column; /* 手機版圖表上下排 */
-            gap: 20px; 
-            flex: 1; 
-        }
+        .chart-row { display: flex; gap: 20px; flex: 1; min-height: 350px; }
         .chart-panel {
-            background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03); padding: 15px; display: flex; flex-direction: column;
-            min-height: 300px; /* 手機版圖表最小高度 */
+            flex: 1; background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); padding: 20px; display: flex; flex-direction: column;
         }
-        .chart-header { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 10px; text-transform: uppercase; display: flex; justify-content: space-between; }
-        .chart-container { flex: 1; position: relative; width: 100%; }
+        .chart-header { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 15px; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .chart-container { flex: 1; position: relative; }
 
-        /* --- 3. 電腦版樣式 (寬度大於 1024px 時) --- */
-        @media (min-width: 1024px) {
-            .container {
-                flex-direction: row; /* 變回左右排 */
-                padding: 30px;
-                gap: 30px;
-                overflow-y: hidden; /* 電腦版不讓整個頁面捲動，而是內部區塊捲動 */
-            }
-            .sidebar {
-                width: 380px; /* 固定側邊欄寬度 */
-                overflow-y: auto; /* 側邊欄獨立捲動 */
-                padding-right: 5px; /* 避免捲軸擋住內容 */
-            }
-            .main-content {
-                overflow-y: auto; /* 主內容獨立捲動 */
-                padding-right: 5px;
-            }
-            .chart-row {
-                flex-direction: row; /* 圖表左右排 */
-            }
-            .title { font-size: 18px; }
-            header { height: 70px; padding: 0 30px; }
-            .kpi-card h2 { font-size: 28px; }
-        }
-
-        /* --- 4. 平板/手機樣式微調 (小於 768px) --- */
-        @media (max-width: 768px) {
-            .brand .title { display: none; } /* 手機上如果標題太長可以隱藏，或改小字體 */
-            .brand::after { content: "TCO Calculator"; font-size: 16px; font-weight: 700; color: #333; margin-left: 5px;} 
-            .kpi-group {
-                grid-template-columns: 1fr; /* 手機極窄螢幕時 KPI 變成單欄堆疊，或保持 3 欄看內容多寡 */
-                grid-template-columns: repeat(3, 1fr); /* 保持 3 欄通常也 OK */
-            }
-            .kpi-card { padding: 10px 5px; }
-            .kpi-card h2 { font-size: 18px; }
-        }
+        /* 3. 移除所有 RWD 的 @media 查詢，確保手機不變形 */
 
     </style>
 </head>
@@ -248,7 +216,7 @@
                             <input type="range" id="in_vrla_life" min="3" max="6" step="1" value="4" oninput="calc()">
                         </div>
                     </div>
-                    <div style="font-size:11px; color:#6b7280; padding-top:5px; line-height: 1.4;">
+                    <div style="font-size:11px; color:#6b7280; padding-top:5px;">
                         *Li-ion battery life estimated at 12-15 years (No replacement needed in 10-yr model).
                     </div>
                 </div>
@@ -386,9 +354,8 @@
             });
         }
 
-        // --- 核心計算邏輯 (模擬) ---
+        // --- 核心計算邏輯 ---
         function calc() {
-            // 1. 讀取輸入
             const elecRate = parseFloat(document.getElementById('in_elec').value);
             const capacity = parseInt(document.getElementById('in_cap').value);
             const years = parseInt(document.getElementById('in_time').value);
@@ -402,7 +369,7 @@
             document.getElementById('val_backup').innerText = backup + " Min";
             document.getElementById('val_vrla_life').innerText = vrlaLife + " Yrs";
 
-            // 2. 成本參數假設
+            // 參數假設
             const baseUnitCost = 150; 
             const vrlaCapEx = capacity * baseUnitCost * (backup / 10); 
             const liionCapEx = vrlaCapEx * 1.8;
@@ -419,7 +386,6 @@
             const spaceCostYearVRLA = racksVRLA * 1000; 
             const spaceCostYearLiion = racksLiion * 1000;
 
-            // 3. 累積計算
             let cumVRLA = 0;
             let cumLiion = 0;
             let dataVRLA = [];
@@ -429,7 +395,7 @@
             let totalRepLiion = 0;
 
             for(let i=0; i<=years; i++) {
-                labels.push("Yr " + i);
+                labels.push("Year " + i);
                 if (i === 0) {
                     cumVRLA = vrlaCapEx;
                     cumLiion = liionCapEx;
@@ -452,13 +418,11 @@
                 dataLiion.push(cumLiion);
             }
 
-            // 4. 更新 Line Chart
             lineChart.data.labels = labels;
             lineChart.data.datasets[0].data = dataVRLA;
             lineChart.data.datasets[1].data = dataLiion;
             lineChart.update();
 
-            // 5. 更新 Bar Chart
             const totalMaintV = vrlaMaintYear * years;
             const totalEnergyV = vrlaEnergyYear * years;
             const totalSpaceV = spaceCostYearVRLA * years;
@@ -471,7 +435,6 @@
             barChart.data.datasets[1].data = [vrlaCapEx, totalMaintV, totalEnergyV, totalRepVRLA, totalSpaceV];
             barChart.update();
 
-            // 6. 更新 KPI
             const finalVRLA = dataVRLA[years];
             const finalLiion = dataLiion[years];
             const savings = finalVRLA - finalLiion;
