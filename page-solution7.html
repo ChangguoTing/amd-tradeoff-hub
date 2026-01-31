@@ -95,6 +95,13 @@
             font-size: 13px; background: #fff; color: #374151; outline: none; 
         }
 
+        /* ✅ Disabled dropdown looks like screenshot (still dropdown but greyed) */
+        select:disabled{
+            background: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
         /* Range Slider */
         .slider-container { flex: 1.2; display: flex; align-items: center; gap: 10px; }
         input[type="range"] {
@@ -218,34 +225,32 @@
 
             <div class="group-title">Power Device</div>
             
+            <!-- ✅ 改：Power Shelf 變成 21/42 inch Junction Box（跟你截圖一致） -->
             <div class="input-row">
                 <label>Power Shelf</label>
-                <select id="power_shelf" onchange="calc()">
-                    </select>
+                <select id="power_shelf" onchange="calc()"></select>
             </div>
 
+            <!-- ✅ 改：BBU 固定 N.A 並鎖定（同 solution2） -->
             <div class="input-row">
                 <label>BBU</label>
-                <select id="bbu_select" onchange="calc()">
+                <select id="bbu_select" disabled>
                     <option value="0">N.A</option>
-                    <option value="72_LFP">2U 72KW LFP</option>
-                    <option value="72_LTO">2U 72KW LTO</option>
                 </select>
             </div>
 
+            <!-- ✅ 改：CBU 固定 N.A 並鎖定（同 solution2） -->
             <div class="input-row">
                 <label>CBU</label>
-                <select id="cbu_select" onchange="calc()">
+                <select id="cbu_select" disabled>
                     <option value="0">N.A</option>
-                    <option value="24">1U 24KW</option>
                 </select>
             </div>
 
             <div class="group-title">
                 IT Power Architecture
             </div>
-            <div class="arch-diagram" id="arch_display">
-                </div>
+            <div class="arch-diagram" id="arch_display"></div>
 
         </div>
 
@@ -293,6 +298,8 @@
 
         function init() {
             setRack(42);
+            updateCapDisplay();
+            calc();
         }
 
         function updateCapDisplay() {
@@ -300,6 +307,7 @@
             document.getElementById('cap_display').innerText = val;
         }
 
+        // ✅ 改：只動 Power Device 的 dropdown 行為
         function setRack(size) {
             currentRack = size;
             
@@ -307,27 +315,31 @@
             document.getElementById('btn-42').classList.remove('active');
             document.getElementById(`btn-${size}`).classList.add('active');
 
+            // 圖不要動（依你要求）
             drawArch(size);
 
+            // Power Shelf -> Junction Box（依你截圖）
             const shelfSelect = document.getElementById('power_shelf');
-            shelfSelect.innerHTML = ''; 
+            shelfSelect.innerHTML = '';
 
             if (size === 42) {
-                let opt1 = new Option("42 inch true 3Phase 74KW", "74");
-                let opt2 = new Option("N.A", "0");
-                shelfSelect.add(opt1);
-                shelfSelect.add(opt2);
+                shelfSelect.add(new Option("42 inch Junction Box", "1"));
             } else {
-                let opt1 = new Option("21 inch 72KW", "72");
-                let opt2 = new Option("N.A", "0");
-                shelfSelect.add(opt1);
-                shelfSelect.add(opt2);
+                shelfSelect.add(new Option("21 inch Junction Box", "1"));
             }
+
+            // BBU/CBU 固定 N.A 並鎖定（同 solution2）
+            const bbu = document.getElementById('bbu_select');
+            const cbu = document.getElementById('cbu_select');
+            bbu.value = "0";
+            cbu.value = "0";
+            bbu.disabled = true;
+            cbu.disabled = true;
 
             calc(); 
         }
 
-        // 修改：Solution 7 的 SVG 繪製邏輯
+        // 原本的 drawArch（不動）
         function drawArch(size) {
             const container = document.getElementById('arch_display');
             let svgContent = '';
@@ -345,7 +357,6 @@
             const viewBoxW = 500; 
             const viewBoxH = 280;
 
-            // 左側共用部分
             const commonSVG = `
                 <text x="50" y="30" font-family="Arial" font-size="24" fill="black">HVDC 800V</text>
                 <line x1="10" y1="40" x2="280" y2="40" stroke="${colorLineBlue}" stroke-width="3"/>
@@ -365,59 +376,50 @@
             `;
 
             if (size === 21) {
-                // 21 inch Rack (窄版)
                 svgContent = `
                 <svg viewBox="0 0 ${viewBoxW} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     ${commonSVG}
-                    
                     <rect x="300" y="20" width="100" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
-
                     <rect x="345" y="20" width="10" height="200" fill="${colorRedBus}" stroke="none"/>
-                    
                     <rect x="302" y="22" width="96" height="30" fill="${colorJunctionBox}" stroke="black" stroke-width="1"/>
                     <text x="350" y="42" font-family="Arial" font-size="11" fill="black" text-anchor="middle">Junction Box</text>
-                    
                     <rect x="302" y="52" width="96" height="30" fill="${colorBBUBox}" stroke="${colorOrangeBorder}" stroke-width="2"/>
                     <text x="350" y="72" font-family="Arial" font-size="11" fill="black" text-anchor="middle">*BBU* CBU</text>
-                    
                     <text x="325" y="150" font-family="Arial" font-size="18" font-weight="bold" fill="black">HVDC</text>
-                </svg>
-                `;
+                </svg>`;
             } else {
-                // 42 inch Rack (寬版)
                 svgContent = `
                 <svg viewBox="0 0 ${viewBoxW + 60} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     ${commonSVG}
-                    
                     <rect x="300" y="20" width="160" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
-
                     <rect x="375" y="20" width="10" height="200" fill="${colorRedBus}" stroke="none"/>
-                    
                     <rect x="302" y="22" width="156" height="30" fill="${colorJunctionBox}" stroke="black" stroke-width="1"/>
                     <text x="380" y="42" font-family="Arial" font-size="12" fill="black" text-anchor="middle">Junction Box</text>
-                    
                     <rect x="302" y="52" width="156" height="30" fill="${colorBBUBox}" stroke="${colorOrangeBorder}" stroke-width="2"/>
                     <text x="380" y="72" font-family="Arial" font-size="12" fill="black" text-anchor="middle">*BBU* CBU</text>
-                    
                     <text x="350" y="150" font-family="Arial" font-size="20" font-weight="bold" fill="black">HVDC</text>
-                </svg>
-                `;
+                </svg>`;
             }
 
             container.innerHTML = svgContent;
         }
 
+        // ✅ 改：計算不再吃 BBU/CBU 選項（固定 0），Power Shelf 只當存在與否
         function calc() {
             const cap = parseInt(document.getElementById('it_capacity').value) || 0;
-            const shelfPower = parseInt(document.getElementById('power_shelf').value);
-            const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
-            const bbuVal = document.getElementById('bbu_select').value;
-            let bbuPower = 0;
-            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") { bbuPower = 72; }
-            const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
-            const cbuVal = parseInt(document.getElementById('cbu_select').value);
-            const cbuQty = cbuVal > 0 ? Math.ceil(cap / cbuVal) : 0;
-            const accessoryQty = shelfQty > 0 ? shelfQty : 0;
+
+            // Junction Box：你沒給「kW 容量」對應，所以 qty 先用 rack 數量邏輯
+            // 這裡沿用你原本 accessoryQty 跟 shelfQty 一樣的概念：用 cap / 200(42) or 100(21) 也可以，但你目前截圖沒要求。
+            // 我這版：每 rack frame 以「每 100kW 一組」估算，避免全部變 0。
+            // 若你要固定 = shelfQty 或固定 = racks，也可以再改。
+            const perUnitKW = 100;
+            const shelfQty = cap > 0 ? Math.ceil(cap / perUnitKW) : 0;
+
+            // 固定 N.A
+            const bbuQty = 0;
+            const cbuQty = 0;
+
+            const accessoryQty = shelfQty;
 
             document.getElementById('qty_shelf').innerText = shelfQty;
             document.getElementById('qty_bbu').innerText = bbuQty;

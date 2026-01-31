@@ -86,12 +86,7 @@
             text-transform: uppercase; letter-spacing: 0.5px;
             margin-bottom: 10px;
         }
-        /* 副標題已移除，保留樣式以防未來需要 */
-        .group-subtitle {
-            text-transform: none; font-weight: normal; color: #666; margin-left: 10px; font-size: 13px;
-        }
-
-        /* 輸入列 */
+        
         .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; margin-bottom: 12px; color: #4b5563; }
         .input-row label { flex: 1; font-weight: 600; }
         
@@ -221,7 +216,7 @@
                 </div>
             </div>
 
-            <div class="group-title">Power Device</div>
+            <div class="group-title">Power Device <span style="color:red; margin-left:5px;">(Sidecar)</span></div>
             
             <div class="input-row">
                 <label>Power Shelf</label>
@@ -233,8 +228,6 @@
                 <label>BBU</label>
                 <select id="bbu_select" onchange="calc()">
                     <option value="0">N.A</option>
-                    <option value="72_LFP">2U 72KW LFP</option>
-                    <option value="72_LTO">2U 72KW LTO</option>
                 </select>
             </div>
 
@@ -242,7 +235,6 @@
                 <label>CBU</label>
                 <select id="cbu_select" onchange="calc()">
                     <option value="0">N.A</option>
-                    <option value="24">1U 24KW</option>
                 </select>
             </div>
 
@@ -259,57 +251,32 @@
 
             <div class="result-row">
                 <div class="res-label-box">Power Whip</div>
-                <div class="res-img-box">
-                    <img src="whip.png" alt="Power Whip">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_whip">--</div>
-                </div>
+                <div class="res-img-box"><img src="whip.png" alt="Power Whip"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_whip">--</div></div>
             </div>
 
             <div class="result-row">
                 <div class="res-label-box">Power Shelf</div>
-                <div class="res-img-box">
-                    <img src="shelf.png" alt="Power Shelf">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_shelf">--</div>
-                </div>
+                <div class="res-img-box"><img src="shelf.png" alt="Power Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_shelf">--</div></div>
             </div>
 
             <div class="result-row">
                 <div class="res-label-box">BBU Shelf</div>
-                <div class="res-img-box">
-                    <img src="shelf.png" alt="BBU Shelf">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_bbu">--</div>
-                </div>
+                <div class="res-img-box"><img src="shelf.png" alt="BBU Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bbu">--</div></div>
             </div>
 
             <div class="result-row">
                 <div class="res-label-box">CBU Shelf</div>
-                <div class="res-img-box">
-                    <img src="shelf.png" alt="CBU Shelf">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_cbu">--</div>
-                </div>
+                <div class="res-img-box"><img src="shelf.png" alt="CBU Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_cbu">--</div></div>
             </div>
 
             <div class="result-row">
                 <div class="res-label-box">Rack Bus Bar</div>
-                <div class="res-img-box">
-                    <img src="rack.png" alt="Rack Bus Bar">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_bus">--</div>
-                </div>
+                <div class="res-img-box"><img src="rack.png" alt="Rack Bus Bar"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bus">--</div></div>
             </div>
 
             <a href="bom1.html" class="bom-btn">
@@ -429,15 +396,9 @@
             const shelfPower = parseInt(document.getElementById('power_shelf').value);
             const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
 
-            const bbuVal = document.getElementById('bbu_select').value;
-            let bbuPower = 0;
-            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") {
-                bbuPower = 72;
-            }
-            const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
-
-            const cbuVal = parseInt(document.getElementById('cbu_select').value);
-            const cbuQty = cbuVal > 0 ? Math.ceil(cap / cbuVal) : 0;
+            // BBU 和 CBU 數量皆為 0 (因為選單只有 N.A)
+            const bbuQty = 0;
+            const cbuQty = 0;
 
             const accessoryQty = shelfQty > 0 ? shelfQty : 0;
 

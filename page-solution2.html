@@ -276,18 +276,13 @@
             <div class="input-row">
                 <label>BBU</label>
                 <select id="bbu_select" onchange="calc()">
-                    <option value="0">N.A</option>
-                    <option value="72_LFP">2U 72KW LFP</option>
-                    <option value="72_LTO">2U 72KW LTO</option>
-                </select>
+                    </select>
             </div>
 
             <div class="input-row">
                 <label>CBU</label>
                 <select id="cbu_select" onchange="calc()">
-                    <option value="0">N.A</option>
-                    <option value="24">1U 24KW</option>
-                </select>
+                    </select>
             </div>
 
             <div class="group-title">
@@ -383,68 +378,81 @@
             document.getElementById('btn-42').classList.remove('active');
             document.getElementById(`btn-${size}`).classList.add('active');
 
-            // 繪製新的架構圖 (Solution 2 樣式)
+            // 繪製新的架構圖
             drawArch(size);
 
             const shelfSelect = document.getElementById('power_shelf');
-            shelfSelect.innerHTML = ''; 
+            const bbuSelect = document.getElementById('bbu_select');
+            const cbuSelect = document.getElementById('cbu_select');
 
+            // 清空所有選項
+            shelfSelect.innerHTML = ''; 
+            bbuSelect.innerHTML = '';
+            cbuSelect.innerHTML = '';
+
+            // --- Power Shelf Options (Solution 2 Specific) ---
             if (size === 42) {
-                let opt1 = new Option("42 inch true 3Phase 74KW", "74");
-                let opt2 = new Option("N.A", "0");
-                shelfSelect.add(opt1);
-                shelfSelect.add(opt2);
+                // 42 inch: 360KW
+                shelfSelect.add(new Option("42 inch 2U 360KW +/-400V OUT", "360"));
+                shelfSelect.add(new Option("N.A", "0"));
             } else {
-                let opt1 = new Option("21 inch 72KW", "72");
-                let opt2 = new Option("N.A", "0");
-                shelfSelect.add(opt1);
-                shelfSelect.add(opt2);
+                // 21 inch: 180KW
+                shelfSelect.add(new Option("21 inch 2U 180KW +/-400V OUT", "180"));
+                shelfSelect.add(new Option("N.A", "0"));
+            }
+
+            // --- BBU Options (Solution 2 Specific) ---
+            bbuSelect.add(new Option("N.A", "0")); // 預設選項
+            if (size === 42) {
+                // 42 inch: 180KW BBU
+                bbuSelect.add(new Option("42 inch 2U 180KW +/-400V OUT", "180"));
+            } else {
+                // 21 inch: 90KW BBU
+                bbuSelect.add(new Option("21 inch 2U 90KW +/-400V OUT", "90"));
+            }
+
+            // --- CBU Options (Solution 2 Specific) ---
+            cbuSelect.add(new Option("N.A", "0")); // 預設選項
+            if (size === 42) {
+                // 42 inch: 48KW CBU
+                cbuSelect.add(new Option("42 inch 1U 48KW +/-400V OUT", "48"));
+            } else {
+                // 21 inch: 24KW CBU
+                cbuSelect.add(new Option("21 inch 1U 24KW +/-400V OUT", "24"));
             }
 
             calc(); 
         }
 
-        // 修改：Solution 2 的 SVG 繪製邏輯
         function drawArch(size) {
             const container = document.getElementById('arch_display');
             let svgContent = '';
 
-            // 定義 Solution 2 的顏色 (紫色、紅色)
-            const colorGreenText = "#4CAF50";  // 480V 文字保持綠色
-            const colorPurple = "#9C27B0";     // 紫色區塊 (PSU/BBU)
-            const colorRed = "#FF0000";        // 紅色 Cable (HVDC)
+            const colorGreenText = "#4CAF50"; 
+            const colorPurple = "#9C27B0"; 
+            const colorRed = "#FF0000"; 
             const colorBlack = "#000000";
 
             if (size === 21) {
-                // 21 inch - 紫色方塊 + 紅色線條 + HVDC 文字
                 svgContent = `
                 <svg viewBox="0 0 120 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     <rect x="10" y="10" width="100" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
-                    
                     <text x="60" y="35" font-family="Arial" font-size="16" font-weight="bold" fill="${colorGreenText}" text-anchor="middle">480V</text>
-                    
                     <rect x="12" y="50" width="96" height="50" fill="${colorPurple}" stroke="${colorBlack}" stroke-width="2"/>
                     <text x="60" y="70" font-family="Arial" font-size="12" fill="white" text-anchor="middle">PSU *BBU</text>
                     <text x="60" y="88" font-family="Arial" font-size="12" fill="white" text-anchor="middle">*CBU</text>
-                    
                     <rect x="55" y="102" width="10" height="106" fill="${colorRed}" stroke="none"/>
-                    
                     <text x="60" y="160" font-family="Arial" font-size="18" font-weight="bold" fill="black" text-anchor="middle">HVDC</text>
                 </svg>
                 `;
             } else {
-                // 42 inch - 寬版紫色方塊 + 紅色線條 + HVDC 文字
                 svgContent = `
                 <svg viewBox="0 0 200 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     <rect x="10" y="10" width="180" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
-                    
                     <text x="100" y="35" font-family="Arial" font-size="16" font-weight="bold" fill="${colorGreenText}" text-anchor="middle">480V</text>
-                    
                     <rect x="12" y="50" width="176" height="50" fill="${colorPurple}" stroke="${colorBlack}" stroke-width="2"/>
                     <text x="100" y="80" font-family="Arial" font-size="14" fill="white" text-anchor="middle">PSU *BBU *CBU</text>
-                    
                     <rect x="95" y="102" width="10" height="106" fill="${colorRed}" stroke="none"/>
-                    
                     <text x="100" y="160" font-family="Arial" font-size="18" font-weight="bold" fill="black" text-anchor="middle">HVDC</text>
                 </svg>
                 `;
@@ -456,19 +464,19 @@
         function calc() {
             const cap = parseInt(document.getElementById('it_capacity').value) || 0;
             
+            // 1. Power Shelf Qty
             const shelfPower = parseInt(document.getElementById('power_shelf').value);
             const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
 
-            const bbuVal = document.getElementById('bbu_select').value;
-            let bbuPower = 0;
-            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") {
-                bbuPower = 72;
-            }
+            // 2. BBU Qty (直接讀取 value 數值)
+            const bbuPower = parseInt(document.getElementById('bbu_select').value);
             const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
 
-            const cbuVal = parseInt(document.getElementById('cbu_select').value);
-            const cbuQty = cbuVal > 0 ? Math.ceil(cap / cbuVal) : 0;
+            // 3. CBU Qty (直接讀取 value 數值)
+            const cbuPower = parseInt(document.getElementById('cbu_select').value);
+            const cbuQty = cbuPower > 0 ? Math.ceil(cap / cbuPower) : 0;
 
+            // 4. Accessory Qty (連動 Power Shelf)
             const accessoryQty = shelfQty > 0 ? shelfQty : 0;
 
             document.getElementById('qty_shelf').innerText = shelfQty;

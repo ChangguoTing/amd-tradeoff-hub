@@ -99,48 +99,18 @@
             font-size: 13px; background: #fff; color: #374151; outline: none; 
         }
 
-        /* Range Slider 樣式 */
-        .slider-container {
-            flex: 1.2;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
+        /* Range Slider */
+        .slider-container { flex: 1.2; display: flex; align-items: center; gap: 10px; }
         input[type="range"] {
-            flex: 1;
-            height: 6px;
-            background: #e5e7eb;
-            border-radius: 3px;
-            outline: none;
-            appearance: none;
-            -webkit-appearance: none;
-            cursor: pointer;
+            flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; outline: none;
+            appearance: none; -webkit-appearance: none; cursor: pointer;
         }
-        
         input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            background: #ED1C24; /* AMD 紅色 */
-            border: 2px solid #fff;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: transform 0.1s;
+            appearance: none; width: 18px; height: 18px; background: #ED1C24; border: 2px solid #fff;
+            border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
         }
-        
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-        }
-
-        .slider-val {
-            font-weight: 700;
-            color: #ED1C24;
-            font-family: monospace;
-            font-size: 14px;
-            width: 60px;
-            text-align: right;
-        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        .slider-val { font-weight: 700; color: #ED1C24; font-family: monospace; font-size: 14px; width: 60px; text-align: right; }
         
         /* Rack Frame Toggle */
         .toggle-group { flex: 1.2; display: flex; gap: 5px; }
@@ -153,21 +123,12 @@
         /* Architecture Diagram Container */
         .arch-diagram {
             border: 1px dashed #ccc; background: #fafafa; 
-            height: 60vh; 
-            min-height: 550px; 
+            height: 60vh; min-height: 550px; 
             border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
-            flex-direction: column; 
-            overflow: hidden;
-            padding: 0; 
-            margin-top: 10px;
+            flex-direction: column; overflow: hidden; padding: 0; margin-top: 10px;
         }
-
-        .arch-diagram svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
+        .arch-diagram svg { width: 100%; height: 100%; display: block; }
 
         /* --- Result Items --- */
         .result-header {
@@ -183,20 +144,16 @@
         .result-row:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
         .res-label-box {
-            background-color: #8BC34A; 
-            color: #fff; padding: 5px 15px; font-weight: 700; font-size: 13px; border-radius: 4px;
+            background-color: #8BC34A; color: #fff; padding: 5px 15px; font-weight: 700; font-size: 13px; border-radius: 4px;
             width: 120px; text-align: center;
         }
         .res-img-box {
             width: 100px; height: 60px; display: flex; align-items: center; justify-content: center;
-            background: #f9f9f9; border: 1px solid #eee; border-radius: 4px;
-            overflow: hidden; 
+            background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; overflow: hidden; 
         }
         .res-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
         
-        .res-qty-box {
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
-        }
+        .res-qty-box { display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .qty-title { font-size: 11px; font-weight: 700; color: #004d70; }
         .qty-val {
             background: #004d70; color: #fff; width: 60px; padding: 5px; text-align: center;
@@ -209,8 +166,7 @@
             background-color: #8BC34A; color: #fff; padding: 12px 25px;
             font-size: 15px; font-weight: 700; border: none; border-radius: 6px;
             cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background 0.2s; display: flex; align-items: center; gap: 8px;
-            text-decoration: none; 
+            transition: background 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; 
         }
         .bom-btn:hover { background-color: #7cb342; }
 
@@ -278,6 +234,7 @@
                     <option value="0">N.A</option>
                     <option value="72_LFP">2U 72KW LFP</option>
                     <option value="72_LTO">2U 72KW LTO</option>
+                    <option value="33_NCM">2U 33KW NCM</option>
                 </select>
             </div>
 
@@ -369,7 +326,7 @@
             setRack(42);
         }
 
-        // 新增：更新滑桿數值顯示
+        // 更新滑桿數值顯示
         function updateCapDisplay() {
             const val = document.getElementById('it_capacity').value;
             document.getElementById('cap_display').innerText = val;
@@ -388,15 +345,20 @@
             shelfSelect.innerHTML = ''; 
 
             if (size === 42) {
+                // 42 inch 選項
                 let opt1 = new Option("42 inch true 3Phase 74KW", "74");
                 let opt2 = new Option("N.A", "0");
                 shelfSelect.add(opt1);
                 shelfSelect.add(opt2);
             } else {
+                // 21 inch 選項
                 let opt1 = new Option("21 inch 72KW", "72");
-                let opt2 = new Option("N.A", "0");
+                // 新增 33KW 選項
+                let opt2 = new Option("21 inch 33KW", "33");
+                let opt3 = new Option("N.A", "0");
                 shelfSelect.add(opt1);
                 shelfSelect.add(opt2);
+                shelfSelect.add(opt3);
             }
 
             calc(); 
@@ -448,8 +410,11 @@
 
             const bbuVal = document.getElementById('bbu_select').value;
             let bbuPower = 0;
+            // 更新：處理新增的 33KW NCM 選項
             if (bbuVal === "72_LFP" || bbuVal === "72_LTO") {
                 bbuPower = 72;
+            } else if (bbuVal === "33_NCM") {
+                bbuPower = 33;
             }
             const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
 

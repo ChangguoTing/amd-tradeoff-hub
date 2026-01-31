@@ -88,6 +88,29 @@
         select:hover { border-color: #9ca3af; }
         select:disabled { background: #f3f4f6; color: #bbb; cursor: not-allowed; border-color: #e5e7eb; }
         
+        /* Image Placeholder Style - Modified for SVG Drawing */
+        .img-placeholder {
+            width: 100%;
+            height: 240px; /* 足夠的高度 */
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02); 
+        }
+        
+        /* 讓 SVG 充滿容器 */
+        .img-placeholder svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
         /* Sliders */
         .slider-wrapper { flex: 1.5; display: flex; align-items: center; gap: 10px; }
         input[type="range"] {
@@ -185,32 +208,36 @@
             
             <div class="input-row">
                 <label>Power distribution type</label>
-                <select id="input_pwr_dist" onchange="checkLogic()">
-                    <option value="1">Traditional AC + LVDC IT Power Shelf</option>
-                    <option value="2">Traditional AC + HVDC IT Power Shelf</option>
-                    <option value="3">LVDC Sidecar Solution</option>
-                    <option value="4">HVDC Sidecar Solution</option>
-                    <option value="5">SST Solution</option>
-                </select>
-            </div>
-
-            <div class="input-row">
-                <label>Data Center Design Capacity
-</label>
-                <select id="capacity" onchange="calc()">
-                    <option value="500">500 kW</option>
-                    <option value="1000" selected>1000 kW</option>
-                    <option value="2000">2000 kW</option>
-                    <option value="5000">5000 kW</option>
+                <select id="input_pwr_dist" onchange="checkLogic(); updateImage()">
+                    <option value="1">Traditional AC + LVDC IT</option>
+                    <option value="2">Traditional AC + HVDC IT</option>
+                    <option value="3">LVDC Sidecar + LVDC IT</option>
+                    <option value="4">HVDC Sidecar + LVDC IT</option>
+                    <option value="5">HVDC Sidecar + HVDC IT</option>
+                    <option value="6">800V SST + LVDC IT</option>
+                    <option value="7">800V SST + HVDC IT</option>
                 </select>
             </div>
 
             <div class="input-row">
                 <label>Backup Solution</label>
-                <select id="input_backup" onchange="checkLogic()">
+                <select id="input_backup" onchange="checkLogic(); updateImage()">
                     <option value="1">UPS Solution</option>
                     <option value="2">NMC/LFP BBU Solution</option>
                     <option value="3">LTO BBU Solution (with Peak Shaving)</option>
+                </select>
+            </div>
+
+            <div class="img-placeholder" id="arch_img_area">
+                </div>
+
+            <div class="input-row">
+                <label>Data Center Design Capacity</label>
+                <select id="capacity" onchange="calc()">
+                    <option value="500">500 kW</option>
+                    <option value="1000" selected>1000 kW</option>
+                    <option value="2000">2000 kW</option>
+                    <option value="5000">5000 kW</option>
                 </select>
             </div>
 
@@ -322,6 +349,159 @@
     </div>
 
     <script>
+        // --- SVG Drawing Logic (Replaces static images) ---
+        function updateImage() {
+            const pwrDist = document.getElementById('input_pwr_dist').value;
+            const backup = document.getElementById('input_backup').value;
+            const container = document.getElementById('arch_img_area');
+            
+            // Define Styles
+            const style = {
+                grid: "#003366", gridText: "white", ups: "#558B2F", upsBox: "#90A4AE", batt: "#0b4f6c",
+                rackBorder: "black", psuBox: "#8BC34A", lvdcBus: "#F8BBD0", lvdcStroke: "#D81B60",
+                hvdcBus: "#FF0000", rackText: "#4CAF50", hvdcText: "black",
+                sidecar: "#558B2F", conv: "white", redConv: "red"
+            };
+
+            let svg = '';
+            
+            // Common Utility Grid Icon
+            const gridIcon = `
+                <rect x="10" y="50" width="60" height="80" fill="${style.grid}" />
+                <path d="M 20 120 L 30 60 L 50 60 L 60 120" stroke="${style.gridText}" stroke-width="2" fill="none"/>
+                <line x1="20" y1="80" x2="60" y2="80" stroke="${style.gridText}" stroke-width="2"/>
+                <line x1="25" y1="60" x2="55" y2="60" stroke="${style.gridText}" stroke-width="2"/>
+                <text x="10" y="145" font-family="Arial" font-size="12" fill="black">Utility Grid</text>
+            `;
+
+            // Helper to draw UPS
+            const drawUPS = (x, y) => `
+                <rect x="${x}" y="${y}" width="120" height="60" fill="${style.ups}" />
+                <rect x="${x+10}" y="${y+10}" width="40" height="40" fill="none" stroke="white" stroke-width="2"/>
+                <line x1="${x+10}" y1="${y+50}" x2="${x+50}" y2="${y+10}" stroke="white" stroke-width="2"/>
+                <rect x="${x+70}" y="${y+10}" width="40" height="40" fill="none" stroke="white" stroke-width="2"/>
+                <line x1="${x+70}" y1="${y+50}" x2="${x+110}" y2="${y+10}" stroke="white" stroke-width="2"/>
+                <rect x="${x+40}" y="${y+80}" width="40" height="30" fill="${style.batt}" />
+                <text x="${x+45}" y="${y+100}" font-family="Arial" font-size="10" fill="white">Batt</text>
+                <line x1="${x+60}" y1="${y+60}" x2="${x+60}" y2="${y+80}" stroke="#D81B60" stroke-width="2"/>
+                <text x="${x+30}" y="${y-10}" font-family="Arial" font-size="14" font-weight="bold">UPS</text>
+            `;
+
+            // Helper for Sidecar
+            const drawSidecar = (x, y, type) => `
+                <rect x="${x}" y="${y}" width="120" height="60" fill="${style.sidecar}" />
+                <rect x="${x+10}" y="${y+10}" width="40" height="40" fill="none" stroke="white" stroke-width="2"/>
+                <line x1="${x+10}" y1="${y+50}" x2="${x+50}" y2="${y+10}" stroke="white" stroke-width="2"/>
+                
+                <rect x="${x+70}" y="${y+10}" width="40" height="40" fill="${type === 'HVDC' ? 'red' : 'none'}" stroke="white" stroke-width="2"/>
+                <line x1="${x+70}" y1="${y+50}" x2="${x+110}" y2="${y+10}" stroke="white" stroke-width="2"/>
+                <text x="${x}" y="${y-10}" font-family="Arial" font-size="14" font-weight="bold">${type} Sidecar</text>
+            `;
+
+            // Helper for Rack
+            const drawRack = (x, y, psuText, busColor, busText, busTextColor) => `
+                <rect x="${x}" y="${y}" width="80" height="140" fill="none" stroke="black" stroke-width="2"/>
+                <rect x="${x+2}" y="${y+30}" width="76" height="30" fill="${style.psuBox}" stroke="black" stroke-width="1"/>
+                <text x="${x+40}" y="${y+50}" font-family="Arial" font-size="10" text-anchor="middle">${psuText}</text>
+                <rect x="${x+35}" y="${y+60}" width="10" height="80" fill="${busColor}" stroke="${busColor === style.lvdcBus ? style.lvdcStroke : 'none'}" stroke-width="1"/>
+                <text x="${x+40}" y="${y+100}" font-family="Arial" font-size="14" font-weight="bold" fill="${busTextColor}" text-anchor="middle">${busText}</text>
+                <text x="${x+40}" y="${y+20}" font-family="Arial" font-size="12" font-weight="bold" fill="#000" text-anchor="middle">Rack</text>
+            `;
+
+            const viewBox = "0 0 500 200";
+
+            if (pwrDist === "1") { 
+                // 1. Traditional AC + LVDC IT
+                if (backup === "1") {
+                    // With UPS (Image 1 logic)
+                    svg = `
+                    <svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+                        ${gridIcon}
+                        <line x1="70" y1="90" x2="150" y2="90" stroke="#D32F2F" stroke-width="3"/>
+                        ${drawUPS(150, 60)}
+                        <line x1="270" y1="90" x2="350" y2="90" stroke="#E040FB" stroke-width="3"/>
+                        ${drawRack(350, 30, "PSU *BBU", style.lvdcBus, "LVDC", style.rackText)}
+                    </svg>`;
+                } else {
+                    // No UPS (Image 2 logic)
+                    svg = `
+                    <svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+                        ${gridIcon}
+                        <line x1="70" y1="90" x2="350" y2="90" stroke="#D32F2F" stroke-width="3"/>
+                        ${drawRack(350, 30, "PSU *BBU", style.lvdcBus, "LVDC", style.rackText)}
+                    </svg>`;
+                }
+            } else if (pwrDist === "2") {
+                // 2. Traditional AC + HVDC IT
+                svg = `
+                <svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+                    ${gridIcon}
+                    <line x1="70" y1="90" x2="150" y2="90" stroke="#D32F2F" stroke-width="3"/>
+                    ${drawUPS(150, 60)}
+                    <line x1="270" y1="90" x2="350" y2="90" stroke="#E040FB" stroke-width="3"/>
+                    ${drawRack(350, 30, "PSU *BBU", style.hvdcBus, "HVDC", "black")}
+                </svg>`;
+            } else if (pwrDist === "3") {
+                // 3. LVDC Sidecar
+                svg = `
+                <svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="50" y1="90" x2="100" y2="90" stroke="#E040FB" stroke-width="3"/>
+                    ${drawSidecar(100, 60, "LVDC")}
+                    <line x1="220" y1="90" x2="350" y2="90" stroke="#9CCC65" stroke-width="4"/>
+                    <text x="285" y="80" font-family="Arial" font-size="10" fill="#33691E" text-anchor="middle">Bus Bar</text>
+                    ${drawRack(350, 30, "", style.lvdcBus, "LVDC", style.rackText)}
+                </svg>`;
+            } else if (pwrDist === "4") {
+                // 4. HVDC Sidecar + LVDC
+                svg = `
+                <svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="50" y1="90" x2="100" y2="90" stroke="#E040FB" stroke-width="3"/>
+                    ${drawSidecar(100, 60, "HVDC")}
+                    <line x1="220" y1="90" x2="350" y2="90" stroke="gray" stroke-width="4"/>
+                    <text x="285" y="80" font-family="Arial" font-size="10" fill="#33691E" text-anchor="middle">HVDC Cable</text>
+                    ${drawRack(350, 30, "PSU", style.lvdcBus, "LVDC", style.rackText)}
+                </svg>`;
+            } else if (pwrDist === "5") {
+                // 5. HVDC Sidecar + HVDC
+                svg = `
+                <svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="50" y1="90" x2="100" y2="90" stroke="#E040FB" stroke-width="3"/>
+                    ${drawSidecar(100, 60, "HVDC")}
+                    <line x1="220" y1="90" x2="350" y2="90" stroke="gray" stroke-width="4"/>
+                    <text x="285" y="80" font-family="Arial" font-size="10" fill="#33691E" text-anchor="middle">HVDC Cable</text>
+                    ${drawRack(350, 30, "*BBU *CBU", style.hvdcBus, "HVDC", "black")}
+                </svg>`;
+            } else if (pwrDist === "6") {
+                // 6. SST + LVDC
+                svg = `
+                <svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+                    <text x="50" y="40" font-family="Arial" font-size="20" font-weight="bold">HVDC 800V SST</text>
+                    <line x1="20" y1="50" x2="300" y2="50" stroke="#0D47A1" stroke-width="4"/>
+                    <line x1="200" y1="50" x2="200" y2="90" stroke="#0D47A1" stroke-width="4"/>
+                    <rect x="160" y="90" width="80" height="50" fill="#8BC34A" stroke="#FF9800" stroke-width="2"/>
+                    <text x="200" y="120" font-family="Arial" font-size="12" text-anchor="middle">Energy Storage</text>
+                    
+                    <line x1="300" y1="50" x2="350" y2="50" stroke="#0D47A1" stroke-width="4" stroke-dasharray="5,5"/>
+                    ${drawRack(350, 30, "PSU *BBU", style.lvdcBus, "LVDC", style.rackText)}
+                </svg>`;
+            } else if (pwrDist === "7") {
+                // 7. SST + HVDC
+                svg = `
+                <svg viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
+                    <text x="50" y="40" font-family="Arial" font-size="20" font-weight="bold">HVDC 800V SST</text>
+                    <line x1="20" y1="50" x2="300" y2="50" stroke="#0D47A1" stroke-width="4"/>
+                    <line x1="200" y1="50" x2="200" y2="90" stroke="#0D47A1" stroke-width="4"/>
+                    <rect x="160" y="90" width="80" height="50" fill="#8BC34A" stroke="#FF9800" stroke-width="2"/>
+                    <text x="200" y="120" font-family="Arial" font-size="12" text-anchor="middle">Energy Storage</text>
+                    
+                    <line x1="300" y1="50" x2="350" y2="50" stroke="#0D47A1" stroke-width="4" stroke-dasharray="5,5"/>
+                    ${drawRack(350, 30, "*BBU *CBU", style.hvdcBus, "HVDC", "black")}
+                </svg>`;
+            }
+
+            container.innerHTML = svg;
+        }
+
         // --- Input Logic Management ---
         function checkLogic() {
             const pwrDist = document.getElementById('input_pwr_dist');
@@ -335,8 +515,8 @@
             peak.disabled = false;
             upsOption.disabled = false; 
             
-            // Logic 1: SST vs UPS
-            if (pwrDist.value === "5") {
+            // Logic 1: SST vs UPS (Option 6 & 7)
+            if (pwrDist.value === "6" || pwrDist.value === "7") {
                 upsOption.disabled = true;
                 if (backup.value === "1") {
                     backup.value = "2"; 
@@ -406,7 +586,6 @@
             document.getElementById('disp_shell').innerText = "$ " + shellPrice + " /ft²";
 
             let racks = Math.ceil(cap / density);
-            // Ensure at least 1 rack if density > cap (rare edge case in UI)
             if (racks < 1) racks = 1;
 
             let itArea = racks * 30; 
@@ -421,7 +600,7 @@
 
             const pwrType = document.getElementById('input_pwr_dist').value;
             let redundancy = red_ups;
-            if (pwrType === "5") redundancy = red_sst; 
+            if (pwrType === "6" || pwrType === "7") redundancy = red_sst; 
 
             if(document.getElementById('cb_ups').checked) { c_ups = totalLoadCost * 0.35 * redundancy; }
             if(document.getElementById('cb_psu').checked) { c_psu = totalLoadCost * 0.15 * red_it; }
@@ -457,7 +636,9 @@
             chartType.update();
         }
 
+        // Initialize Logic and Images
         checkLogic();
+        updateImage();
     </script>
 </body>
 </html>
