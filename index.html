@@ -13,7 +13,6 @@
             background-color: #000;
             color: #fff;
             height: 100%;
-            /* 強制最小寬度 */
             min-width: 1200px;
             overflow-x: auto; 
         }
@@ -35,28 +34,12 @@
             box-sizing: border-box;
         }
 
-        .nav-left { 
-            display: flex; align-items: center; gap: 25px; 
-        }
-        
-        .menu-toggle {
-            cursor: pointer; font-size: 22px; color: #fff; padding: 5px;
-        }
-
-        .amd-logo { 
-            height: 26px; width: auto; cursor: pointer; display: block; filter: brightness(0) invert(1);
-        }
-
-        .site-title {
-            font-size: 22px; font-weight: 700; color: #fff; white-space: nowrap; letter-spacing: 0.5px; margin-left: 10px;
-        }
-
-        .nav-right { 
-            display: flex; gap: 25px; align-items: center; 
-        }
-        .nav-right i { 
-            font-size: 18px; color: #fff; cursor: pointer; transition: color 0.2s;
-        }
+        .nav-left { display: flex; align-items: center; gap: 25px; }
+        .menu-toggle { cursor: pointer; font-size: 22px; color: #fff; padding: 5px; }
+        .amd-logo { height: 26px; width: auto; cursor: pointer; display: block; filter: brightness(0) invert(1); }
+        .site-title { font-size: 22px; font-weight: 700; color: #fff; white-space: nowrap; letter-spacing: 0.5px; margin-left: 10px; }
+        .nav-right { display: flex; gap: 25px; align-items: center; }
+        .nav-right i { font-size: 18px; color: #fff; cursor: pointer; transition: color 0.2s; }
         .nav-right i:hover { color: #ccc; }
 
         /* --- 側邊選單 --- */
@@ -64,7 +47,7 @@
             position: fixed;
             top: 0; left: -100%;
             width: 100%;
-            max-width: 400px; /* 選單寬度 */
+            max-width: 350px; 
             height: 100vh;
             background-color: #000;
             z-index: 2000;
@@ -76,48 +59,76 @@
 
         .sidebar-menu.active { left: 0; }
 
-        .sidebar-header {
-            display: flex; align-items: center; padding: 20px; border-bottom: 1px solid #222; gap: 15px;
-        }
-
-        .close-btn {
-            width: 40px; height: 40px; border: 1px solid #fff; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: #fff; cursor: pointer; transition: 0.2s;
-        }
+        .sidebar-header { display: flex; align-items: center; padding: 20px; border-bottom: 1px solid #222; gap: 15px; }
+        .close-btn { width: 40px; height: 40px; border: 1px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; cursor: pointer; transition: 0.2s; }
         .close-btn:hover { border-color: #ED1C24; color: #ED1C24; }
+        .sidebar-title { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+        .sidebar-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: visible; }
 
-        .sidebar-title {
-            font-size: 18px; font-weight: 700; letter-spacing: 0.5px;
-        }
-
-        .sidebar-list {
-            list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto;
-        }
-
-        /* 選單連結樣式 */
+        /* 選單項目 (父層) */
         .menu-item {
             border-bottom: 1px solid #222;
+            position: relative; /* 讓子選單定位 */
         }
 
-        .menu-item a {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .menu-link {
+            display: flex; justify-content: space-between; align-items: center;
             padding: 25px 30px;
-            text-decoration: none;
-            color: #fff; /* 字體白色 */
-            font-size: 16px;
-            font-weight: 600; /* 加粗 */
+            text-decoration: none; color: #fff; font-size: 16px; font-weight: 600;
             transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+            width: 100%; 
+            box-sizing: border-box;
         }
 
-        .menu-item a:hover {
-            background-color: #1a1a1a; /* Hover 背景變深灰 */
-            color: #ED1C24; /* 文字變紅 (可選，若想保持白字可刪除這行) */
+        .menu-link:hover { background-color: #1a1a1a; color: #ED1C24; }
+        .menu-arrow { font-size: 14px; color: #666; transition: transform 0.3s; }
+        .menu-link:hover .menu-arrow { color: #ED1C24; }
+
+        /* --- 子選單樣式 (Hover 右側展開) --- */
+        .sub-menu {
+            display: none; /* 預設隱藏 */
+            position: absolute; /* 絕對定位 */
+            top: 0; 
+            left: 100%; /* 顯示在父選單的右側 */
+            width: 300px; /* 子選單寬度 */
+            background-color: #0f0f0f; 
+            border: 1px solid #333;
+            border-left: none; 
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            z-index: 2001; 
         }
 
-        .menu-arrow { font-size: 14px; color: #666; }
-        .menu-item a:hover .menu-arrow { color: #ED1C24; }
+        /* 滑鼠懸停展開 */
+        .menu-item:hover .sub-menu {
+            display: block;
+        }
+
+        /* 箭頭旋轉 */
+        .menu-item:hover .menu-arrow {
+            transform: rotate(-90deg); 
+            color: #ED1C24;
+        }
+
+        .sub-menu-item a {
+            display: block;
+            padding: 20px 25px;
+            color: #ccc;
+            text-decoration: none;
+            font-size: 15px;
+            border-bottom: 1px solid #222;
+            transition: all 0.2s;
+        }
+
+        .sub-menu-item a:hover {
+            color: #fff;
+            background-color: #1a1a1a;
+            border-left: 3px solid #ED1C24;
+            padding-left: 22px; 
+        }
 
         /* --- 英雄區塊 --- */
         .hero {
@@ -126,7 +137,6 @@
             position: relative; overflow: hidden; padding-top: 75px;
             background-color: #050505;
         }
-
         .hero-bg-image {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('123.png');
@@ -136,25 +146,10 @@
             -webkit-mask-image: radial-gradient(circle at center, black 50%, transparent 100%);
             opacity: 0.9;
         }
-
-        .hero-content {
-            z-index: 10; text-align: left; max-width: 1200px; width: 100%; padding: 0 60px; margin: 0 auto;
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem; color: #fff; margin-bottom: 10px; font-weight: 400; display: block;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .hero-title {
-            font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin: 10px 0 20px 0; color: #fff;
-            text-transform: capitalize; text-shadow: 0 2px 10px rgba(0,0,0,0.7);
-        }
-
-        .hero-desc {
-            font-size: 1.2rem; color: #e5e5e5; line-height: 1.6; margin-bottom: 50px; max-width: 700px;
-            font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
+        .hero-content { z-index: 10; text-align: left; max-width: 1200px; width: 100%; padding: 0 60px; margin: 0 auto; }
+        .hero-subtitle { font-size: 1.5rem; color: #fff; margin-bottom: 10px; font-weight: 400; display: block; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .hero-title { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin: 10px 0 20px 0; color: #fff; text-transform: capitalize; text-shadow: 0 2px 10px rgba(0,0,0,0.7); }
+        .hero-desc { font-size: 1.2rem; color: #e5e5e5; line-height: 1.6; margin-bottom: 50px; max-width: 700px; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
     </style>
 </head>
@@ -188,28 +183,44 @@
         <ul class="sidebar-list">
             
             <li class="menu-item">
-                <a href="power-roadmap.html">
+                <div class="menu-link">
                     Power Solution
                     <i class="fas fa-chevron-right menu-arrow"></i>
-                </a>
+                </div>
+                <ul class="sub-menu">
+                    <li class="sub-menu-item">
+                        <a href="page-orv3.html">ORV3 & AMD Standard Solution</a>
+                    </li>
+                    <li class="sub-menu-item">
+                        <a href="page-arcadia.html">Arcadia AI Power Solution</a>
+                    </li>
+                </ul>
             </li>
 
             <li class="menu-item">
-                <a href="tco-analysis.html">
+                <div class="menu-link">
                     TCO Analysis
                     <i class="fas fa-chevron-right menu-arrow"></i>
-                </a>
+                </div>
+                <ul class="sub-menu">
+                    <li class="sub-menu-item">
+                        <a href="tcocom.html">TCO Comparison Report</a>
+                    </li>
+                    <li class="sub-menu-item">
+                        <a href="hub.html">Trade/Off Tools</a>
+                    </li>
+                </ul>
             </li>
 
             <li class="menu-item">
-                <a href="resources.html">
+                <a href="resources.html" class="menu-link">
                     White Papers & Education
                     <i class="fas fa-chevron-right menu-arrow"></i>
                 </a>
             </li>
 
             <li class="menu-item">
-                <a href="reference-designs.html">
+                <a href="reference-designs.html" class="menu-link">
                     Data Center Reference Designs
                     <i class="fas fa-chevron-right menu-arrow"></i>
                 </a>
@@ -220,20 +231,11 @@
 
     <div class="hero">
         <div class="hero-bg-image"></div>
-        
         <div class="hero-content">
             <span class="hero-subtitle">Your Trusted Partner for Advancing AI</span>
-            
-            <h1 class="hero-title">
-                Advancing <br>
-                Enterprise AI
-            </h1>
-            
-            <p class="hero-desc">
-                Accelerate AI breakthroughs with end-to-end computing solutions and broad technology partnerships.
-            </p>
-            
-            </div>
+            <h1 class="hero-title">Advancing <br> Enterprise AI</h1>
+            <p class="hero-desc">Accelerate AI breakthroughs with end-to-end computing solutions and broad technology partnerships.</p>
+        </div>
     </div>
 
     <script>

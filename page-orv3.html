@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ORV3 & AMD Standard Solution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 (白底模式) --- */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            background-color: #f9fafb; 
+            color: #333; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            min-width: 1200px; 
+            overflow-x: auto; 
+        }
+
+        /* --- Header --- */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-shrink: 0; 
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 26px; width: auto; display: block; } 
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #ed1c24; padding-left: 15px; 
+        }
+        .back-btn { 
+            color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
+        }
+        .back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+
+        /* --- 圖片地圖容器 --- */
+        .map-wrapper {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+
+        .map-container {
+            position: relative;
+            width: 1200px; 
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        .main-image {
+            width: 100%;
+            display: block;
+            image-rendering: -webkit-optimize-contrast;
+        }
+
+        /* --- 連結熱區 (Hotspots) --- */
+        .hotspot {
+            position: absolute;
+            right: 0.5%;      
+            width: 19%;       
+            height: 6.5%; 
+            
+            /* 已改為透明 */
+            background-color: transparent; 
+            
+            cursor: pointer;
+            display: block;
+            z-index: 10;
+            border-radius: 4px;
+        }
+        
+        /* Hover 時完全透明，無邊框 */
+        .hotspot:hover {
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        /* --- 設定 7 個 Solution 的垂直位置 (Top %) - 已根據您的設定更新 --- */
+        .link-sol1 { top: 5%; }
+        .link-sol2 { top: 16.6%; }
+        .link-sol3 { top: 34%; }
+        .link-sol4 { top: 52.5%; }
+        .link-sol5 { top: 64%; }
+        .link-sol6 { top: 81%; }
+        .link-sol7 { top: 92%; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">ORV3 & AMD Standard Solution</div>
+        </div>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </header>
+
+    <div class="map-wrapper">
+        <div class="map-container">
+            <img src="orv3-solution.svg" alt="ORV3 and AMD Standard Solution Architecture" class="main-image">
+
+            <a href="page-solution1.html" class="hotspot link-sol1" title="Solution 1"></a>
+            <a href="page-solution2.html" class="hotspot link-sol2" title="Solution 2"></a>
+            <a href="page-solution3.html" class="hotspot link-sol3" title="Solution 3"></a>
+            <a href="page-solution4.html" class="hotspot link-sol4" title="Solution 4"></a>
+            <a href="page-solution5.html" class="hotspot link-sol5" title="Solution 5"></a>
+            <a href="page-solution6.html" class="hotspot link-sol6" title="Solution 6"></a>
+            <a href="page-solution7.html" class="hotspot link-sol7" title="Solution 7"></a>
+        </div>
+    </div>
+
+</body>
+</html>

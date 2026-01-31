@@ -100,7 +100,7 @@
         }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); background: #ED1C24; }
 
-        .val-box { font-weight: 700; width: 70px; text-align: right; font-size: 13px; color: #ED1C24; font-family: monospace; }
+        .val-box { font-weight: 700; width: 75px; text-align: right; font-size: 13px; color: #ED1C24; font-family: monospace; }
 
         /* Redundancy Grid */
         .grid-container { 
@@ -137,29 +137,13 @@
             display: flex; justify-content: space-between; border-left: 4px solid #ED1C24;
             text-transform: uppercase; letter-spacing: 0.5px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-            align-items: center; /* 垂直置中 */
+            align-items: center;
         }
         
-        /* 專門給標題右側下拉選單用的樣式 (覆蓋 sidebar select) */
+        .header-select-wrapper { display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .header-select {
-            background: transparent; 
-            border: none; 
-            color: #111; 
-            font-weight: bold; 
-            font-size: 13px; 
-            cursor: pointer;
-            width: auto; /* 不強制寬度 */
-            flex: none;  /* 不強制佔滿 */
-            text-align: right;
-            appearance: none; /* 隱藏預設箭頭，讓它看起來更像純文字，或者保留 */
-            -webkit-appearance: none;
-        }
-        /* 自定義箭頭圖示 */
-        .header-select-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
+            background: transparent; border: none; color: #111; font-weight: bold; font-size: 13px; cursor: pointer;
+            width: auto; flex: none; text-align: right; appearance: none; -webkit-appearance: none;
         }
         
         .summary-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 40px; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
@@ -211,7 +195,8 @@
             </div>
 
             <div class="input-row">
-                <label>Design Capacity</label>
+                <label>Data Center Design Capacity
+</label>
                 <select id="capacity" onchange="calc()">
                     <option value="500">500 kW</option>
                     <option value="1000" selected>1000 kW</option>
@@ -242,8 +227,8 @@
             <div class="input-row">
                 <label>Power Density</label>
                 <div class="slider-wrapper">
-                    <input type="range" id="density" min="2" max="20" step="1" value="4" oninput="calc()">
-                    <div class="val-box" id="disp_density">4 kW/rack</div>
+                    <input type="range" id="density" min="100" max="1000" step="100" value="100" oninput="calc()">
+                    <div class="val-box" id="disp_density">100 kW</div>
                 </div>
             </div>
 
@@ -350,7 +335,7 @@
             peak.disabled = false;
             upsOption.disabled = false; 
             
-            // Logic 1: SST (Input 1=5) vs UPS (Input 2=1)
+            // Logic 1: SST vs UPS
             if (pwrDist.value === "5") {
                 upsOption.disabled = true;
                 if (backup.value === "1") {
@@ -358,13 +343,13 @@
                 }
             }
 
-            // Logic 2: Input 2 (Opt 3) locks Input 3
+            // Logic 2: Input 2 locks Input 3
             if (backup.value === "3") {
                 peak.disabled = true;
                 peak.value = ""; 
             }
 
-            // Logic 3: Input 3 (Opt 4) locks Input 2
+            // Logic 3: Input 3 locks Input 2
             if (!peak.disabled && peak.value === "4") {
                 backup.disabled = true;
                 backup.value = "";
@@ -415,57 +400,37 @@
             let red_ups = parseFloat(document.getElementById('red_ups').value);
             let red_sst = parseFloat(document.getElementById('red_sst').value);
 
-            document.getElementById('disp_density').innerText = density + " kW/rack";
+            // Updated label for Power Density Slider
+            document.getElementById('disp_density').innerText = density + " kW";
             document.getElementById('disp_labor').innerText = "$ " + labor + " /hr";
             document.getElementById('disp_shell').innerText = "$ " + shellPrice + " /ft²";
 
             let racks = Math.ceil(cap / density);
+            // Ensure at least 1 rack if density > cap (rare edge case in UI)
+            if (racks < 1) racks = 1;
+
             let itArea = racks * 30; 
             let facArea = Math.round(itArea * 1.7); 
 
             // Base Load
-            const baseCostPerKW = 2500; // Base reference
+            const baseCostPerKW = 2500; 
             const totalLoadCost = cap * baseCostPerKW;
 
-            // --- Individual Component Costs (Estimates) ---
+            // --- Individual Component Costs ---
             let c_ups = 0, c_psu = 0, c_bbu = 0, c_cbu = 0, c_itbus = 0, c_busway = 0;
 
-            // Determine Redundancy Multiplier
             const pwrType = document.getElementById('input_pwr_dist').value;
             let redundancy = red_ups;
             if (pwrType === "5") redundancy = red_sst; 
 
-            // 1. UPS/SST Cost
-            if(document.getElementById('cb_ups').checked) {
-                c_ups = totalLoadCost * 0.35 * redundancy; 
-            }
+            if(document.getElementById('cb_ups').checked) { c_ups = totalLoadCost * 0.35 * redundancy; }
+            if(document.getElementById('cb_psu').checked) { c_psu = totalLoadCost * 0.15 * red_it; }
+            if(document.getElementById('cb_bbu').checked) { c_bbu = totalLoadCost * 0.12; }
+            if(document.getElementById('cb_cbu').checked) { c_cbu = totalLoadCost * 0.08; }
+            if(document.getElementById('cb_bus').checked) { c_itbus = totalLoadCost * 0.05 * red_it; }
+            if(document.getElementById('cb_busway').checked) { c_busway = totalLoadCost * 0.10 * redundancy; }
 
-            // 2. PSU Cost
-            if(document.getElementById('cb_psu').checked) {
-                c_psu = totalLoadCost * 0.15 * red_it;
-            }
-
-            // 3. BBU Cost
-            if(document.getElementById('cb_bbu').checked) {
-                c_bbu = totalLoadCost * 0.12;
-            }
-
-            // 4. CBU Cost
-            if(document.getElementById('cb_cbu').checked) {
-                c_cbu = totalLoadCost * 0.08;
-            }
-
-            // 5. IT Bus Bar Cost
-            if(document.getElementById('cb_bus').checked) {
-                c_itbus = totalLoadCost * 0.05 * red_it;
-            }
-
-            // 6. BusWay Cost
-            if(document.getElementById('cb_busway').checked) {
-                c_busway = totalLoadCost * 0.10 * redundancy;
-            }
-
-            // --- Other Costs (Hidden from Pie but in Total) ---
+            // Other Costs
             let laborCost = (c_ups + c_psu + c_bbu + c_cbu + c_itbus + c_busway) * (labor / 100) * 0.4;
             let shellCost = facArea * shellPrice;
             let miscCost = (c_ups + c_psu) * 0.2; 

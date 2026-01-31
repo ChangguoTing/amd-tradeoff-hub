@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AMD Solution Details</title>
+    <title>Solution 3: LVDC Sidecar + LVDC IT</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- 全局設定 --- */
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
             margin: 0; 
-            background-color: #f9fafb;
-            color: #333;
+            background-color: #f9fafb; 
+            color: #333; 
             display: flex; 
             flex-direction: column; 
             height: 100vh; 
@@ -22,19 +23,19 @@
         header { 
             background-color: #ffffff; 
             padding: 0 30px; 
-            height: 70px; 
+            height: 75px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             border-bottom: 1px solid #e5e7eb;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             flex-shrink: 0; 
         }
         .brand { display: flex; align-items: center; gap: 15px; }
-        .brand img { height: 24px; width: auto; display: block; } 
+        .brand img { height: 26px; width: auto; display: block; }
         .title { 
             font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
-            border-left: 2px solid #e5e7eb; padding-left: 15px; 
+            border-left: 2px solid #ed1c24; padding-left: 15px; 
         }
         
         .back-btn { 
@@ -42,75 +43,133 @@
             display: flex; align-items: center; gap: 8px; padding: 8px 16px;
             border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
         }
-        .back-btn:hover { 
-            background-color: #ED1C24; color: #fff; border-color: #ED1C24; 
+        .back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+
+        /* --- 主佈局 --- */
+        .container { 
+            display: flex; flex: 1; padding: 20px; gap: 20px; overflow: hidden; 
+            max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box; 
         }
 
-        /* --- 主要內容區 --- */
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding-bottom: 50px;
+        /* 左側欄 (Inputs) */
+        .sidebar { 
+            width: 45%; 
+            background: #ffffff; 
+            border: 1px solid #e5e7eb; border-radius: 6px;
+            padding: 20px; 
+            overflow-y: auto; 
+            display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
 
-        .construction-box {
-            background: #ffffff;
-            padding: 60px 80px;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border-top: 4px solid #ED1C24; /* AMD 紅色頂條 */
-            max-width: 700px;
-            border: 1px solid #e5e7eb;
-        }
-
-        .icon-wrapper {
-            font-size: 60px;
-            color: #e5e7eb;
-            margin-bottom: 30px;
+        /* 右側欄 (Results) */
+        .main { 
+            width: 55%; 
+            background: #ffffff; 
+            border: 1px solid #e5e7eb; border-radius: 6px;
+            padding: 20px; 
+            overflow-y: auto; 
             position: relative;
-            display: inline-block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
+
+        /* 群組標題 */
+        .group-title { 
+            background: #f3f4f6; 
+            color: #111827; 
+            padding: 10px 15px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            border-radius: 4px; 
+            display: flex; justify-content: flex-start; align-items: center;
+            border-left: 4px solid #ED1C24; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        /* 副標題已移除，保留樣式以防未來需要 */
+        .group-subtitle {
+            text-transform: none; font-weight: normal; color: #666; margin-left: 10px; font-size: 13px;
+        }
+
+        /* 輸入列 */
+        .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; margin-bottom: 12px; color: #4b5563; }
+        .input-row label { flex: 1; font-weight: 600; }
         
-        /* 伺服器圖標 */
-        .icon-wrapper i { z-index: 1; position: relative; }
-
-        /* 紅色裝飾點 */
-        .icon-wrapper::after {
-            content: ''; position: absolute; top: -5px; right: -10px; width: 20px; height: 20px;
-            background-color: #ED1C24; border-radius: 50%; border: 4px solid #fff;
+        select, input[type="text"] { 
+            flex: 1.2; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 4px; 
+            font-size: 13px; background: #fff; color: #374151; outline: none; 
         }
 
-        h1 {
-            font-size: 32px; color: #111827; margin: 0 0 15px 0; font-weight: 700;
+        /* Range Slider */
+        .slider-container { flex: 1.2; display: flex; align-items: center; gap: 10px; }
+        input[type="range"] {
+            flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; outline: none;
+            appearance: none; -webkit-appearance: none; cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none; width: 18px; height: 18px; background: #ED1C24; border: 2px solid #fff;
+            border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        .slider-val { font-weight: 700; color: #ED1C24; font-family: monospace; font-size: 14px; width: 60px; text-align: right; }
+        
+        /* Rack Frame Toggle */
+        .toggle-group { flex: 1.2; display: flex; gap: 5px; }
+        .toggle-opt {
+            flex: 1; text-align: center; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;
+            background: #fff; transition: all 0.2s;
+        }
+        .toggle-opt.active { background-color: #4b5563; color: #fff; border-color: #4b5563; }
+
+        /* Architecture Diagram Container */
+        .arch-diagram {
+            border: 1px dashed #ccc; background: #fafafa; 
+            height: 60vh; min-height: 550px; 
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; overflow: hidden; padding: 0; margin-top: 10px;
+        }
+        .arch-diagram svg { width: 100%; height: 100%; display: block; }
+
+        /* --- Result Items --- */
+        .result-header {
+            font-size: 18px; font-weight: 700; color: #4CAF50; 
+            margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;
         }
 
-        p {
-            color: #6b7280; font-size: 18px; line-height: 1.6; margin: 0 0 30px 0;
+        .result-row {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 15px; padding: 10px; border: 1px solid #f0f0f0; border-radius: 6px;
+            background: #fff; transition: transform 0.2s;
+        }
+        .result-row:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        .res-label-box {
+            background-color: #8BC34A; color: #fff; padding: 5px 15px; font-weight: 700; font-size: 13px; border-radius: 4px;
+            width: 120px; text-align: center;
+        }
+        .res-img-box {
+            width: 100px; height: 60px; display: flex; align-items: center; justify-content: center;
+            background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; overflow: hidden; 
+        }
+        .res-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        
+        .res-qty-box { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .qty-title { font-size: 11px; font-weight: 700; color: #004d70; }
+        .qty-val {
+            background: #004d70; color: #fff; width: 60px; padding: 5px; text-align: center;
+            font-weight: 700; font-size: 14px; border-radius: 4px;
         }
 
-        .solution-tag {
-            display: inline-block;
-            background-color: #f3f4f6;
-            color: #374151;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            border: 1px solid #d1d5db;
+        /* BOM Button */
+        .bom-btn {
+            position: absolute; bottom: 20px; right: 20px;
+            background-color: #8BC34A; color: #fff; padding: 12px 25px;
+            font-size: 15px; font-weight: 700; border: none; border-radius: 6px;
+            cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; 
         }
-
-        .action-btn {
-            display: inline-block;
-            background-color: #ED1C24; color: #fff; text-decoration: none;
-            padding: 12px 30px; border-radius: 4px; font-weight: 600;
-            transition: background 0.3s;
-        }
-        .action-btn:hover { background-color: #c4121a; }
+        .bom-btn:hover { background-color: #7cb342; }
 
     </style>
 </head>
@@ -119,25 +178,277 @@
     <header>
         <div class="brand">
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
-            <div class="title">Solution Details</div>
+            <div class="title">Solution 3: LVDC Sidecar + LVDC IT</div>
         </div>
-        <a href="power-roadmap.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Roadmap</a>
+        <a href="page-orv3.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Map</a>
     </header>
 
-    <div class="main-container">
-        <div class="construction-box">
-            <div class="icon-wrapper">
-                <i class="fas fa-server"></i>
+    <div class="container">
+        <div class="sidebar">
+            
+            <div class="group-title">General Information <i class="far fa-question-circle" style="margin-left: auto;"></i></div>
+            
+            <div class="input-row">
+                <label>Location</label>
+                <select id="location">
+                    <option>United States</option>
+                    <option>Taiwan</option>
+                </select>
             </div>
             
-            <div class="solution-tag">Technical Specs</div>
-            <h1>Solution 3: 54V Sidecar + 54V Server</h1>
+            <div class="input-row">
+                <label>IT Capacity (kW)</label>
+                <div class="slider-container">
+                    <input type="range" id="it_capacity" min="0" max="1000" step="50" value="200" oninput="updateCapDisplay(); calc();">
+                    <span class="slider-val" id="cap_display">200</span>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <label>Power Redundancy</label>
+                <select>
+                    <option>N</option>
+                    <option>N+1</option>
+                    <option>2N</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>Rack Frame</label>
+                <div class="toggle-group">
+                    <div class="toggle-opt" id="btn-21" onclick="setRack(21)">21 inch</div>
+                    <div class="toggle-opt active" id="btn-42" onclick="setRack(42)">42 inch</div>
+                </div>
+            </div>
+
+            <div class="group-title">Power Device</div>
             
-           
-            
-            <a href="power-roadmap.html" class="action-btn">Return to Roadmap</a>
+            <div class="input-row">
+                <label>Power Shelf</label>
+                <select id="power_shelf" onchange="calc()">
+                    </select>
+            </div>
+
+            <div class="input-row">
+                <label>BBU</label>
+                <select id="bbu_select" onchange="calc()">
+                    <option value="0">N.A</option>
+                    <option value="72_LFP">2U 72KW LFP</option>
+                    <option value="72_LTO">2U 72KW LTO</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>CBU</label>
+                <select id="cbu_select" onchange="calc()">
+                    <option value="0">N.A</option>
+                    <option value="24">1U 24KW</option>
+                </select>
+            </div>
+
+            <div class="group-title">
+                IT Power Architecture
+                </div>
+            <div class="arch-diagram" id="arch_display">
+                </div>
+
+        </div>
+
+        <div class="main">
+            <div class="result-header">Results</div>
+
+            <div class="result-row">
+                <div class="res-label-box">Power Whip</div>
+                <div class="res-img-box">
+                    <img src="whip.png" alt="Power Whip">
+                </div>
+                <div class="res-qty-box">
+                    <div class="qty-title">Qty</div>
+                    <div class="qty-val" id="qty_whip">--</div>
+                </div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">Power Shelf</div>
+                <div class="res-img-box">
+                    <img src="shelf.png" alt="Power Shelf">
+                </div>
+                <div class="res-qty-box">
+                    <div class="qty-title">Qty</div>
+                    <div class="qty-val" id="qty_shelf">--</div>
+                </div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">BBU Shelf</div>
+                <div class="res-img-box">
+                    <img src="shelf.png" alt="BBU Shelf">
+                </div>
+                <div class="res-qty-box">
+                    <div class="qty-title">Qty</div>
+                    <div class="qty-val" id="qty_bbu">--</div>
+                </div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">CBU Shelf</div>
+                <div class="res-img-box">
+                    <img src="shelf.png" alt="CBU Shelf">
+                </div>
+                <div class="res-qty-box">
+                    <div class="qty-title">Qty</div>
+                    <div class="qty-val" id="qty_cbu">--</div>
+                </div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">Rack Bus Bar</div>
+                <div class="res-img-box">
+                    <img src="rack.png" alt="Rack Bus Bar">
+                </div>
+                <div class="res-qty-box">
+                    <div class="qty-title">Qty</div>
+                    <div class="qty-val" id="qty_bus">--</div>
+                </div>
+            </div>
+
+            <a href="bom1.html" class="bom-btn">
+                <i class="fas fa-file-download"></i> BOM Generator
+            </a>
         </div>
     </div>
 
+    <script>
+        let currentRack = 42;
+
+        function init() {
+            setRack(42);
+        }
+
+        function updateCapDisplay() {
+            const val = document.getElementById('it_capacity').value;
+            document.getElementById('cap_display').innerText = val;
+        }
+
+        function setRack(size) {
+            currentRack = size;
+            
+            document.getElementById('btn-21').classList.remove('active');
+            document.getElementById('btn-42').classList.remove('active');
+            document.getElementById(`btn-${size}`).classList.add('active');
+
+            // 繪製 Solution 3 的架構圖
+            drawArch(size);
+
+            const shelfSelect = document.getElementById('power_shelf');
+            shelfSelect.innerHTML = ''; 
+
+            if (size === 42) {
+                let opt1 = new Option("42 inch true 3Phase 74KW", "74");
+                let opt2 = new Option("N.A", "0");
+                shelfSelect.add(opt1);
+                shelfSelect.add(opt2);
+            } else {
+                let opt1 = new Option("21 inch 72KW", "72");
+                let opt2 = new Option("N.A", "0");
+                shelfSelect.add(opt1);
+                shelfSelect.add(opt2);
+            }
+
+            calc(); 
+        }
+
+        // 修改：Solution 3 的 SVG 繪製邏輯
+        function drawArch(size) {
+            const container = document.getElementById('arch_display');
+            let svgContent = '';
+
+            const colorSidecar = "#558B2F"; // Sidecar 綠色
+            const colorGreenText = "#4CAF50";
+            const colorPink = "#F8BBD0";
+            const colorPinkStroke = "#D81B60";
+            const colorBlack = "#000000";
+            
+            // 由於這是並排顯示，我們需要更寬的 ViewBox
+            const viewBoxW = 400;
+            const viewBoxH = 250;
+
+            // SVG 結構：左邊 Sidecar + 連接線 + 右邊 Rack
+            if (size === 21) {
+                // 21 inch Rack (窄)
+                svgContent = `
+                <svg viewBox="0 0 ${viewBoxW} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                    <text x="10" y="30" font-family="Arial" font-size="18" font-weight="bold" fill="black">54V sidecar(P+B+C)</text>
+                    
+                    <rect x="10" y="50" width="140" height="80" fill="${colorSidecar}" stroke="none"/>
+                    <rect x="25" y="65" width="40" height="50" fill="none" stroke="white" stroke-width="2"/>
+                    <line x1="25" y1="115" x2="65" y2="65" stroke="white" stroke-width="2"/>
+                    <rect x="95" y="65" width="40" height="50" fill="none" stroke="white" stroke-width="2"/>
+                    <line x1="95" y1="115" x2="135" y2="65" stroke="white" stroke-width="2"/>
+                    <line x1="10" y1="90" x2="150" y2="90" stroke="white" stroke-width="1" opacity="0.5"/>
+
+                    <line x1="150" y1="90" x2="260" y2="90" stroke="#9CCC65" stroke-width="4"/>
+                    <text x="160" y="80" font-family="Arial" font-size="12" fill="#33691E">Horizontal Bus Bar</text>
+                    <text x="160" y="105" font-family="Arial" font-size="12" fill="#33691E">54Vdc</text>
+
+                    <rect x="260" y="10" width="100" height="230" fill="none" stroke="${colorBlack}" stroke-width="3"/>
+                    <rect x="302" y="10" width="16" height="230" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="2"/>
+                    <text x="280" y="125" font-family="Arial" font-size="16" fill="${colorGreenText}" font-weight="bold">LVDC</text>
+                </svg>
+                `;
+            } else {
+                // 42 inch Rack (寬)
+                svgContent = `
+                <svg viewBox="0 0 ${viewBoxW} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                    <text x="10" y="30" font-family="Arial" font-size="18" font-weight="bold" fill="black">54V sidecar(P+B+C)</text>
+                    
+                    <rect x="10" y="50" width="140" height="80" fill="${colorSidecar}" stroke="none"/>
+                    <rect x="25" y="65" width="40" height="50" fill="none" stroke="white" stroke-width="2"/>
+                    <line x1="25" y1="115" x2="65" y2="65" stroke="white" stroke-width="2"/>
+                    <rect x="95" y="65" width="40" height="50" fill="none" stroke="white" stroke-width="2"/>
+                    <line x1="95" y1="115" x2="135" y2="65" stroke="white" stroke-width="2"/>
+                    <line x1="10" y1="90" x2="150" y2="90" stroke="white" stroke-width="1" opacity="0.5"/>
+
+                    <line x1="150" y1="90" x2="220" y2="90" stroke="#9CCC65" stroke-width="4"/>
+                    <text x="155" y="80" font-family="Arial" font-size="12" fill="#33691E">Horizontal Bus Bar</text>
+                    <text x="155" y="105" font-family="Arial" font-size="12" fill="#33691E">54Vdc</text>
+
+                    <rect x="220" y="10" width="170" height="230" fill="none" stroke="${colorBlack}" stroke-width="3"/>
+                    <rect x="297" y="10" width="16" height="230" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="2"/>
+                    <text x="250" y="125" font-family="Arial" font-size="16" fill="${colorGreenText}" font-weight="bold">LVDC</text>
+                </svg>
+                `;
+            }
+
+            container.innerHTML = svgContent;
+        }
+
+        function calc() {
+            const cap = parseInt(document.getElementById('it_capacity').value) || 0;
+            
+            const shelfPower = parseInt(document.getElementById('power_shelf').value);
+            const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
+
+            const bbuVal = document.getElementById('bbu_select').value;
+            let bbuPower = 0;
+            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") {
+                bbuPower = 72;
+            }
+            const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
+
+            const cbuVal = parseInt(document.getElementById('cbu_select').value);
+            const cbuQty = cbuVal > 0 ? Math.ceil(cap / cbuVal) : 0;
+
+            const accessoryQty = shelfQty > 0 ? shelfQty : 0;
+
+            document.getElementById('qty_shelf').innerText = shelfQty;
+            document.getElementById('qty_bbu').innerText = bbuQty;
+            document.getElementById('qty_cbu').innerText = cbuQty;
+            document.getElementById('qty_whip').innerText = accessoryQty;
+            document.getElementById('qty_bus').innerText = accessoryQty;
+        }
+
+        init();
+    </script>
 </body>
 </html>

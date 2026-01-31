@@ -7,21 +7,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- 1. 全局樣式 (AMD Bright Professional) --- */
+        /* --- 全局設定 --- */
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
             margin: 0; 
-            background-color: #f9fafb; /* 極淺灰背景 */
+            background-color: #f9fafb; 
             color: #333; 
             height: 100vh; 
             display: flex; 
             flex-direction: column;
-            /* 2. 修改點：強制最小寬度，確保左右兩欄永遠並排 */
             min-width: 1200px; 
-            overflow-x: auto; /* 允許橫向捲動 */
+            overflow-x: auto; 
         }
         
-        /* 頂部標題列 */
+        /* Header */
         header { 
             background-color: #ffffff; 
             padding: 0 30px; 
@@ -33,7 +32,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             flex-shrink: 0; 
         }
-        
         .brand { display: flex; align-items: center; gap: 15px; }
         .brand img { height: 24px; width: auto; display: block; }
         .title { 
@@ -41,35 +39,36 @@
             border-left: 2px solid #e5e7eb; padding-left: 15px;
         }
         
-        /* 主佈局 */
+        /* Layout */
         .container { 
             display: flex; flex: 1; padding: 30px; gap: 30px; overflow: hidden; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box; 
         }
         
         /* --- 左側：輸入區 --- */
         .left-panel { 
-            width: 40%; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; padding-right: 10px; 
+            width: 45%; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; padding-right: 10px; 
         }
         
-        /* 輸入群組 */
+        /* --- 原本的輸入群組樣式 (AMD 風格) --- */
         .input-group { 
             background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; 
             box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;
         }
         .group-header { 
-            background: #f3f4f6; color: #111827; padding: 12px 20px; font-weight: 700; font-size: 14px; 
+            background: #f3f4f6; color: #111827; padding: 12px 20px; font-weight: 700; font-size: 13px; 
             display: flex; justify-content: space-between; border-bottom: 1px solid #d1d5db; 
             text-transform: uppercase; letter-spacing: 0.5px; border-left: 4px solid #ED1C24; /* AMD 紅色 */
         }
-        .group-header i { color: #374151; }
+        .group-header i { color: #6b7280; cursor: pointer; }
         
-        .group-body { padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+        .group-body { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
 
+        /* 輸入列 */
         .control-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #4b5563; }
         .control-row label { flex: 1.2; font-weight: 600; }
         .slider-container { flex: 1.5; display: flex; align-items: center; gap: 15px; }
         
-        /* 滑桿樣式 */
+        /* 滑桿樣式 (恢復原本簡潔風格) */
         input[type="range"] { 
             flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; outline: none; appearance: none; -webkit-appearance: none; cursor: pointer;
         }
@@ -79,42 +78,39 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
         }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #ED1C24; }
-        
-        /* 針對 Legacy 滑桿使用灰色按鈕區分 */
-        .legacy-slider::-webkit-slider-thumb { background: #6b7280 !important; }
-        .legacy-slider::-webkit-slider-thumb:hover { background: #4b5563 !important; }
 
-        .val-display { font-weight: 700; width: 55px; text-align: right; color: #ED1C24; font-family: monospace; font-size: 14px; }
-        .val-legacy { color: #6b7280 !important; } /* Legacy 數值用灰色 */
+        .val-display { font-weight: 700; width: 50px; text-align: right; color: #ED1C24; font-family: monospace; font-size: 14px; }
 
-        /* 下拉選單 */
+        /* 下拉選單 (恢復原本風格) */
         .styled-select {
-            width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; 
+            width: 100%; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 4px; 
             background-color: #fff; color: #374151; font-size: 13px; outline: none; cursor: pointer;
         }
 
         /* --- 右側：結果區 --- */
-        .right-panel { width: 60%; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+        .right-panel { 
+            width: 55%; display: flex; flex-direction: column; gap: 20px; 
+            justify-content: center; 
+        }
         
         .result-box { 
             background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; 
             display: flex; flex-direction: column; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            height: 550px; /* 加大高度 */
         }
         .result-header { 
-            background: #fff; color: #111827; padding: 15px 20px; font-weight: 700; font-size: 14px; 
+            background: #fff; color: #111827; padding: 20px; font-weight: 700; font-size: 16px; 
             display: flex; justify-content: space-between; border-bottom: 1px solid #f3f4f6; text-transform: uppercase;
         }
-        .chart-area { padding: 20px; height: 250px; position: relative; }
+        .chart-area { padding: 20px; flex: 1; position: relative; }
 
         /* 圖例 */
         .custom-legend { 
-            display: flex; justify-content: center; gap: 25px; margin-top: auto; padding: 15px; 
-            font-size: 13px; color: #4b5563; background: #fff; border-radius: 6px; border: 1px solid #e5e7eb;
+            display: flex; justify-content: center; gap: 25px; padding: 15px; 
+            font-size: 13px; color: #4b5563; background: #fff; border-top: 1px solid #f3f4f6;
         }
         .legend-item { display: flex; align-items: center; gap: 8px; font-weight: 600; }
         .color-box { width: 14px; height: 14px; border-radius: 3px; }
-
-        /* 3. 修改點：完全刪除了 @media screen and (max-width: 768px) {...} 區塊 */
 
     </style>
 </head>
@@ -131,72 +127,52 @@
     <div class="container">
         <div class="left-panel">
             
-            <div class="input-group" style="border-left: 4px solid #9ca3af;">
-                <div class="group-header" style="border-left: none;">Legacy Baseline <i class="fas fa-history"></i></div>
-                <div class="group-body">
-                    <div class="control-row">
-                        <label>Legacy UPS Efficiency</label>
-                        <div class="slider-container">
-                            <input type="range" id="leg_ups" min="80" max="95" step="0.5" value="88.0" oninput="calc()" class="legacy-slider">
-                            <span class="val-display val-legacy" id="val_leg_ups">88.0%</span>
-                        </div>
-                    </div>
-                    <div class="control-row">
-                        <label>Legacy PDU Efficiency</label>
-                        <div class="slider-container">
-                            <input type="range" id="leg_pdu" min="90" max="98" step="0.1" value="95.0" oninput="calc()" class="legacy-slider">
-                            <span class="val-display val-legacy" id="val_leg_pdu">95.0%</span>
-                        </div>
-                    </div>
-                    <div class="control-row">
-                        <label>Legacy Wiring Eff.</label>
-                        <div class="slider-container">
-                            <input type="range" id="leg_wire" min="95" max="99" step="0.1" value="98.0" oninput="calc()" class="legacy-slider">
-                            <span class="val-display val-legacy" id="val_leg_wire">98.0%</span>
-                        </div>
-                    </div>
-                    <div class="control-row">
-                        <label>Legacy PSU Efficiency</label>
-                        <div class="slider-container">
-                            <input type="range" id="leg_psu" min="70" max="90" step="0.5" value="82.0" oninput="calc()" class="legacy-slider">
-                            <span class="val-display val-legacy" id="val_leg_psu">82.0%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div style="font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 10px; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px;">INPUTS</div>
 
             <div class="input-group">
-                <div class="group-header">Modern UPS Efficiency <i class="fas fa-battery-full"></i></div>
+                <div class="group-header">
+                    MV X’mer / SST <i class="far fa-question-circle"></i>
+                </div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Modern AC UPS</label>
+                        <label>Modern AC UPS Efficiency</label>
                         <div class="slider-container">
                             <input type="range" id="ups_ac" min="90" max="99" step="0.1" value="96.3" oninput="calc()">
                             <span class="val-display" id="val_ups_ac">96.3%</span>
                         </div>
                     </div>
                     <div class="control-row">
-                        <label>DC UPS / Rectifier</label>
+                        <label>DC UPS Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="ups_dc" min="90" max="99" step="0.1" value="97.5" oninput="calc()">
-                            <span class="val-display" id="val_ups_dc">97.5%</span>
+                            <input type="range" id="ups_dc" min="90" max="99" step="0.1" value="96.5" oninput="calc()">
+                            <span class="val-display" id="val_ups_dc">96.5%</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="input-group">
-                <div class="group-header">Power Distribution <i class="fas fa-network-wired"></i></div>
+                <div class="group-header">
+                    UPS / Sidecar <i class="far fa-question-circle"></i>
+                </div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Modern AC PDU</label>
+                        <label>Modern AC PDU Efficiency</label>
                         <div class="slider-container">
                             <input type="range" id="pdu_ac" min="95" max="99.9" step="0.1" value="98.3" oninput="calc()">
                             <span class="val-display" id="val_pdu_ac">98.3%</span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="group-header">
+                    AC / HVDC Distribution <i class="far fa-question-circle"></i>
+                </div>
+                <div class="group-body">
                     <div class="control-row">
-                        <label>Modern Wiring</label>
+                        <label>Distribution Wiring Efficiency</label>
                         <div class="slider-container">
                             <input type="range" id="wire" min="98" max="99.9" step="0.1" value="99.5" oninput="calc()">
                             <span class="val-display" id="val_wire">99.5%</span>
@@ -206,20 +182,40 @@
             </div>
 
             <div class="input-group">
-                <div class="group-header">IT Power Supply (PSU) <i class="fas fa-plug"></i></div>
+                <div class="group-header">
+                    IT Bus Bar / HVDC Cable <i class="far fa-question-circle"></i>
+                </div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Modern AC PSU</label>
+                        <label>Modern AC Power Supply Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="psu_ac" min="85" max="98" step="0.1" value="94.0" oninput="calc()">
-                            <span class="val-display" id="val_psu_ac">94.0%</span>
+                            <input type="range" id="psu_ac" min="85" max="99" step="0.1" value="93.2" oninput="calc()">
+                            <span class="val-display" id="val_psu_ac">93.2%</span>
                         </div>
                     </div>
                     <div class="control-row">
-                        <label>Modern DC PSU</label>
+                        <label>Modern DC Power Supply Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="psu_dc" min="85" max="98" step="0.1" value="96.0" oninput="calc()">
-                            <span class="val-display" id="val_psu_dc">96.0%</span>
+                            <input type="range" id="psu_dc" min="85" max="99" step="0.1" value="94.1" oninput="calc()">
+                            <span class="val-display" id="val_psu_dc">94.1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="group-header">
+                    Power Supply / DC DC <i class="far fa-question-circle"></i>
+                </div>
+                <div class="group-body">
+                    <div class="control-row">
+                        <label style="flex:0.5;">Cooling Architecture</label>
+                        <div style="flex:1;">
+                            <select class="styled-select">
+                                <option>Traditional chilled water system</option>
+                                <option>Air cooled chiller</option>
+                                <option>Direct Expansion (DX)</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -228,29 +224,16 @@
         </div>
 
         <div class="right-panel">
-            
             <div class="result-box">
                 <div class="result-header">Power Path Efficiency (%)</div>
                 <div class="chart-area"><canvas id="chartEff"></canvas></div>
+                <div class="custom-legend">
+                    <div class="legend-item"><div class="color-box" style="background:#D1D5DB"></div>Legacy</div>
+                    <div class="legend-item"><div class="color-box" style="background:#9CA3AF"></div>Modern AC</div>
+                    <div class="legend-item"><div class="color-box" style="background:#6B7280"></div>480 VAC</div>
+                    <div class="legend-item"><div class="color-box" style="background:#ED1C24"></div>HVDC +/-400V</div>
+                </div>
             </div>
-
-            <div class="result-box">
-                <div class="result-header">Efficiency Improvement (%)</div>
-                <div class="chart-area"><canvas id="chartImp"></canvas></div>
-            </div>
-
-            <div class="result-box">
-                <div class="result-header">Total Power Reduction (%)</div>
-                <div class="chart-area"><canvas id="chartRed"></canvas></div>
-            </div>
-
-            <div class="custom-legend">
-                <div class="legend-item"><div class="color-box" style="background:#D1D5DB"></div>Legacy</div>
-                <div class="legend-item"><div class="color-box" style="background:#9CA3AF"></div>Modern AC</div>
-                <div class="legend-item"><div class="color-box" style="background:#6B7280"></div>480 VAC</div>
-                <div class="legend-item"><div class="color-box" style="background:#ED1C24"></div>HVDC +/-400V</div>
-            </div>
-
         </div>
     </div>
 
@@ -258,74 +241,47 @@
         // 設定 Chart.js
         Chart.defaults.font.family = "'Segoe UI', sans-serif";
         Chart.defaults.color = '#374151'; 
-        Chart.defaults.font.size = 11;
+        Chart.defaults.font.size = 12;
         
-        // 顏色定義 (Legacy 用淺灰，DC 用 AMD 紅色)
         const colors = ['#D1D5DB', '#9CA3AF', '#6B7280', '#ED1C24']; 
         const labels = ['Legacy', 'Modern AC', '480 VAC', 'HVDC +/-400V'];
 
-        let chartEff, chartImp, chartRed;
+        let chartEff;
 
         function initCharts() {
-            const commonOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { 
-                    legend: { display: false }, 
-                    tooltip: { enabled: true, backgroundColor: '#1f2937', padding: 10 } 
-                },
-                layout: { padding: { top: 25 } },
-                scales: {
-                    x: { display: true, grid: { display: false }, ticks: { color: '#4b5563', font: { weight: '600' } } }
-                }
-            };
-
-            // 圖表 1: 效率
-            chartEff = new Chart(document.getElementById('chartEff'), {
+            const ctx = document.getElementById('chartEff').getContext('2d');
+            chartEff = new Chart(ctx, {
                 type: 'bar',
-                data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6, borderRadius: 4 }] },
+                data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.5, borderRadius: 6 }] },
                 options: { 
-                    ...commonOptions, 
-                    scales: { ...commonOptions.scales, y: { beginAtZero: false, min: 60, max: 100, grid: { color: '#f3f4f6' } } },
-                    plugins: { ...commonOptions.plugins, datalabels: { anchor: 'end', align: 'top', color: '#374151', font: { weight: 'bold' }, formatter: (v)=>v.toFixed(1) } } 
-                },
-                plugins: [ChartDataLabels]
-            });
-
-            // 圖表 2: 提升率
-            chartImp = new Chart(document.getElementById('chartImp'), {
-                type: 'bar',
-                data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6, borderRadius: 4 }] },
-                options: { 
-                    ...commonOptions, 
-                    scales: { ...commonOptions.scales, y: { beginAtZero: true, max: 35, grid: { color: '#f3f4f6' } } },
-                    plugins: { ...commonOptions.plugins, datalabels: { anchor: 'end', align: 'top', color: '#374151', formatter: (v)=>v.toFixed(1)+'%' } } 
-                },
-                plugins: [ChartDataLabels]
-            });
-
-            // 圖表 3: 節能率
-            chartRed = new Chart(document.getElementById('chartRed'), {
-                type: 'bar',
-                data: { labels: labels, datasets: [{ data: [0,0,0,0], backgroundColor: colors, barPercentage: 0.6, borderRadius: 4 }] },
-                options: { 
-                    ...commonOptions, 
-                    scales: { ...commonOptions.scales, y: { beginAtZero: true, max: 30, grid: { color: '#f3f4f6' } } },
-                    plugins: { ...commonOptions.plugins, datalabels: { anchor: 'end', align: 'top', color: '#374151', formatter: (v)=>v.toFixed(1)+'%' } } 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false }, 
+                        tooltip: { enabled: true, backgroundColor: '#1f2937', padding: 12 },
+                        datalabels: { 
+                            anchor: 'end', align: 'top', color: '#374151', font: { weight: 'bold', size: 14 }, 
+                            formatter: (v)=>v.toFixed(1) + '%' 
+                        } 
+                    },
+                    layout: { padding: { top: 30 } },
+                    scales: {
+                        x: { display: true, grid: { display: false }, ticks: { font: { weight: '700', size: 13 } } },
+                        y: { beginAtZero: false, min: 60, max: 100, grid: { color: '#f3f4f6' } }
+                    }
                 },
                 plugins: [ChartDataLabels]
             });
         }
 
-        // --- 計算邏輯 ---
         function calc() {
-            // 1. 讀取 Legacy 輸入
-            const legUps = parseFloat(document.getElementById('leg_ups').value) / 100;
-            const legPdu = parseFloat(document.getElementById('leg_pdu').value) / 100;
-            const legWire = parseFloat(document.getElementById('leg_wire').value) / 100;
-            const legPsu = parseFloat(document.getElementById('leg_psu').value) / 100;
+            // 固定 Legacy Baseline (因為介面移除了輸入)
+            const legUps = 0.88;
+            const legPdu = 0.95;
+            const legWire = 0.98;
+            const legPsu = 0.82;
 
-            // 2. 讀取 Modern 輸入
+            // 讀取 Modern 輸入
             const upsAc = parseFloat(document.getElementById('ups_ac').value) / 100;
             const upsDc = parseFloat(document.getElementById('ups_dc').value) / 100;
             const pduAc = parseFloat(document.getElementById('pdu_ac').value) / 100;
@@ -333,11 +289,7 @@
             const psuAc = parseFloat(document.getElementById('psu_ac').value) / 100;
             const psuDc = parseFloat(document.getElementById('psu_dc').value) / 100;
 
-            // 3. 更新顯示文字
-            document.getElementById('val_leg_ups').innerText = (legUps*100).toFixed(1) + "%";
-            document.getElementById('val_leg_pdu').innerText = (legPdu*100).toFixed(1) + "%";
-            document.getElementById('val_leg_wire').innerText = (legWire*100).toFixed(1) + "%";
-            document.getElementById('val_leg_psu').innerText = (legPsu*100).toFixed(1) + "%";
+            // 更新顯示文字
             document.getElementById('val_ups_ac').innerText = (upsAc*100).toFixed(1) + "%";
             document.getElementById('val_ups_dc').innerText = (upsDc*100).toFixed(1) + "%";
             document.getElementById('val_pdu_ac').innerText = (pduAc*100).toFixed(1) + "%";
@@ -345,34 +297,17 @@
             document.getElementById('val_psu_ac').innerText = (psuAc*100).toFixed(1) + "%";
             document.getElementById('val_psu_dc').innerText = (psuDc*100).toFixed(1) + "%";
 
-            // --- 效率計算模型 ---
+            // 效率計算
             const effLegacy = legUps * legPdu * legWire * legPsu;
             const effModern = upsAc * pduAc * wire * psuAc;
-            const eff480 = effModern * 1.015; 
+            const eff480 = effModern * 1.015; // 480V 假設比 Modern AC 高一點
             const effHVDC = upsDc * 0.998 * (wire + 0.002) * psuDc;
 
             const effData = [effLegacy * 100, effModern * 100, eff480 * 100, effHVDC * 100];
 
-            const impData = effData.map(e => {
-                if (effLegacy === 0) return 0;
-                return ((e - effLegacy * 100) / (effLegacy * 100)) * 100;
-            });
-
-            const inputLegacy = 1 / effLegacy;
-            const redData = [effLegacy, effModern, eff480, effHVDC].map(e => {
-                const inputCurrent = 1 / e;
-                return (1 - (inputCurrent / inputLegacy)) * 100;
-            });
-
             // 更新圖表
             chartEff.data.datasets[0].data = effData;
             chartEff.update();
-
-            chartImp.data.datasets[0].data = impData;
-            chartImp.update();
-
-            chartRed.data.datasets[0].data = redData;
-            chartRed.update();
         }
 
         initCharts();

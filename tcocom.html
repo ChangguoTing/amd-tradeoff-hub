@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TCO Comparison Report | AMD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 (黑底風格) --- */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            height: 100vh;
+            min-width: 1200px; 
+            overflow-x: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header --- */
+        header { 
+            background-color: #000; 
+            padding: 0 30px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            flex-shrink: 0; 
+            z-index: 1000;
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); } 
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #fff; letter-spacing: 1px;
+            border-left: 2px solid #ed1c24; padding-left: 15px; 
+        }
+        
+        .back-btn { 
+            color: #ccc; text-decoration: none; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border: 1px solid #444; border-radius: 4px; transition: all 0.2s;
+        }
+        .back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+
+        /* --- 主內容區 (Hero Background) --- */
+        .hero-section {
+            flex: 1;
+            position: relative;
+            background-color: #000;
+            display: flex;
+            align-items: center; /* 垂直置中 */
+            justify-content: flex-start; /* 靠左對齊 */
+            padding-left: 8%; /* 左側留白 */
+            overflow: hidden;
+        }
+
+        /* 背景圖片 */
+        .bg-image {
+            position: absolute;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-image: url('amdbox.png'); 
+            background-size: cover; 
+            background-position: center right; 
+            background-repeat: no-repeat;
+            opacity: 0.9;
+            z-index: 1;
+        }
+
+        /* 內容覆蓋層 */
+        .content-overlay {
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+            /* 調整漸層背景，讓文字更清晰 */
+            background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.3), transparent); 
+            padding: 40px;
+            border-radius: 8px;
+        }
+
+        /* 頁面標題 */
+        .page-heading {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 40px; /* 增加下方間距，因為移除了麵包屑 */
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            margin-top: 0;
+        }
+
+        /* 按鈕容器 */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* 稍微增加按鈕間距 */
+        }
+
+        /* 自定義按鈕樣式 */
+        .tco-btn {
+            display: block;
+            background-color: rgba(22, 88, 126, 0.85); /* 半透明深藍色 */
+            color: #fff;
+            text-decoration: none;
+            padding: 22px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 4px;
+            border-left: 5px solid #16587e; 
+            transition: all 0.3s ease;
+            text-align: center; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .tco-btn:hover {
+            background-color: rgba(22, 88, 126, 1); 
+            transform: translateX(5px); 
+            border-left-color: #ed1c24; /* Hover 變紅色邊框 */
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">TCO Comparison Report</div>
+        </div>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </header>
+
+    <div class="hero-section">
+        <div class="bg-image"></div>
+
+        <div class="content-overlay">
+            
+            <h1 class="page-heading">TCO Comparison Report</h1>
+
+            <div class="button-group">
+                <a href="traditional.html" class="tco-btn">
+                    Traditional AC vs OCP HPRV1
+                </a>
+
+                <a href="lotbbu.html" class="tco-btn">
+                    AMD Helios 72 with LOT BBU<br>vs Nvidia VR with BBU
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

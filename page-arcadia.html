@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Arcadia AI Power Solution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            background-color: #ffffff; 
+            color: #333; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            min-width: 1200px; 
+            overflow-x: auto; 
+        }
+
+        /* --- Header --- */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            flex-shrink: 0; 
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 26px; width: auto; display: block; } 
+        
+        .back-btn { 
+            color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border-radius: 4px; transition: all 0.2s;
+        }
+        .back-btn:hover { color: #ed1c24; }
+
+        /* --- 頁面標題 --- */
+        .page-header-text {
+            font-size: 32px;
+            font-weight: 400; 
+            margin: 40px 0 10px 0;
+            padding-left: 60px; 
+        }
+
+        /* --- 內容容器 (Flex Row) --- */
+        .content-wrapper {
+            flex: 1;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: center; 
+            gap: 80px; 
+            align-items: center; 
+            overflow-y: auto;
+        }
+
+        /* --- 單個項目容器 --- */
+        .item-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45%;
+            max-width: 650px;
+        }
+
+        /* --- 紅色邊框圖片盒子 (現在是連結) --- */
+        /* 將 div 改為 a 之後，需要確保它表現得像個區塊 */
+        .image-box {
+            width: 100%;
+            aspect-ratio: 16 / 10; 
+            
+            border: 2px solid #ed1c24; /* AMD 紅色邊框 */
+            border-radius: 25px;       
+            background-color: #fff;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;             
+            box-sizing: border-box;
+            
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer; /* 讓鼠標變成手型 */
+            text-decoration: none; /* 移除連結底線 */
+        }
+
+        .image-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(237, 28, 36, 0.15);
+        }
+
+        .solution-image {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain; 
+            image-rendering: -webkit-optimize-contrast;
+        }
+
+        /* --- 下方文字標籤 --- */
+        .item-label {
+            margin-top: 25px;
+            font-size: 20px;
+            font-weight: 500;
+            color: #000;
+            border-bottom: 2px solid #000; 
+            padding-bottom: 2px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+        </div>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </header>
+
+    <div class="page-header-text">Arcadia AI Power Solution</div>
+
+    <div class="content-wrapper">
+        
+        <div class="item-group">
+            <a href="amdflat.html" class="image-box">
+                <img src="amd flatpage.png" alt="AMD Flat Tesseract Rack Platform" class="solution-image">
+            </a>
+            <div class="item-label">AMD Flat Tesseract Rack Platform</div>
+        </div>
+
+        <div class="item-group">
+            <a href="amdspectra.html" class="image-box">
+                <img src="amd spect.png" alt="AMD Spectra Rack Platform" class="solution-image">
+            </a>
+            <div class="item-label">AMD Spectra Rack Platform</div>
+        </div>
+
+    </div>
+
+</body>
+</html>
