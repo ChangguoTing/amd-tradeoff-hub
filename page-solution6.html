@@ -7,99 +7,92 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- 全局設定 --- */
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            background-color: #f9fafb;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            min-width: 1200px;
-            overflow-x: auto;
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            background-color: #f9fafb; 
+            color: #333; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            min-width: 1200px; 
+            overflow-x: auto; 
         }
 
         /* --- Header --- */
-        header {
-            background-color: #ffffff;
-            padding: 0 30px;
-            height: 75px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            flex-shrink: 0;
+            flex-shrink: 0; 
         }
         .brand { display: flex; align-items: center; gap: 15px; }
         .brand img { height: 26px; width: auto; display: block; }
-        .title {
+        .title { 
             font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
-            border-left: 2px solid #ed1c24; padding-left: 15px;
+            border-left: 2px solid #ed1c24; padding-left: 15px; 
         }
-
-        .back-btn {
-            color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600;
+        
+        .back-btn { 
+            color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
             display: flex; align-items: center; gap: 8px; padding: 8px 16px;
             border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
         }
         .back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
 
         /* --- 主佈局 --- */
-        .container {
-            display: flex; flex: 1; padding: 20px; gap: 20px; overflow: hidden;
-            max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box;
+        .container { 
+            display: flex; flex: 1; padding: 20px; gap: 20px; overflow: hidden; 
+            max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box; 
         }
 
         /* 左側欄 (Inputs) */
-        .sidebar {
-            width: 45%;
-            background: #ffffff;
+        .sidebar { 
+            width: 45%; 
+            background: #ffffff; 
             border: 1px solid #e5e7eb; border-radius: 6px;
-            padding: 20px;
-            overflow-y: auto;
+            padding: 20px; 
+            overflow-y: auto; 
             display: flex; flex-direction: column; gap: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
 
         /* 右側欄 (Results) */
-        .main {
-            width: 55%;
-            background: #ffffff;
+        .main { 
+            width: 55%; 
+            background: #ffffff; 
             border: 1px solid #e5e7eb; border-radius: 6px;
-            padding: 20px;
-            overflow-y: auto;
+            padding: 20px; 
+            overflow-y: auto; 
             position: relative;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
 
         /* 群組標題 */
-        .group-title {
-            background: #f3f4f6;
-            color: #111827;
-            padding: 10px 15px;
-            font-size: 14px;
-            font-weight: 700;
-            border-radius: 4px;
+        .group-title { 
+            background: #f3f4f6; 
+            color: #111827; 
+            padding: 10px 15px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            border-radius: 4px; 
             display: flex; justify-content: flex-start; align-items: center;
-            border-left: 4px solid #ED1C24;
+            border-left: 4px solid #ED1C24; 
             text-transform: uppercase; letter-spacing: 0.5px;
             margin-bottom: 10px;
         }
-
+        
         .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; margin-bottom: 12px; color: #4b5563; }
         .input-row label { flex: 1; font-weight: 600; }
-
-        select, input[type="text"] {
-            flex: 1.2; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 4px;
-            font-size: 13px; background: #fff; color: #374151; outline: none;
-        }
-
-        /* disabled 下拉風格 */
-        select:disabled{
-            background: #f3f4f6;
-            color: #9ca3af;
-            cursor: not-allowed;
+        
+        select, input[type="text"] { 
+            flex: 1.2; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 4px; 
+            font-size: 13px; background: #fff; color: #374151; outline: none; 
         }
 
         /* Range Slider */
@@ -114,7 +107,7 @@
         }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
         .slider-val { font-weight: 700; color: #ED1C24; font-family: monospace; font-size: 14px; width: 60px; text-align: right; }
-
+        
         /* Rack Frame Toggle */
         .toggle-group { flex: 1.2; display: flex; gap: 5px; }
         .toggle-opt {
@@ -123,10 +116,10 @@
         }
         .toggle-opt.active { background-color: #4b5563; color: #fff; border-color: #4b5563; }
 
-        /* Architecture Diagram Container */
+        /* Architecture Diagram Container - 調整高度 */
         .arch-diagram {
-            border: 1px dashed #ccc; background: #fafafa;
-            height: 60vh; min-height: 550px;
+            border: 1px dashed #ccc; background: #fafafa; 
+            height: 45vh; min-height: 400px; 
             border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
             flex-direction: column; overflow: hidden; padding: 0; margin-top: 10px;
@@ -135,7 +128,7 @@
 
         /* --- Result Items --- */
         .result-header {
-            font-size: 18px; font-weight: 700; color: #4CAF50;
+            font-size: 18px; font-weight: 700; color: #4CAF50; 
             margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;
         }
 
@@ -152,10 +145,10 @@
         }
         .res-img-box {
             width: 100px; height: 60px; display: flex; align-items: center; justify-content: center;
-            background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; overflow: hidden;
+            background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; overflow: hidden; 
         }
         .res-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
-
+        
         .res-qty-box { display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .qty-title { font-size: 11px; font-weight: 700; color: #004d70; }
         .qty-val {
@@ -169,7 +162,7 @@
             background-color: #8BC34A; color: #fff; padding: 12px 25px;
             font-size: 15px; font-weight: 700; border: none; border-radius: 6px;
             cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none;
+            transition: background 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; 
         }
         .bom-btn:hover { background-color: #7cb342; }
 
@@ -177,272 +170,278 @@
 </head>
 <body>
 
-<header>
-    <div class="brand">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
-        <div class="title">Solution 6: 800V SST + LVDC IT</div>
-    </div>
-    <a href="page-orv3.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Map</a>
-</header>
-
-<div class="container">
-    <div class="sidebar">
-
-        <div class="group-title">General Information <i class="far fa-question-circle" style="margin-left: auto;"></i></div>
-
-        <div class="input-row">
-            <label>Location</label>
-            <select id="location">
-                <option>United States</option>
-                <option>Taiwan</option>
-            </select>
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">Solution 6: 800V SST + LVDC IT</div>
         </div>
+        <a href="page-orv3.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Map</a>
+    </header>
 
-        <div class="input-row">
-            <label>IT Capacity (kW)</label>
-            <div class="slider-container">
-                <input type="range" id="it_capacity" min="0" max="1000" step="50" value="200" oninput="updateCapDisplay(); calc();">
-                <span class="slider-val" id="cap_display">200</span>
+    <div class="container">
+        <div class="sidebar">
+            
+            <div class="group-title">General Information <i class="far fa-question-circle" style="margin-left: auto;"></i></div>
+            
+            <div class="input-row">
+                <label>Location</label>
+                <select id="location">
+                    <option>United States</option>
+                    <option>Taiwan</option>
+                </select>
             </div>
-        </div>
-
-        <div class="input-row">
-            <label>Power Redundancy</label>
-            <select>
-                <option>N</option>
-                <option>N+1</option>
-                <option>2N</option>
-            </select>
-        </div>
-
-        <div class="input-row">
-            <label>Rack Frame</label>
-            <div class="toggle-group">
-                <div class="toggle-opt" id="btn-21" onclick="setRack(21)">21 inch</div>
-                <div class="toggle-opt active" id="btn-42" onclick="setRack(42)">42 inch</div>
+            
+            <div class="input-row">
+                <label>IT Capacity (kW)</label>
+                <div class="slider-container">
+                    <input type="range" id="it_capacity" min="0" max="1000" step="50" value="200" oninput="updateCapDisplay(); calc();">
+                    <span class="slider-val" id="cap_display">200</span>
+                </div>
             </div>
+
+            <div class="input-row">
+                <label>Power Redundancy</label>
+                <select>
+                    <option>N</option>
+                    <option>N+1</option>
+                    <option>2N</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>Rack Frame</label>
+                <div class="toggle-group">
+                    <div class="toggle-opt" id="btn-21" onclick="setRack(21)">21 inch</div>
+                    <div class="toggle-opt active" id="btn-42" onclick="setRack(42)">42 inch</div>
+                </div>
+            </div>
+
+            <div class="group-title">Power Device</div>
+            
+            <div class="input-row">
+                <label>Power Shelf</label>
+                <select id="power_shelf" onchange="calc()">
+                    </select>
+            </div>
+
+            <div class="input-row">
+                <label>BBU</label>
+                <select id="bbu_select" onchange="calc()">
+                    <option value="0">N.A</option>
+                    <option value="72_LFP">2U 72KW LFP</option>
+                    <option value="72_LTO">2U 72KW LTO</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>CBU</label>
+                <select id="cbu_select" onchange="calc()">
+                    <option value="0">N.A</option>
+                    <option value="24">1U 24KW</option>
+                </select>
+            </div>
+
+            <div class="group-title">
+                IT Power Architecture
+            </div>
+            <div class="arch-diagram" id="arch_display">
+                </div>
+
         </div>
 
-        <div class="group-title">Power Device</div>
+        <div class="main">
+            <div class="result-header">Results</div>
 
-        <!-- ✅ Power Shelf：依 rack frame 自動變成 42->200kW / 21->100kW -->
-        <div class="input-row">
-            <label>Power Shelf</label>
-            <select id="power_shelf" onchange="calc()"></select>
+            <div class="result-row">
+                <div class="res-label-box">Power Whip</div>
+                <div class="res-img-box"><img src="whip.png" alt="Power Whip"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_whip">--</div></div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">Power Shelf</div>
+                <div class="res-img-box"><img src="shelf.png" alt="Power Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_shelf">--</div></div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">BBU Shelf</div>
+                <div class="res-img-box"><img src="shelf.png" alt="BBU Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bbu">--</div></div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">CBU Shelf</div>
+                <div class="res-img-box"><img src="shelf.png" alt="CBU Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_cbu">--</div></div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">Rack Bus Bar</div>
+                <div class="res-img-box"><img src="rack.png" alt="Rack Bus Bar"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bus">--</div></div>
+            </div>
+
+            <a href="bom1.html" class="bom-btn">
+                <i class="fas fa-file-download"></i> BOM Generator
+            </a>
         </div>
-
-        <!-- ✅ BBU 固定 N.A 並禁用 -->
-        <div class="input-row">
-            <label>BBU</label>
-            <select id="bbu_select" disabled>
-                <option value="0">N.A</option>
-            </select>
-        </div>
-
-        <!-- ✅ CBU 固定 N.A 並禁用 -->
-        <div class="input-row">
-            <label>CBU</label>
-            <select id="cbu_select" disabled>
-                <option value="0">N.A</option>
-            </select>
-        </div>
-
-        <div class="group-title">IT Power Architecture</div>
-        <div class="arch-diagram" id="arch_display"></div>
-
     </div>
 
-    <div class="main">
-        <div class="result-header">Results</div>
+    <script>
+        let currentRack = 42;
 
-        <div class="result-row">
-            <div class="res-label-box">Power Whip</div>
-            <div class="res-img-box"><img src="whip.png" alt="Power Whip"></div>
-            <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_whip">--</div></div>
-        </div>
-
-        <div class="result-row">
-            <div class="res-label-box">Power Shelf</div>
-            <div class="res-img-box"><img src="shelf.png" alt="Power Shelf"></div>
-            <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_shelf">--</div></div>
-        </div>
-
-        <div class="result-row">
-            <div class="res-label-box">BBU Shelf</div>
-            <div class="res-img-box"><img src="shelf.png" alt="BBU Shelf"></div>
-            <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bbu">--</div></div>
-        </div>
-
-        <div class="result-row">
-            <div class="res-label-box">CBU Shelf</div>
-            <div class="res-img-box"><img src="shelf.png" alt="CBU Shelf"></div>
-            <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_cbu">--</div></div>
-        </div>
-
-        <div class="result-row">
-            <div class="res-label-box">Rack Bus Bar</div>
-            <div class="res-img-box"><img src="rack.png" alt="Rack Bus Bar"></div>
-            <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bus">--</div></div>
-        </div>
-
-        <a href="bom1.html" class="bom-btn">
-            <i class="fas fa-file-download"></i> BOM Generator
-        </a>
-    </div>
-</div>
-
-<script>
-    let currentRack = 42;
-
-    function init() {
-        setRack(42);
-        updateCapDisplay();
-        calc();
-    }
-
-    function updateCapDisplay() {
-        const val = document.getElementById('it_capacity').value;
-        document.getElementById('cap_display').innerText = val;
-    }
-
-    function setRack(size) {
-        currentRack = size;
-
-        document.getElementById('btn-21').classList.remove('active');
-        document.getElementById('btn-42').classList.remove('active');
-        document.getElementById(`btn-${size}`).classList.add('active');
-
-        // ✅ 圖不要動：仍然畫你原本的架構圖
-        drawArch(size);
-
-        // ✅ Power Device：依截圖規格更新
-        const shelfSelect = document.getElementById('power_shelf');
-        shelfSelect.innerHTML = '';
-
-        if (size === 42) {
-            // 42 inch -> 200KW 800V/50V
-            shelfSelect.add(new Option("42 inch 200KW 800V/50V", "200"));
-        } else {
-            // 21 inch -> 100KW 800V/50V
-            shelfSelect.add(new Option("21 inch 100KW 800V/50V", "100"));
+        function init() {
+            setRack(42);
         }
 
-        // BBU/CBU 固定 N.A 並禁用
-        const bbu = document.getElementById('bbu_select');
-        const cbu = document.getElementById('cbu_select');
-        bbu.value = "0";
-        cbu.value = "0";
-        bbu.disabled = true;
-        cbu.disabled = true;
-
-        calc();
-    }
-
-    // ----------------------------
-    // 你原本的 drawArch：完全不改
-    // ----------------------------
-    function drawArch(size) {
-        const container = document.getElementById('arch_display');
-        let svgContent = '';
-
-        const colorBlueText = "#005691";
-        const colorLineBlue = "#003366";
-        const colorLightGreen = "#8BC34A";
-        const colorOrangeBorder = "#FF9800";
-
-        const colorRackCyan = "#81D4FA";
-        const colorPink = "#F48FB1";
-        const colorPinkStroke = "#D81B60";
-        const colorBlack = "#000000";
-        const colorRedText = "#D32F2F";
-        const colorGreenText = "#388E3C";
-
-        const viewBoxW = 500;
-        const viewBoxH = 280;
-
-        const commonSVG = `
-            <text x="50" y="30" font-family="Arial" font-size="24" fill="black">HVDC 800V</text>
-
-            <line x1="10" y1="40" x2="280" y2="40" stroke="${colorLineBlue}" stroke-width="3"/>
-            <line x1="200" y1="40" x2="200" y2="60" stroke="${colorLineBlue}" stroke-width="3"/>
-
-            <text x="10" y="65" font-family="Arial" font-size="20" font-weight="bold" fill="${colorBlueText}">Energy Storage</text>
-
-            <defs>
-                <linearGradient id="imgPlaceholder" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style="stop-color:#455A64;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#263238;stop-opacity:1" />
-                </linearGradient>
-            </defs>
-            <rect x="10" y="80" width="120" height="80" fill="url(#imgPlaceholder)" />
-            <image href="energy.png" x="10" y="80" width="120" height="80" preserveAspectRatio="none" />
-
-            <rect x="160" y="70" width="80" height="60" fill="${colorLightGreen}" stroke="${colorOrangeBorder}" stroke-width="2"/>
-            <text x="165" y="90" font-family="Arial" font-size="12" fill="black">*Energy</text>
-            <text x="165" y="110" font-family="Arial" font-size="12" fill="black">Storage</text>
-        `;
-
-        if (size === 21) {
-            svgContent = `
-            <svg viewBox="0 0 ${viewBoxW} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
-                ${commonSVG}
-
-                <rect x="300" y="20" width="120" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
-
-                <text x="360" y="45" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
-
-                <rect x="302" y="60" width="116" height="50" fill="${colorRackCyan}" stroke="${colorBlack}" stroke-width="1"/>
-                <text x="360" y="85" font-family="Arial" font-size="12" fill="black" text-anchor="middle">PSU *BBU *CBU</text>
-
-                <rect x="355" y="110" width="10" height="110" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="1"/>
-
-                <text x="330" y="160" font-family="Arial" font-size="16" fill="${colorGreenText}" font-weight="bold">LVDC</text>
-            </svg>
-            `;
-        } else {
-            svgContent = `
-            <svg viewBox="0 0 ${viewBoxW + 60} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
-                ${commonSVG}
-
-                <rect x="300" y="20" width="180" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
-
-                <text x="390" y="45" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
-
-                <rect x="302" y="60" width="176" height="50" fill="${colorRackCyan}" stroke="${colorBlack}" stroke-width="1"/>
-                <text x="390" y="85" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU *BBU *CBU</text>
-
-                <rect x="385" y="110" width="10" height="110" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="1"/>
-
-                <text x="350" y="160" font-family="Arial" font-size="16" fill="${colorGreenText}" font-weight="bold">LVDC</text>
-            </svg>
-            `;
+        function updateCapDisplay() {
+            const val = document.getElementById('it_capacity').value;
+            document.getElementById('cap_display').innerText = val;
         }
 
-        container.innerHTML = svgContent;
-    }
+        function setRack(size) {
+            currentRack = size;
+            
+            document.getElementById('btn-21').classList.remove('active');
+            document.getElementById('btn-42').classList.remove('active');
+            document.getElementById(`btn-${size}`).classList.add('active');
 
-    function calc() {
-        const cap = parseInt(document.getElementById('it_capacity').value) || 0;
+            // 繪製 Solution 6 的架構圖
+            drawArch(size);
 
-        // Power Shelf (42->200 / 21->100)
-        const shelfPower = parseInt(document.getElementById('power_shelf').value) || 0;
-        const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
+            const shelfSelect = document.getElementById('power_shelf');
+            shelfSelect.innerHTML = ''; 
 
-        // BBU/CBU 固定 N.A => qty 0（依截圖）
-        const bbuQty = 0;
-        const cbuQty = 0;
+            if (size === 42) {
+                // 根據圖片說明：42 inch 對應 200KW
+                let opt1 = new Option("42 inch 200KW 800V/50V", "200");
+                let opt2 = new Option("N.A", "0");
+                shelfSelect.add(opt1);
+                shelfSelect.add(opt2);
+            } else {
+                // 根據圖片說明：21 inch 對應 100KW
+                let opt1 = new Option("21 inch 100KW 800V/50V", "100");
+                let opt2 = new Option("N.A", "0");
+                shelfSelect.add(opt1);
+                shelfSelect.add(opt2);
+            }
 
-        // accessory：跟 shelfQty 同步（你原本邏輯）
-        const accessoryQty = shelfQty > 0 ? shelfQty : 0;
+            calc(); 
+        }
 
-        document.getElementById('qty_shelf').innerText = shelfQty;
-        document.getElementById('qty_bbu').innerText = bbuQty;
-        document.getElementById('qty_cbu').innerText = cbuQty;
-        document.getElementById('qty_whip').innerText = accessoryQty;
-        document.getElementById('qty_bus').innerText = accessoryQty;
-    }
+        // 修改：Solution 6 的 SVG 繪製邏輯 (根據截圖配色)
+        function drawArch(size) {
+            const container = document.getElementById('arch_display');
+            let svgContent = '';
 
-    init();
-</script>
+            const colorBlueText = "#005691"; // 左側標題藍色
+            const colorLineBlue = "#003366"; // 左側線條深藍色
+            const colorLightGreen = "#8BC34A"; // Energy Storage 綠色框
+            const colorOrangeBorder = "#FF9800"; // Energy Storage 橘色邊框
+            
+            const colorRackCyan = "#81D4FA"; // 淺藍色 PSU 區塊
+            const colorPink = "#F48FB1";     // Bus Bar 粉色
+            const colorPinkStroke = "#D81B60";
+            const colorBlack = "#000000";
+            const colorRedText = "#D32F2F";  // 800V 紅色文字
+            const colorGreenText = "#388E3C"; // LVDC 綠色文字
+
+            // 寬度設定，放大 viewbox 來縮小內容
+            const viewBoxW = 500; 
+            const viewBoxH = 300; // 加大高度
+
+            // 左側共用部分：HVDC 800V Header + Energy Storage Image + Box
+            // 使用外部 energy.png
+            const commonSVG = `
+                <text x="50" y="30" font-family="Arial" font-size="24" fill="black">HVDC 800V</text>
+                
+                <line x1="10" y1="40" x2="280" y2="40" stroke="${colorLineBlue}" stroke-width="3"/>
+                <line x1="200" y1="40" x2="200" y2="60" stroke="${colorLineBlue}" stroke-width="3"/>
+
+                <text x="10" y="65" font-family="Arial" font-size="20" font-weight="bold" fill="${colorBlueText}">Energy Storage</text>
+
+                <defs>
+                    <linearGradient id="imgPlaceholder" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#455A64;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#263238;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <rect x="10" y="80" width="120" height="80" fill="url(#imgPlaceholder)" />
+                <image href="energy.png" x="10" y="80" width="120" height="80" preserveAspectRatio="none" />
+
+                <rect x="160" y="70" width="80" height="60" fill="${colorLightGreen}" stroke="${colorOrangeBorder}" stroke-width="2"/>
+                <text x="200" y="90" font-family="Arial" font-size="12" fill="black" text-anchor="middle">*Energy</text>
+                <text x="200" y="110" font-family="Arial" font-size="12" fill="black" text-anchor="middle">Storage</text>
+            `;
+
+            if (size === 21) {
+                // 21 inch Rack (窄版)
+                svgContent = `
+                <svg viewBox="-20 -20 ${viewBoxW} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                    ${commonSVG}
+                    
+                    <rect x="300" y="20" width="120" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
+                    
+                    <text x="360" y="45" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
+                    
+                    <rect x="302" y="60" width="116" height="50" fill="${colorRackCyan}" stroke="${colorBlack}" stroke-width="1"/>
+                    <text x="360" y="85" font-family="Arial" font-size="12" fill="black" text-anchor="middle">PSU *BBU *CBU</text>
+                    
+                    <rect x="355" y="110" width="10" height="110" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="1"/>
+                    
+                    <text x="360" y="160" font-family="Arial" font-size="16" fill="${colorGreenText}" font-weight="bold" text-anchor="middle">LVDC</text>
+                </svg>
+                `;
+            } else {
+                // 42 inch Rack (寬版)
+                svgContent = `
+                <svg viewBox="-20 -20 ${viewBoxW + 60} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                    ${commonSVG}
+                    
+                    <rect x="300" y="20" width="180" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
+                    
+                    <text x="390" y="45" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
+                    
+                    <rect x="302" y="60" width="176" height="50" fill="${colorRackCyan}" stroke="${colorBlack}" stroke-width="1"/>
+                    <text x="390" y="85" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU *BBU *CBU</text>
+                    
+                    <rect x="385" y="110" width="10" height="110" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="1"/>
+                    
+                    <text x="390" y="160" font-family="Arial" font-size="16" fill="${colorGreenText}" font-weight="bold" text-anchor="middle">LVDC</text>
+                </svg>
+                `;
+            }
+
+            container.innerHTML = svgContent;
+        }
+
+        function calc() {
+            const cap = parseInt(document.getElementById('it_capacity').value) || 0;
+            
+            const shelfPower = parseInt(document.getElementById('power_shelf').value);
+            const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
+
+            const bbuVal = document.getElementById('bbu_select').value;
+            let bbuPower = 0;
+            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") {
+                bbuPower = 72;
+            }
+            const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
+
+            const cbuVal = parseInt(document.getElementById('cbu_select').value);
+            const cbuQty = cbuVal > 0 ? Math.ceil(cap / cbuVal) : 0;
+
+            const accessoryQty = shelfQty > 0 ? shelfQty : 0;
+
+            document.getElementById('qty_shelf').innerText = shelfQty;
+            document.getElementById('qty_bbu').innerText = bbuQty;
+            document.getElementById('qty_cbu').innerText = cbuQty;
+            document.getElementById('qty_whip').innerText = accessoryQty;
+            document.getElementById('qty_bus').innerText = accessoryQty;
+        }
+
+        init();
+    </script>
 </body>
 </html>

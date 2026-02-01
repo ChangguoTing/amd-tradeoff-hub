@@ -120,10 +120,11 @@
         }
         .toggle-opt.active { background-color: #4b5563; color: #fff; border-color: #4b5563; }
 
-        /* Architecture Diagram Container */
+        /* Architecture Diagram Container - 修改高度以縮小圖片顯示 */
         .arch-diagram {
             border: 1px dashed #ccc; background: #fafafa; 
-            height: 60vh; min-height: 550px; 
+            height: 45vh;       /* 從 60vh 減小 */
+            min-height: 400px;  /* 從 550px 減小 */
             border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
             flex-direction: column; overflow: hidden; padding: 0; margin-top: 10px;
@@ -260,57 +261,32 @@
 
             <div class="result-row">
                 <div class="res-label-box">Power Whip</div>
-                <div class="res-img-box">
-                    <img src="whip.png" alt="Power Whip">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_whip">--</div>
-                </div>
+                <div class="res-img-box"><img src="whip.png" alt="Power Whip"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_whip">--</div></div>
             </div>
 
             <div class="result-row">
                 <div class="res-label-box">Power Shelf</div>
-                <div class="res-img-box">
-                    <img src="shelf.png" alt="Power Shelf">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_shelf">--</div>
-                </div>
+                <div class="res-img-box"><img src="shelf.png" alt="Power Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_shelf">--</div></div>
             </div>
 
             <div class="result-row">
                 <div class="res-label-box">BBU Shelf</div>
-                <div class="res-img-box">
-                    <img src="shelf.png" alt="BBU Shelf">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_bbu">--</div>
-                </div>
+                <div class="res-img-box"><img src="shelf.png" alt="BBU Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bbu">--</div></div>
             </div>
 
             <div class="result-row">
                 <div class="res-label-box">CBU Shelf</div>
-                <div class="res-img-box">
-                    <img src="shelf.png" alt="CBU Shelf">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_cbu">--</div>
-                </div>
+                <div class="res-img-box"><img src="shelf.png" alt="CBU Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_cbu">--</div></div>
             </div>
 
             <div class="result-row">
                 <div class="res-label-box">Rack Bus Bar</div>
-                <div class="res-img-box">
-                    <img src="rack.png" alt="Rack Bus Bar">
-                </div>
-                <div class="res-qty-box">
-                    <div class="qty-title">Qty</div>
-                    <div class="qty-val" id="qty_bus">--</div>
-                </div>
+                <div class="res-img-box"><img src="rack.png" alt="Rack Bus Bar"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bus">--</div></div>
             </div>
 
             <a href="bom1.html" class="bom-btn">
@@ -326,7 +302,6 @@
             setRack(42);
         }
 
-        // 更新滑桿數值顯示
         function updateCapDisplay() {
             const val = document.getElementById('it_capacity').value;
             document.getElementById('cap_display').innerText = val;
@@ -345,15 +320,12 @@
             shelfSelect.innerHTML = ''; 
 
             if (size === 42) {
-                // 42 inch 選項
                 let opt1 = new Option("42 inch true 3Phase 74KW", "74");
                 let opt2 = new Option("N.A", "0");
                 shelfSelect.add(opt1);
                 shelfSelect.add(opt2);
             } else {
-                // 21 inch 選項
                 let opt1 = new Option("21 inch 72KW", "72");
-                // 新增 33KW 選項
                 let opt2 = new Option("21 inch 33KW", "33");
                 let opt3 = new Option("N.A", "0");
                 shelfSelect.add(opt1);
@@ -375,26 +347,40 @@
             const colorBlack = "#000000";
 
             if (size === 21) {
+                // 21 inch: 增加 viewBox 大小以縮小顯示比例，並確保文字置中
+                // Rack 寬度 100，中心點 x=60
                 svgContent = `
-                <svg viewBox="0 0 120 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                <svg viewBox="-20 -10 160 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     <rect x="10" y="10" width="100" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
+                    
                     <text x="60" y="35" font-family="Arial" font-size="16" font-weight="bold" fill="${colorGreenText}" text-anchor="middle">480V</text>
+                    
                     <rect x="12" y="50" width="96" height="50" fill="${colorGreen}" stroke="${colorBlack}" stroke-width="2"/>
-                    <text x="18" y="70" font-family="Arial" font-size="12" fill="black">PSU *BBU</text>
-                    <text x="18" y="88" font-family="Arial" font-size="12" fill="black">*CBU</text>
+                    
+                    <text x="60" y="70" font-family="Arial" font-size="12" fill="black" text-anchor="middle">PSU *BBU</text>
+                    <text x="60" y="88" font-family="Arial" font-size="12" fill="black" text-anchor="middle">*CBU</text>
+                    
                     <rect x="52" y="102" width="16" height="106" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="2"/>
-                    <text x="35" y="160" font-family="Arial" font-size="16" fill="${colorGreenText}" text-anchor="middle">LVDC</text>
+                    
+                    <text x="60" y="160" font-family="Arial" font-size="16" fill="${colorGreenText}" text-anchor="middle">LVDC</text>
                 </svg>
                 `;
             } else {
+                // 42 inch: 增加 viewBox 大小以縮小顯示比例，並確保文字置中
+                // Rack 寬度 180，中心點 x=100
                 svgContent = `
-                <svg viewBox="0 0 200 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                <svg viewBox="-20 -10 240 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     <rect x="10" y="10" width="180" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
+                    
                     <text x="100" y="35" font-family="Arial" font-size="16" font-weight="bold" fill="${colorGreenText}" text-anchor="middle">480V</text>
+                    
                     <rect x="12" y="50" width="176" height="50" fill="${colorGreen}" stroke="${colorBlack}" stroke-width="2"/>
+                    
                     <text x="100" y="80" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU *BBU *CBU</text>
+                    
                     <rect x="92" y="102" width="16" height="106" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="2"/>
-                    <text x="70" y="160" font-family="Arial" font-size="16" fill="${colorGreenText}" text-anchor="middle">LVDC</text>
+                    
+                    <text x="100" y="160" font-family="Arial" font-size="16" fill="${colorGreenText}" text-anchor="middle">LVDC</text>
                 </svg>
                 `;
             }
@@ -410,7 +396,6 @@
 
             const bbuVal = document.getElementById('bbu_select').value;
             let bbuPower = 0;
-            // 更新：處理新增的 33KW NCM 選項
             if (bbuVal === "72_LFP" || bbuVal === "72_LTO") {
                 bbuPower = 72;
             } else if (bbuVal === "33_NCM") {

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AMD AI Power Solution Support</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f9fafb; /* 下半部背景 */
+            color: #333;
+            height: 100%;
+            min-width: 1200px;
+            overflow-x: auto; 
+        }
+
+        /* --- 頂部導航欄 --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            height: 75px;
+            background-color: #000;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 25px; }
+        .back-home { color: #fff; text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 8px; transition: color 0.2s;}
+        .back-home:hover { color: #ED1C24; }
+        .amd-logo { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); }
+        .nav-right { display: flex; gap: 25px; align-items: center; }
+        .nav-right i { font-size: 18px; color: #fff; cursor: pointer; }
+
+        /* --- Hero Section (黑色區域) --- */
+        .support-hero {
+            background-color: #000;
+            color: #fff;
+            padding: 150px 20px 80px 20px; /* 調整高度 */
+            text-align: center;
+            background-image: radial-gradient(circle at center, #2a2a2a 0%, #000000 100%);
+            border-bottom: 4px solid #ED1C24; 
+        }
+
+        .support-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            letter-spacing: 1px;
+        }
+
+        .support-hero h2 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #ddd;
+            margin: 0;
+        }
+
+        /* --- 選擇卡片區域 --- */
+        .selection-section {
+            padding: 60px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 80px; /* ✅ 修改：間距加大，讓卡片分散開 */
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #fff;
+            border: 2px solid #8BC34A; /* 綠色邊框 */
+            border-radius: 6px;
+            padding: 25px; /* ✅ 修改：內距縮小 */
+            width: 300px;  /* ✅ 修改：卡片寬度變小 (原 350px) */
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            font-size: 1.3rem; /* 字體稍微縮小 */
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #000;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            height: 50px; /* 固定高度讓標題對齊 */
+            display: flex;
+            align-items: center;
+        }
+
+        .card p {
+            font-size: 0.95rem; /* 字體稍微縮小 */
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            flex-grow: 1; 
+        }
+
+        .card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-link {
+            color: #0078D7;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        .card-link:hover {
+            color: #005a9e;
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-left">
+            <a href="index.html" class="back-home">
+                <i class="fas fa-arrow-left"></i> Home
+            </a>
+            <div style="width: 20px;"></div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" class="amd-logo">
+        </div>
+
+        <div class="nav-right">
+            <i class="fas fa-user"></i>
+            <i class="fas fa-globe"></i>
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+
+    <div class="support-hero">
+        <h1>Welcome to AMD AI Power Solution</h1>
+        <h2>Find Power Solution for AMD Standard & Custom Design</h2>
+    </div>
+
+    <div class="selection-section">
+        <div class="cards-container">
+            
+            <div class="card">
+                <h3>Introduction</h3>
+                <p>Overview of AMD Power Solutions and Partner Suppliers. Learn about our ecosystem and standardized approaches to data center power.</p>
+                <div class="card-links">
+                    <a href="#" class="card-link">Power Solutions &gt;</a>
+                    <a href="#" class="card-link">Partners &gt;</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Solution Finder & BOM Generator (AMD STD)</h3>
+                <p>Select the appropriate power solution and generate the Bill of Materials (BOM) based on your specific requirements.</p>
+                <div class="card-links">
+                    <a href="page-orv3.html" class="card-link">Solution Selection & BOM &gt;</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Custom Design</h3>
+                <p>AMD delivers customized solutions to address the unique requirements of CSP data centers, tailored for high-performance AI workloads.</p>
+                <div class="card-links">
+                    <a href="amdflat.html" class="card-link">Arcadia with Tesseract Rack Platform &gt;</a>
+                    <a href="amdspectra.html" class="card-link">Arcadia with Spectra Rack Platform &gt;</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

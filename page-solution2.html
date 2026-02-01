@@ -99,48 +99,18 @@
             font-size: 13px; background: #fff; color: #374151; outline: none; 
         }
 
-        /* Range Slider 樣式 */
-        .slider-container {
-            flex: 1.2;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
+        /* Range Slider */
+        .slider-container { flex: 1.2; display: flex; align-items: center; gap: 10px; }
         input[type="range"] {
-            flex: 1;
-            height: 6px;
-            background: #e5e7eb;
-            border-radius: 3px;
-            outline: none;
-            appearance: none;
-            -webkit-appearance: none;
-            cursor: pointer;
+            flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; outline: none;
+            appearance: none; -webkit-appearance: none; cursor: pointer;
         }
-        
         input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            background: #ED1C24;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: transform 0.1s;
+            appearance: none; width: 18px; height: 18px; background: #ED1C24; border: 2px solid #fff;
+            border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
         }
-        
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-        }
-
-        .slider-val {
-            font-weight: 700;
-            color: #ED1C24;
-            font-family: monospace;
-            font-size: 14px;
-            width: 60px;
-            text-align: right;
-        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        .slider-val { font-weight: 700; color: #ED1C24; font-family: monospace; font-size: 14px; width: 60px; text-align: right; }
         
         /* Rack Frame Toggle */
         .toggle-group { flex: 1.2; display: flex; gap: 5px; }
@@ -150,11 +120,11 @@
         }
         .toggle-opt.active { background-color: #4b5563; color: #fff; border-color: #4b5563; }
 
-        /* --- Architecture Diagram Container (超級加大版) --- */
+        /* Architecture Diagram Container - 修改高度以縮小圖片 */
         .arch-diagram {
             border: 1px dashed #ccc; background: #fafafa; 
-            height: 60vh; 
-            min-height: 550px; 
+            height: 45vh;       /* 從 60vh 減小 */
+            min-height: 400px;  /* 從 550px 減小 */
             border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
             flex-direction: column; 
@@ -434,8 +404,9 @@
             const colorBlack = "#000000";
 
             if (size === 21) {
+                // 21 inch: 擴大 viewBox 以縮小內容顯示 (-20 -10 160 240)
                 svgContent = `
-                <svg viewBox="0 0 120 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                <svg viewBox="-20 -10 160 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     <rect x="10" y="10" width="100" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
                     <text x="60" y="35" font-family="Arial" font-size="16" font-weight="bold" fill="${colorGreenText}" text-anchor="middle">480V</text>
                     <rect x="12" y="50" width="96" height="50" fill="${colorPurple}" stroke="${colorBlack}" stroke-width="2"/>
@@ -446,8 +417,9 @@
                 </svg>
                 `;
             } else {
+                // 42 inch: 擴大 viewBox 以縮小內容顯示 (-20 -10 240 240)
                 svgContent = `
-                <svg viewBox="0 0 200 220" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                <svg viewBox="-20 -10 240 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     <rect x="10" y="10" width="180" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
                     <text x="100" y="35" font-family="Arial" font-size="16" font-weight="bold" fill="${colorGreenText}" text-anchor="middle">480V</text>
                     <rect x="12" y="50" width="176" height="50" fill="${colorPurple}" stroke="${colorBlack}" stroke-width="2"/>

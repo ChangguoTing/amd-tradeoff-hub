@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>White Papers & Education | AMD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            height: 100%;
+            min-width: 1200px;
+            overflow-x: auto; 
+        }
+
+        /* --- 頂部導航欄 --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            height: 75px;
+            background-color: #000;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 25px; }
+        .back-home { color: #fff; text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 8px; transition: color 0.2s;}
+        .back-home:hover { color: #ED1C24; }
+        .amd-logo { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); }
+        .nav-right { display: flex; gap: 25px; align-items: center; }
+        .nav-right i { font-size: 18px; color: #fff; cursor: pointer; }
+
+        /* --- Hero Section (黑色區域 - 比例加大) --- */
+        .support-hero {
+            background-color: #000;
+            color: #fff;
+            /* 增加 padding 讓黑色區域變大，視覺上佔比更重 */
+            padding: 180px 20px 100px 20px;
+            text-align: center;
+            /* 模擬 AMD 風格的深色背景 */
+            background-image: radial-gradient(circle at center, #2a2a2a 0%, #000000 100%);
+            border-bottom: 4px solid #ED1C24; /* 底部紅線裝飾 */
+        }
+
+        .support-hero h1 {
+            font-size: 4rem; /* 字體加大 */
+            font-weight: 800;
+            margin: 0 0 20px 0;
+            letter-spacing: 1px;
+        }
+
+        .support-hero h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: #ddd;
+            margin: 0;
+        }
+
+        /* --- 選擇卡片區域 (白色區域 - 比例縮小) --- */
+        .selection-section {
+            /* 減少 padding 讓白色區域感覺小一點 */
+            padding: 40px 40px; 
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px; /* 增加間距 */
+            flex-wrap: wrap;
+            /* 讓卡片往上浮動一點，覆蓋部分黑色區域，增加層次感 (可選) */
+            /* margin-top: -50px; */ 
+        }
+
+        .card {
+            background: #fff;
+            border: 2px solid #8BC34A; /* 綠色邊框 */
+            border-radius: 4px;
+            padding: 0;
+            width: 500px; /* 卡片加寬以容納詳細清單 */
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* 卡片內的圖片區域 */
+        .card-img {
+            width: 100%;
+            height: 220px; /* 圖片高度 */
+            object-fit: cover; /* 保持圖片比例填滿 */
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #000;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        /* 清單樣式 */
+        .content-block {
+            margin-bottom: 20px;
+        }
+        
+        /* 標籤樣式 (模仿截圖中的藍色/綠色方塊) */
+        .cat-tag {
+            display: inline-block;
+            background-color: #005691; /* 藍色標籤 (HW/FW) */
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .cat-tag.green {
+            background-color: #2E7D32; /* 綠色標籤 (PSU/Data Center) */
+        }
+
+        .content-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            color: #444;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .content-list li {
+            margin-bottom: 5px;
+            padding-left: 5px;
+        }
+
+        /* 連結樣式 */
+        .card-link {
+            color: #0078D7;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+            margin-top: auto; /* 推到底部 */
+            padding-top: 20px;
+        }
+
+        .card-link:hover {
+            color: #005a9e;
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-left">
+            <a href="index.html" class="back-home">
+                <i class="fas fa-arrow-left"></i> Home
+            </a>
+            <div style="width: 20px;"></div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" class="amd-logo">
+        </div>
+
+        <div class="nav-right">
+            <i class="fas fa-user"></i>
+            <i class="fas fa-globe"></i>
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+
+    <div class="support-hero">
+        <h1>Welcome to AMD Support</h1>
+        <h2>AI Power Education Center</h2>
+    </div>
+
+    <div class="selection-section">
+        <div class="cards-container">
+            
+            <div class="card">
+                <img src="green1.png" alt="White Paper Diagram" class="card-img">
+                <div class="card-content">
+                    <h3>White Paper</h3>
+                    
+                    <div class="content-block">
+                        <span class="cat-tag">HW</span>
+                        <ul class="content-list">
+                            <li>1. NEC 80% derating</li>
+                            <li>2. Bus Bar Guideline</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-block">
+                        <span class="cat-tag">FW</span>
+                        <ul class="content-list">
+                            <li>1. Redfish protocol for PSU</li>
+                            <li>2. Security & Communication</li>
+                        </ul>
+                    </div>
+
+                    <a href="#" class="card-link">View White Papers &gt;</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="green2.png" alt="Simulation Center Diagram" class="card-img">
+                <div class="card-content">
+                    <h3>Simulation Center</h3>
+                    
+                    <div class="content-block">
+                        <span class="cat-tag green">PSU</span>
+                        <ul class="content-list">
+                            <li>1. 3PH 18.5KW PSU</li>
+                            <li>2. 72KW BBU</li>
+                            <li>3. 24KW CBU</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-block">
+                        <span class="cat-tag green">Data Center</span> <ul class="content-list">
+                            <li>1. 2GW HVDC Power Distribution</li>
+                            <li>2. 1GW 480V Power Distribution</li>
+                        </ul>
+                    </div>
+
+                    <a href="#" class="card-link">Enter Simulation Center &gt;</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

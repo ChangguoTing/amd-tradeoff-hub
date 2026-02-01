@@ -116,15 +116,32 @@
         }
         .toggle-opt.active { background-color: #4b5563; color: #fff; border-color: #4b5563; }
 
-        /* Architecture Diagram Container */
-        .arch-diagram {
-            border: 1px dashed #ccc; background: #fafafa; 
-            height: 60vh; min-height: 550px; 
+        /* Architecture Diagram Container (UPDATED) */
+        .arch-diagram{
+            border: 1px dashed #ccc;
+            background: #fafafa;
             border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; overflow: hidden; padding: 0; margin-top: 10px;
+
+            /* 空白少一點 */
+            height: 45vh;
+            min-height: 420px;
+
+            /* 置中 */
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            /* 不要貼邊但也不要浪費 */
+            padding: 10px;
+            box-sizing: border-box;
+            overflow: hidden;
+            margin-top: 10px;
         }
-        .arch-diagram svg { width: 100%; height: 100%; display: block; }
+        .arch-diagram svg{
+            width: 100%;
+            height: 100%;
+            display:block;
+        }
 
         /* --- Result Items --- */
         .result-header {
@@ -221,7 +238,7 @@
             <div class="input-row">
                 <label>Power Shelf</label>
                 <select id="power_shelf" onchange="calc()">
-                    </select>
+                </select>
             </div>
 
             <div class="input-row">
@@ -243,9 +260,9 @@
 
             <div class="group-title">
                 IT Power Architecture
-                </div>
+            </div>
             <div class="arch-diagram" id="arch_display">
-                </div>
+            </div>
 
         </div>
 
@@ -327,81 +344,102 @@
             calc(); 
         }
 
-        // 修改：Solution 5 的 SVG 繪製邏輯 (HVDC IT)
+        // UPDATED: drawArch() - centered, scaled, less whitespace, centered text
         function drawArch(size) {
             const container = document.getElementById('arch_display');
-            let svgContent = '';
 
-            const colorSidecar = "#558B2F"; // Sidecar 綠色
-            const colorRedBox = "#FF0000";  // 紅色轉換器方塊
-            const colorRedText = "#FF0000"; // 紅色標題字
-            const colorBlack = "#000000";
-            const colorPSU = "#81D4FA";     // PSU 淺藍色
-            // 修改：Bus Bar 改為紅色
-            const colorRedBus = "#FF0000";    
-            
-            const viewBoxW = 500;
-            const viewBoxH = 280;
+            const colorSidecar = "#558B2F";
+            const colorRedBox  = "#FF0000";
+            const colorRedText = "#FF0000";
+            const colorBlack   = "#000000";
+            const colorPSU     = "#81D4FA";
+            const colorRedBus  = "#FF0000";
 
-            // 左側 Sidecar 結構 (共用)
+            // Smaller viewBox to reduce whitespace
+            const vbW = (size === 21) ? 480 : 540;
+            const vbH = 240;
+
+            // Uniform scale for the whole diagram
+            const scale = 0.92;
+
+            // Estimated content bounds (before scaling)
+            const contentW = (size === 21) ? 430 : 490;
+            const contentH = 210;
+
+            // Centering translation after scaling
+            const tx = (vbW - contentW * scale) / 2;
+            const ty = (vbH - contentH * scale) / 2;
+
+            // Helpful centers for text alignment
+            const leftCenterX = 120;
+            const cableCenterX = 235;
+
+            const rackX = 280;
+            const rackW = (size === 21) ? 110 : 170;
+            const rackCenterX = rackX + rackW / 2;
+
             const sidecarSVG = `
-                <text x="10" y="30" font-family="Arial" font-size="20" font-weight="bold" fill="${colorRedText}">1. 800V sidecar(P+B+C)</text>
-                <text x="10" y="55" font-family="Arial" font-size="20" font-weight="bold" fill="${colorRedText}">2. +/-400V sidecar</text>
+                <!-- Title text centered -->
+                <text x="${leftCenterX}" y="28" font-family="Arial" font-size="20" font-weight="bold"
+                      fill="${colorRedText}" text-anchor="middle">
+                    1. 800V sidecar(P+B+C)
+                </text>
+                <text x="${leftCenterX}" y="54" font-family="Arial" font-size="20" font-weight="bold"
+                      fill="${colorRedText}" text-anchor="middle">
+                    2. +/-400V sidecar
+                </text>
 
-                <line x1="10" y1="95" x2="40" y2="95" stroke="#E040FB" stroke-width="4"/>
+                <line x1="10" y1="92" x2="40" y2="92" stroke="#E040FB" stroke-width="4"/>
 
-                <rect x="40" y="70" width="140" height="70" fill="${colorSidecar}" stroke="none"/>
-                
-                <rect x="50" y="80" width="50" height="50" fill="none" stroke="white" stroke-width="2"/>
-                <path d="M 50 130 L 100 80" stroke="white" stroke-width="2"/>
-                <rect x="55" y="85" width="40" height="40" fill="#90A4AE" opacity="0.5"/>
+                <rect x="40" y="66" width="150" height="78" fill="${colorSidecar}" stroke="none"/>
 
-                <line x1="100" y1="105" x2="115" y2="105" stroke="white" stroke-width="2"/>
+                <rect x="52" y="80" width="52" height="52" fill="none" stroke="white" stroke-width="2"/>
+                <path d="M 52 132 L 104 80" stroke="white" stroke-width="2"/>
+                <rect x="58" y="86" width="40" height="40" fill="#90A4AE" opacity="0.5"/>
 
-                <rect x="115" y="80" width="50" height="50" fill="${colorRedBox}" stroke="white" stroke-width="2"/>
-                <line x1="115" y1="130" x2="165" y2="80" stroke="white" stroke-width="2"/>
+                <line x1="104" y1="106" x2="120" y2="106" stroke="white" stroke-width="2"/>
 
-                <line x1="180" y1="105" x2="280" y2="105" stroke="gray" stroke-width="4"/>
-                <text x="190" y="95" font-family="Arial" font-size="12" fill="#33691E">HVDC Cable</text>
+                <rect x="120" y="80" width="52" height="52" fill="${colorRedBox}" stroke="white" stroke-width="2"/>
+                <line x1="120" y1="132" x2="172" y2="80" stroke="white" stroke-width="2"/>
+
+                <line x1="190" y1="106" x2="${rackX}" y2="106" stroke="gray" stroke-width="4"/>
+
+                <!-- HVDC Cable label centered -->
+                <text x="${cableCenterX}" y="95" font-family="Arial" font-size="12"
+                      fill="#33691E" text-anchor="middle">
+                    HVDC Cable
+                </text>
             `;
 
-            if (size === 21) {
-                // 21 inch Rack (窄版 - HVDC IT)
-                svgContent = `
-                <svg viewBox="0 0 ${viewBoxW} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
-                    ${sidecarSVG}
-                    
-                    <rect x="280" y="30" width="100" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
-                    
-                    <text x="330" y="55" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
-                    
-                    <rect x="282" y="70" width="96" height="50" fill="${colorPSU}" stroke="${colorBlack}" stroke-width="1"/>
-                    <text x="330" y="100" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU</text>
-                    
-                    <rect x="325" y="120" width="10" height="110" fill="${colorRedBus}" stroke="none"/>
-                    
-                    <text x="290" y="170" font-family="Arial" font-size="18" fill="${colorBlack}" font-weight="bold">HVDC</text>
+            const rackSVG = `
+                <rect x="${rackX}" y="30" width="${rackW}" height="200" fill="none"
+                      stroke="${colorBlack}" stroke-width="3"/>
+
+                <text x="${rackCenterX}" y="55" font-family="Arial" font-size="16" font-weight="bold"
+                      fill="${colorRedText}" text-anchor="middle">800V</text>
+
+                <rect x="${rackX + 2}" y="70" width="${rackW - 4}" height="52"
+                      fill="${colorPSU}" stroke="${colorBlack}" stroke-width="1"/>
+
+                <text x="${rackCenterX}" y="102" font-family="Arial" font-size="14"
+                      fill="black" text-anchor="middle">PSU</text>
+
+                <rect x="${rackCenterX - 5}" y="122" width="10" height="108"
+                      fill="${colorRedBus}" stroke="none"/>
+
+                <text x="${rackCenterX}" y="172" font-family="Arial" font-size="18"
+                      fill="${colorBlack}" font-weight="bold" text-anchor="middle">HVDC</text>
+            `;
+
+            const svgContent = `
+                <svg viewBox="0 0 ${vbW} ${vbH}" preserveAspectRatio="xMidYMid meet"
+                     xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                    <g transform="translate(${tx}, ${ty}) scale(${scale})">
+                        ${sidecarSVG}
+                        ${rackSVG}
+                    </g>
                 </svg>
-                `;
-            } else {
-                // 42 inch Rack (寬版 - HVDC IT)
-                svgContent = `
-                <svg viewBox="0 0 ${viewBoxW + 60} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
-                    ${sidecarSVG}
-                    
-                    <rect x="280" y="30" width="160" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
-                    
-                    <text x="360" y="55" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
-                    
-                    <rect x="282" y="70" width="156" height="50" fill="${colorPSU}" stroke="${colorBlack}" stroke-width="1"/>
-                    <text x="360" y="100" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU</text>
-                    
-                    <rect x="355" y="120" width="10" height="110" fill="${colorRedBus}" stroke="none"/>
-                    
-                    <text x="310" y="170" font-family="Arial" font-size="18" fill="${colorBlack}" font-weight="bold">HVDC</text>
-                </svg>
-                `;
-            }
+            `;
 
             container.innerHTML = svgContent;
         }

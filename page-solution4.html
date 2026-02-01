@@ -116,10 +116,10 @@
         }
         .toggle-opt.active { background-color: #4b5563; color: #fff; border-color: #4b5563; }
 
-        /* Architecture Diagram Container */
+        /* Architecture Diagram Container - 縮小高度 */
         .arch-diagram {
             border: 1px dashed #ccc; background: #fafafa; 
-            height: 60vh; min-height: 550px; 
+            height: 45vh; min-height: 400px; 
             border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
             flex-direction: column; overflow: hidden; padding: 0; margin-top: 10px;
@@ -216,7 +216,7 @@
                 </div>
             </div>
 
-            <div class="group-title">Power Device</div>
+            <div class="group-title">Power Device <span style="color:red; margin-left:5px;">(Sidecar)</span></div>
             
             <div class="input-row">
                 <label>Power Shelf</label>
@@ -230,6 +230,7 @@
                     <option value="0">N.A</option>
                     <option value="72_LFP">2U 72KW LFP</option>
                     <option value="72_LTO">2U 72KW LTO</option>
+                    <option value="33_NCM">2U 33KW NCM</option>
                 </select>
             </div>
 
@@ -243,7 +244,7 @@
 
             <div class="group-title">
                 IT Power Architecture
-                </div>
+            </div>
             <div class="arch-diagram" id="arch_display">
                 </div>
 
@@ -307,6 +308,7 @@
             document.getElementById('btn-42').classList.remove('active');
             document.getElementById(`btn-${size}`).classList.add('active');
 
+            // 繪製 Solution 4 的架構圖
             drawArch(size);
 
             const shelfSelect = document.getElementById('power_shelf');
@@ -332,22 +334,23 @@
             const container = document.getElementById('arch_display');
             let svgContent = '';
 
-            const colorSidecar = "#558B2F"; // Sidecar 綠色
-            const colorRedBox = "#FF0000";  // 紅色轉換器方塊
-            const colorRedText = "#FF0000"; // 紅色標題字
+            const colorSidecar = "#558B2F"; 
+            const colorRedBox = "#FF0000"; 
+            const colorRedText = "#FF0000"; 
             const colorBlack = "#000000";
-            const colorPSU = "#81D4FA";     // PSU 淺藍色
-            const colorPink = "#F8BBD0";    // Bus Bar 粉色
+            const colorPSU = "#81D4FA";
+            const colorPink = "#F8BBD0";
             const colorPinkStroke = "#D81B60";
-            const colorGreenText = "#388E3C"; // LVDC 綠色文字
+            const colorGreenText = "#388E3C";
             
-            const viewBoxW = 500;
-            const viewBoxH = 280;
+            // 寬度設定，調整 ViewBox 以縮小顯示
+            const viewBoxW = 400;
+            const viewBoxH = 250;
 
-            // 左側 Sidecar 結構 (共用)
+            // 左側 Sidecar (共用)
             const sidecarSVG = `
-                <text x="10" y="30" font-family="Arial" font-size="20" font-weight="bold" fill="${colorRedText}">1. 800V sidecar(P+B+C)</text>
-                <text x="10" y="55" font-family="Arial" font-size="20" font-weight="bold" fill="${colorRedText}">2. +/-400V sidecar</text>
+                <text x="10" y="30" font-family="Arial" font-size="18" font-weight="bold" fill="${colorRedText}">1. 800V sidecar(P+B+C)</text>
+                <text x="10" y="55" font-family="Arial" font-size="18" font-weight="bold" fill="${colorRedText}">2. +/-400V sidecar</text>
 
                 <line x1="10" y1="95" x2="40" y2="95" stroke="#E040FB" stroke-width="4"/>
 
@@ -355,49 +358,51 @@
                 
                 <rect x="50" y="80" width="50" height="50" fill="none" stroke="white" stroke-width="2"/>
                 <path d="M 50 130 L 100 80" stroke="white" stroke-width="2"/>
-                <rect x="55" y="85" width="40" height="40" fill="#90A4AE" opacity="0.5"/> <line x1="100" y1="105" x2="115" y2="105" stroke="white" stroke-width="2"/>
+                <rect x="55" y="85" width="40" height="40" fill="#90A4AE" opacity="0.5"/>
+                <line x1="100" y1="105" x2="115" y2="105" stroke="white" stroke-width="2"/>
 
                 <rect x="115" y="80" width="50" height="50" fill="${colorRedBox}" stroke="white" stroke-width="2"/>
                 <line x1="115" y1="130" x2="165" y2="80" stroke="white" stroke-width="2"/>
 
-                <line x1="180" y1="105" x2="280" y2="105" stroke="gray" stroke-width="4"/>
-                <text x="190" y="95" font-family="Arial" font-size="12" fill="#33691E">HVDC Cable</text>
+                <line x1="180" y1="105" x2="260" y2="105" stroke="gray" stroke-width="4"/>
+                <text x="220" y="95" font-family="Arial" font-size="12" fill="#33691E" text-anchor="middle">HVDC Cable</text>
             `;
 
             if (size === 21) {
                 // 21 inch Rack (窄版)
+                // 擴大 viewBox 以縮小顯示
                 svgContent = `
-                <svg viewBox="0 0 ${viewBoxW} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                <svg viewBox="-30 -20 460 290" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     ${sidecarSVG}
                     
-                    <rect x="280" y="30" width="100" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
+                    <rect x="260" y="30" width="100" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
                     
-                    <text x="330" y="55" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
+                    <text x="310" y="55" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
                     
-                    <rect x="282" y="70" width="96" height="50" fill="${colorPSU}" stroke="${colorBlack}" stroke-width="1"/>
-                    <text x="330" y="100" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU</text>
+                    <rect x="262" y="70" width="96" height="50" fill="${colorPSU}" stroke="${colorBlack}" stroke-width="1"/>
+                    <text x="310" y="100" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU</text>
                     
-                    <rect x="325" y="120" width="10" height="110" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="1"/>
+                    <rect x="305" y="120" width="10" height="110" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="1"/>
                     
-                    <text x="290" y="170" font-family="Arial" font-size="18" fill="${colorGreenText}" font-weight="bold">LVDC</text>
+                    <text x="310" y="170" font-family="Arial" font-size="18" fill="${colorGreenText}" font-weight="bold" text-anchor="middle">LVDC</text>
                 </svg>
                 `;
             } else {
                 // 42 inch Rack (寬版)
                 svgContent = `
-                <svg viewBox="0 0 ${viewBoxW + 60} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                <svg viewBox="-30 -20 530 290" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     ${sidecarSVG}
                     
-                    <rect x="280" y="30" width="160" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
+                    <rect x="260" y="30" width="160" height="200" fill="none" stroke="${colorBlack}" stroke-width="3"/>
                     
-                    <text x="360" y="55" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
+                    <text x="340" y="55" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
                     
-                    <rect x="282" y="70" width="156" height="50" fill="${colorPSU}" stroke="${colorBlack}" stroke-width="1"/>
-                    <text x="360" y="100" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU</text>
+                    <rect x="262" y="70" width="156" height="50" fill="${colorPSU}" stroke="${colorBlack}" stroke-width="1"/>
+                    <text x="340" y="100" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU</text>
                     
-                    <rect x="355" y="120" width="10" height="110" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="1"/>
+                    <rect x="335" y="120" width="10" height="110" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="1"/>
                     
-                    <text x="310" y="170" font-family="Arial" font-size="18" fill="${colorGreenText}" font-weight="bold">LVDC</text>
+                    <text x="340" y="170" font-family="Arial" font-size="18" fill="${colorGreenText}" font-weight="bold" text-anchor="middle">LVDC</text>
                 </svg>
                 `;
             }
@@ -407,14 +412,19 @@
 
         function calc() {
             const cap = parseInt(document.getElementById('it_capacity').value) || 0;
+            
             const shelfPower = parseInt(document.getElementById('power_shelf').value);
             const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
+
             const bbuVal = document.getElementById('bbu_select').value;
             let bbuPower = 0;
             if (bbuVal === "72_LFP" || bbuVal === "72_LTO") { bbuPower = 72; }
+            else if (bbuVal === "33_NCM") { bbuPower = 33; }
             const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
+
             const cbuVal = parseInt(document.getElementById('cbu_select').value);
             const cbuQty = cbuVal > 0 ? Math.ceil(cap / cbuVal) : 0;
+
             const accessoryQty = shelfQty > 0 ? shelfQty : 0;
 
             document.getElementById('qty_shelf').innerText = shelfQty;

@@ -2,108 +2,178 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Data Center Reference Designs</title>
+    <title>Data Center Reference Designs | AMD</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- 全局設定 --- */
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
             margin: 0; 
-            background-color: #ffffff; /* 全白背景 */
+            padding: 0;
+            background-color: #fff; /* 這裡改回白底，因為截圖左側是白的 */
             color: #333;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            /* 強制桌面版視圖 */
             min-width: 1200px; 
-            overflow-x: auto; 
-        }
-
-        /* --- 頂部導航 --- */
-        header { 
-            padding: 20px 40px; 
-            display: flex; 
-            align-items: center; 
-        }
-        .amd-logo { height: 20px; width: auto; margin-right: 20px; }
-        .back-link { text-decoration: none; color: #666; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
-        .back-link:hover { color: #ED1C24; }
-
-        /* --- 頁面標題 --- */
-        .page-title {
-            padding: 0 40px;
-            margin-top: 10px;
-            font-size: 42px;
-            font-weight: 400;
-            color: #000;
-        }
-
-        /* --- 主要內容容器 (置中對齊) --- */
-        .main-container {
-            flex: 1;
+            overflow: hidden; /* 防止出現卷軸，因為是滿版設計 */
             display: flex;
-            justify-content: center; /* 水平置中 */
-            align-items: center;     /* 垂直置中 */
-            padding-bottom: 50px;
+            flex-direction: column;
         }
 
-        /* --- 卡片連結區塊 --- */
-        .nav-card {
+        /* --- Header (保持黑色風格) --- */
+        header { 
+            background-color: #000; 
+            padding: 0 30px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            flex-shrink: 0; 
+            z-index: 1000;
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); } 
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #fff; letter-spacing: 1px;
+            border-left: 2px solid #ed1c24; padding-left: 15px; 
+        }
+        
+        .header-back-btn { 
+            color: #ccc; text-decoration: none; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border: 1px solid #444; border-radius: 4px; transition: all 0.2s;
+        }
+        .header-back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+
+        /* --- 主內容區 (左右分割) --- */
+        .main-layout {
+            display: flex;
+            flex: 1; /* 佔滿剩餘高度 */
+            height: calc(100vh - 75px);
+        }
+
+        /* 左側：文字與下載區 */
+        .left-panel {
+            width: 40%;
+            background-color: #fff;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 垂直置中 */
+            box-sizing: border-box;
+        }
+
+        /* 返回首頁的小連結 (頁面內) */
+        .back-link {
+            color: #666;
             text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 20px;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: #000; }
+
+        .page-title {
+            font-size: 42px;
+            font-weight: 700;
             color: #000;
+            margin: 0 0 60px 0;
+            line-height: 1.2;
+        }
+
+        /* 右側：圖片區 */
+        .right-panel {
+            width: 60%;
+            background-image: url('blue.png'); /* 使用您指定的圖片 */
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        
+        /* 圖片遮罩 (可選，增加質感) */
+        .right-panel::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 10%);
+            pointer-events: none;
+        }
+
+        /* --- 下載按鈕組樣式 (仿照截圖) --- */
+        .download-group {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            group: dl; /* 用於 hover */
+            cursor: pointer;
+        }
+
+        /* 藍色按鈕本體 */
+        .dl-btn-rect {
+            background-color: #0E4E73; /* 接近截圖的深藍色 */
+            color: #fff;
+            width: 280px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 500;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* PDF 圖示與文字區 */
+        .dl-icon-area {
+            margin-left: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 600px; /* 這裡因為只有一張卡，稍微寬一點 */
-            transition: transform 0.3s ease;
+            color: #333;
+            transition: transform 0.2s ease;
         }
 
-        .nav-card:hover {
-            transform: translateY(-10px);
+        .dl-icon-area img {
+            height: 32px; /* PDF icon 大小 */
+            margin-bottom: 5px;
+        }
+        
+        /* 如果沒有 PDF 圖片，用 FontAwesome 代替 */
+        .dl-icon-area i {
+            font-size: 32px;
+            color: #ED1C24; /* Adobe Red */
+            margin-bottom: 5px;
         }
 
-        /* --- 紅色圓角框框 --- */
-        .image-box {
-            width: 100%;
-            height: 400px; /* 卡片高度 */
-            border: 2px solid #ED1C24; /* AMD 紅色邊框 */
-            border-radius: 40px;       /* 大圓角 */
-            padding: 40px;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #fff;
-            transition: box-shadow 0.3s ease;
+        .dl-text {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            line-height: 1.2;
         }
 
-        /* 滑鼠移過去時的陰影 */
-        .nav-card:hover .image-box {
-            box-shadow: 0 10px 30px rgba(237, 28, 36, 0.15);
+        /* Hover 互動效果 */
+        .download-item:hover .dl-btn-rect {
+            background-color: #003366; /* 深一點的藍 */
+            transform: translateX(5px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.3);
         }
-
-        /* 圖片設定 */
-        .image-box img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        /* --- 底部文字 --- */
-        .card-label {
-            margin-top: 25px;
-            font-size: 24px;
-            font-weight: 400;
-            color: #000;
-            border-bottom: 2px solid #000; /* 下底線 */
-            padding-bottom: 2px;
-            transition: color 0.3s, border-color 0.3s;
-        }
-
-        /* 文字變色效果 */
-        .nav-card:hover .card-label {
-            color: #ED1C24;
-            border-color: #ED1C24;
+        
+        .download-item:hover .dl-icon-area {
+            transform: translateX(5px);
         }
 
     </style>
@@ -111,21 +181,47 @@
 <body>
 
     <header>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" class="amd-logo">
-        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">Reference Designs</div>
+        </div>
+        <a href="index.html" class="header-back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
     </header>
 
-    <h1 class="page-title">Data Center Reference Designs</h1>
+    <div class="main-layout">
+        <div class="left-panel">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            
+            <h1 class="page-title">Data Center Reference Designs</h1>
 
-    <div class="main-container">
-        
-        <a href="datacenter.html" class="nav-card">
-            <div class="image-box">
-                <img src="dc_design.png" alt="Data Center Reference Designs">
+            <div class="download-group">
+                
+                <a href="MI4.pdf" download class="download-item">
+                    <div class="dl-btn-rect">
+                        MI4xx Helios
+                    </div>
+                    <div class="dl-icon-area">
+                        <i class="fas fa-file-pdf"></i>
+                        <span class="dl-text">Adobe Acrobat<br>Document</span>
+                    </div>
+                </a>
+
+                <a href="MI5.pdf" download class="download-item">
+                    <div class="dl-btn-rect">
+                        MI5xx Arcadia
+                    </div>
+                    <div class="dl-icon-area">
+                        <i class="fas fa-file-pdf"></i>
+                        <span class="dl-text">Adobe Acrobat<br>Document</span>
+                    </div>
+                </a>
+
             </div>
-            <div class="card-label">Data Center Reference Designs</div>
-        </a>
+        </div>
 
+        <div class="right-panel"></div>
     </div>
 
 </body>
