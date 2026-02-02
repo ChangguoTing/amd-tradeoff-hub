@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Input Parameters | AMD TradeOff Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            background-color: #f9fafb;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            min-width: 1200px;
+            overflow-x: auto; 
+        }
+
+        /* --- Header --- */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-shrink: 0; 
+            position: sticky; /* 讓 Header 固定在頂部 */
+            top: 0;
+            z-index: 100;
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 26px; width: auto; display: block; }
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #ed1c24; padding-left: 15px; 
+        }
+        
+        .back-btn { 
+            color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
+        }
+        .back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+
+        /* --- 主內容區 --- */
+        .main-container {
+            flex: 1;
+            max-width: 1200px; /* 限制最大寬度，讓列表不會太寬 */
+            margin: 40px auto;
+            padding: 0 40px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* --- Input Section --- */
+        .input-section {
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        /* 標題列 */
+        .section-header {
+            background-color: #333; 
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+        
+        .help-icon { font-size: 1.2rem; cursor: pointer; opacity: 0.8; }
+        .help-icon:hover { opacity: 1; }
+
+        /* 內容區域 */
+        .section-body {
+            padding: 40px;
+        }
+
+        .instruction-text {
+            font-size: 1.2rem;
+            color: #4b5563;
+            margin-bottom: 30px;
+            font-weight: 500;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        /* --- 垂直列表佈局 (Row by Row) --- */
+        .arch-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px; /* 卡片之間的間距 */
+        }
+
+        /* 選項卡片 (橫向滿版) */
+        .arch-card {
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            background: #fff;
+            display: flex;
+            flex-direction: column; /* 保持圖片在文字上方，但卡片變寬 */
+            align-items: center;
+        }
+
+        .arch-card:hover {
+            border-color: #999;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        /* 選中狀態 */
+        .arch-card.selected {
+            border-color: #ed1c24;
+            background-color: #fff5f5;
+            box-shadow: 0 0 0 3px rgba(237, 28, 36, 0.15);
+        }
+        /* 打勾圖示 */
+        .arch-card.selected::after {
+            content: '\f00c'; 
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 15px; right: 15px;
+            background: #ed1c24;
+            color: white;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* 圖片樣式 (加大顯示) */
+        .arch-img {
+            width: 100%;
+            max-width: 900px; /* 限制最大寬度，保持清晰 */
+            height: auto;     /* 高度自動，保持比例 */
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+
+        /* 卡片標題 */
+        .arch-info {
+            text-align: center;
+            width: 100%;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+
+        .arch-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .arch-desc {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* --- 底部按鈕區 --- */
+        .action-bar {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .calc-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 15px 60px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+
+        .calc-btn:hover {
+            background-color: #ed1c24;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+    </style>
+    
+    <script>
+        function selectOption(element) {
+            const allCards = document.querySelectorAll('.arch-card');
+            allCards.forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+    </script>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">TradeOff Tool Inputs</div>
+        </div>
+        <a href="hub.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Hub</a>
+    </header>
+
+    <div class="main-container">
+        
+        <div class="input-section">
+            <div class="section-header">
+                <h3 class="section-title">Physical Infrastructure</h3>
+                <i class="far fa-question-circle help-icon"></i>
+            </div>
+
+            <div class="section-body">
+                
+                <p class="instruction-text">
+                    Select architecture to be calculated:
+                </p>
+
+                <div class="arch-list">
+                    
+                    <div class="arch-card" onclick="selectOption(this)">
+                        <img src="mtool1.svg" alt="Solution 1" class="arch-img">
+                        <div class="arch-info">
+                            <div class="arch-title">Solution 1</div>
+                            <div class="arch-desc">Traditional AC + LVDC IT</div>
+                        </div>
+                    </div>
+
+                    <div class="arch-card" onclick="selectOption(this)">
+                        <img src="mtool2.svg" alt="Solution 2" class="arch-img">
+                        <div class="arch-info">
+                            <div class="arch-title">Solution 2</div>
+                            <div class="arch-desc">Traditional AC + HVDC IT</div>
+                        </div>
+                    </div>
+
+                    <div class="arch-card" onclick="selectOption(this)">
+                        <img src="mtool3.svg" alt="Solution 3" class="arch-img">
+                        <div class="arch-info">
+                            <div class="arch-title">Solution 3</div>
+                            <div class="arch-desc">LVDC Sidecar + LVDC IT</div>
+                        </div>
+                    </div>
+
+                    <div class="arch-card" onclick="selectOption(this)">
+                        <img src="mtool4.svg" alt="Solution 4" class="arch-img">
+                        <div class="arch-info">
+                            <div class="arch-title">Solution 4</div>
+                            <div class="arch-desc">HVDC Sidecar + LVDC IT</div>
+                        </div>
+                    </div>
+
+                    <div class="arch-card" onclick="selectOption(this)">
+                        <img src="mtool5.svg" alt="Solution 5" class="arch-img">
+                        <div class="arch-info">
+                            <div class="arch-title">Solution 5</div>
+                            <div class="arch-desc">HVDC Sidecar + HVDC IT</div>
+                        </div>
+                    </div>
+
+                    <div class="arch-card" onclick="selectOption(this)">
+                        <img src="mtool6.svg" alt="Solution 6" class="arch-img">
+                        <div class="arch-info">
+                            <div class="arch-title">Solution 6</div>
+                            <div class="arch-desc">800V SST + LVDC IT</div>
+                        </div>
+                    </div>
+
+                    <div class="arch-card" onclick="selectOption(this)">
+                        <img src="mtool7.svg" alt="Solution 7" class="arch-img">
+                        <div class="arch-info">
+                            <div class="arch-title">Solution 7</div>
+                            <div class="arch-desc">800V SST + HVDC IT</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="action-bar">
+                    <a href="ac-vs-dc.html" class="calc-btn">
+                        Calculate Results <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2025 AMD AI Power Solution Tool
+    </footer>
+
+</body>
+</html>
