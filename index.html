@@ -65,9 +65,10 @@
         .sidebar-title { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
         .sidebar-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: visible; }
 
-        /* 選單項目 (父層) - 移除箭頭與子選單邏輯 */
+        /* 選單項目 (父層) */
         .menu-item {
             border-bottom: 1px solid #222;
+            position: relative; /* 讓子選單定位 */
         }
 
         .menu-link {
@@ -81,6 +82,49 @@
         }
 
         .menu-link:hover { background-color: #1a1a1a; color: #ED1C24; }
+        
+        /* 箭頭樣式 */
+        .menu-arrow { font-size: 14px; color: #666; transition: transform 0.3s; }
+        .menu-link:hover .menu-arrow { color: #ED1C24; transform: rotate(-90deg); }
+
+        /* --- 子選單樣式 (Hover 右側展開) --- */
+        .sub-menu {
+            display: none; /* 預設隱藏 */
+            position: absolute; /* 絕對定位 */
+            top: 0; 
+            left: 100%; /* 顯示在父選單的右側 */
+            width: 300px; /* 子選單寬度 */
+            background-color: #0f0f0f; 
+            border: 1px solid #333;
+            border-left: none; 
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            z-index: 2001; 
+        }
+
+        /* 滑鼠懸停展開 */
+        .menu-item:hover .sub-menu {
+            display: block;
+        }
+
+        .sub-menu-item a {
+            display: block;
+            padding: 20px 25px;
+            color: #ccc;
+            text-decoration: none;
+            font-size: 15px;
+            border-bottom: 1px solid #222;
+            transition: all 0.2s;
+        }
+
+        .sub-menu-item a:hover {
+            color: #fff;
+            background-color: #1a1a1a;
+            border-left: 3px solid #ED1C24;
+            padding-left: 22px; 
+        }
 
         /* --- 英雄區塊 --- */
         .hero {
@@ -135,6 +179,7 @@
         </div>
 
         <ul class="sidebar-list">
+            
             <li class="menu-item">
                 <a href="amdsupport.html" class="menu-link">
                     Power Solution
@@ -142,9 +187,18 @@
             </li>
 
             <li class="menu-item">
-                <a href="tcocom.html" class="menu-link">
+                <div class="menu-link">
                     TCO Analysis
-                </a>
+                    <i class="fas fa-chevron-right menu-arrow"></i>
+                </div>
+                <ul class="sub-menu">
+                    <li class="sub-menu-item">
+                        <a href="tcocom.html">TCO Comparison Report</a>
+                    </li>
+                    <li class="sub-menu-item">
+                        <a href="hub.html">Trade/Off Tools</a>
+                    </li>
+                </ul>
             </li>
 
             <li class="menu-item">
@@ -158,6 +212,7 @@
                     Data Center Reference Designs
                 </a>
             </li>
+
         </ul>
     </div>
 
